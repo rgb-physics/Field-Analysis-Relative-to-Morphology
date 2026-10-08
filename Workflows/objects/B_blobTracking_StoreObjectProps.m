@@ -1,0 +1,231 @@
+% Takes in directory of blob objects saved tif per time point. Checks for
+% overlaps in object indices between consecutive time points, samples
+% object labels of each, then samples unique pairs of labels between the
+% two time points. Optionally reconstructs tifs with blobs labeled per
+% object ancestry/inherited blob index 
+% This script assumes minimal object drift; object overlap between frames
+% is assumed enough for inheritence
+% Rémi Boros, 2024-06-17; 2024-10-17
+
+% saveDirs = {'Session 88, Exp 1',...
+%     'Session 88, Exp 2',...
+%     'Session 88, Exp 3',...
+%     'Session 88, Exp 4',...
+%     'Session 88, Exp 5'};
+% baseDir = '<redacted original absolute path>';
+baseDir = 'Session 81, Exp 2';
+saveDirs = {fullfile(baseDir,'Tracked Blobs')};
+expInds = 1:numel(saveDirs);
+
+swapT = 35;
+
+for index = 1:numel(expInds)
+    expInd = expInds(index);
+
+dataDir = fullfile(baseDir,'Blob Tifs');
+dataName = 'FILLED_E2_BlobMat_t%03i.tif';
+saveDir = saveDirs{index};
+saveName = 'T%03i_trajIDs.tif';
+
+earlyTs = swapT(index):-1:1;
+lateTs = swapT(index):100;
+
+saveBool = 1;
+newObjsBool = 1;            % Generate trajectories for nucleating objects 
+truncateMergers = 0;        % End trajectories when drops merge (new traj for child) - otherwise, inheritance goes to largest boject
+truncateSplitters = 0;      % End trajectories when drops split (new trajs for each child)
+maskBool = 0;
+
+labeledInput = 0;           % If zero, binarize, then bwlabeln to get IDs
+
+uniqueFrame1 = 0;
+
+ccFields = {'Centroid','Area','PixelIdxList','MajorAxisLength','MinorAxisLength'};
+% Loop over early times or late times
+for timeBool = 1:2
+    if timeBool == 1
+        selectTimes = earlyTs;
+    else
+        selectTimes = lateTs;
+    end
+%% Make directory
+if ~exist(saveDir,'dir')
+    mkdir(saveDir);
+end
+if ~exist(fullfile(saveDir,'Masked Blobs'),'dir')
+    mkdir(fullfile(saveDir,'Masked Blobs'));
+    mkdir(fullfile(saveDir,'Masked CCs'));
+end
+
+%% Iterate over time
+% Generate cells of centroids and areas at T_ref; link to object IDs at T1
+for tInd = 1:(numel(selectTimes) - 1)
+
+    % Load data sets
+    nextT = selectTimes(tInd+1);
+    if ~exist(fullfile(dataDir,sprintf(dataName,nextT)),'file')
+        continue
+    end
+    frameTwo = double(tiffreadVolume(fullfile(dataDir,sprintf(dataName,nextT))));
+
+    % Prepare data labels and logical matrices
+    if tInd == 1
+        if uniqueFrame1 == 1
+            labeledObjs1 = double(tiffreadVolume(fullfile(dataDir1,dataName1)));
+        else
+            frameOne = double(tiffreadVolume(fullfile(dataDir,sprintf(dataName,selectTimes(1)))));
+            if labeledInput == 1
+                labeledObjs1 = frameOne;
+            else
+                labeledObjs1 = bwlabeln(frameOne);
+            end
+            frameOneLogical = logical(labeledObjs1);
+        end
+        indVec1 = find(frameOneLogical); 
+        nextID = max(labeledObjs1(:)) + 1;
+    end
+    [objVols1, objIDs1] = groupcounts(labeledObjs1(labeledObjs1>0));
+    % Prepare frame two data
+    if labeledInput == 1
+        labeledObjs2 = frameTwo;
+    else
+        labeledObjs2 = bwlabeln(frameTwo);
+    end
+    frameTwoLogical = logical(frameTwo);
+    indVec2 = find(frameTwoLogical);   
+    [objVols2, objIDs2] = groupcounts(labeledObjs2(labeledObjs2>0));
+
+    % Get overlapping indices between frames
+    overlapInds = indVec1(ismember(indVec1,indVec2));
+    % Get object labels at overlapping inds over consecutive time points
+    objectLabelPairs = [labeledObjs2(overlapInds),labeledObjs1(overlapInds)];
+    uniqueObjectPairs = unique(objectLabelPairs,"rows");
+    ogPairs = uniqueObjectPairs;
+
+% Assign IDs to merged objects; T_i objects are parents, T_i+1 is the child 
+    % Generate new trajectory inheritance for merger events
+    [labelCountsM,labelIDsM] = groupcounts(uniqueObjectPairs(:,1));   % Identify ID repeats in frame 2 among overlap ID pairs
+    mergerLabels = labelIDsM(labelCountsM>1);                         % Get list of IDs in frame 2 that repeat (multiple objects "map" to a single object)
+    % Iterate through each repeated label and assign appropriate IDs
+    for currLabel = 1:numel(mergerLabels)
+        currInds = find(uniqueObjectPairs(:,1) == mergerLabels(currLabel));
+        % If truncating trajectories upon merger event
+        if truncateMergers == 1
+            updateIDs = nextID;
+            nextID = nextID + 1;
+        % If continuing trajectories through mergers, keep ID of larger parent
+        else
+            mergerParentIDs = uniqueObjectPairs(currInds,2);
+            volsOfParents = objVols1(ismember(objIDs1,mergerParentIDs));      % Fewer numbers of objects than max ID as time progresses -> get indices of appropriate objects
+            [~, largestVolInd] = max(volsOfParents);
+            updateIDs = mergerParentIDs(largestVolInd);
+        end
+        uniqueObjectPairs(currInds,2) = updateIDs;
+    end
+
+    % Remove degenerate cases from object merging
+        % Object pairs are ordered wrt objects in frame 2; Remove ordered pairs
+        % in cases where there are repetitions of objects in frame 2
+    degenerateCases = logical([0; diff(uniqueObjectPairs(:,1)) == 0]);
+    if isempty(uniqueObjectPairs)   
+        keptPairs = uniqueObjectPairs;
+    else
+        keptPairs = uniqueObjectPairs(~degenerateCases,:);
+    end
+
+% Assign IDs to truncated objects; T_i is single parent, T_i+1 are children
+% (flipped case of mergers)
+    % Generate new trajectory inheritance for merger events
+    [labelCountsT,labelIDsT] = groupcounts(keptPairs(:,2));   % Identify ID repeats in frame 1 among overlap ID pairs
+    truncatedLabels = labelIDsT(labelCountsT>1);                      % Get list of IDs in frame 1 that repeat
+    % Iterate through each repeated label and assign appropriate IDs
+    for currLabel = 1:numel(truncatedLabels)
+        currInds = find(keptPairs(:,2) == truncatedLabels(currLabel));
+        updateIDs = nextID + (1:numel(currInds)) - 1;
+        % If truncating trajectories upon truncation event
+        if truncateMergers == 1
+            nextID = nextID + numel(currInds);
+        % If continuing trajectories through truncations, assign parent ID
+        % to largest child
+        else
+            truncChildrenIDs = keptPairs(currInds,1);          % Get IDs of children for current truncation
+            volsOfChildren = objVols2(ismember(objIDs2,truncChildrenIDs));       % Get volumes of children
+            [~, largestVolInd] = max(volsOfChildren);           % Find largest
+            updateIDs(largestVolInd:end) = updateIDs(largestVolInd:end) - 1;
+            updateIDs(largestVolInd) = truncatedLabels(currLabel);          % Assign ID of largest
+            nextID = nextID + numel(currInds) - 1;
+        end
+        keptPairs(currInds,2) = updateIDs;
+    end
+    
+% Generate a mapping vector for inheritance
+    mapVector = zeros(numel(unique(labeledObjs2)) - ismember(0,labeledObjs2),1);
+        % Assign indices corresponding to frame two labels with non-degenerate
+        % object labels from frame 1
+    mapVector(keptPairs(:,1)) = keptPairs(:,2);
+
+% Assign IDs to nucleated/new objects
+    if newObjsBool == 1
+        % Find nucleated/new objects in new time point
+            % Compare labels at indices in frame 2 that overlap with zeros in frame 
+            % 1 to the list of all unique labels in frame 2. Any new labels must be
+            % accounted for and added
+        firstPassNewObjs = unique(labeledObjs2(~frameOneLogical));
+        uniqueNewObjs = firstPassNewObjs(~ismember(firstPassNewObjs,keptPairs(:,1)));
+            % Remove 0
+        uniqueNewObjs = uniqueNewObjs(uniqueNewObjs~=0);
+            % Assign indices to new objects
+        mapVector(uniqueNewObjs) = (1:numel(uniqueNewObjs)) + nextID;
+        nextID = nextID + numel(uniqueNewObjs);
+        % mapVector(uniqueNewLabels) = (1:numel(uniqueNewLabels)) + size(keptPairs,1);
+    end
+
+% Assign inheritance to trajectories, then save
+        % Duplicate frame 2, then get vector of labels > 0
+    inheritMat = labeledObjs2;
+    nonzeroLabels = inheritMat(frameTwoLogical);
+        % Map using map vector of indices in duplicated inheritance matrix
+    inheritMat(frameTwoLogical) = mapVector(nonzeroLabels);
+    % NOTE: vector of a scalar array returns an array with mapped vector contents
+    
+    % Save, if requested
+    if saveBool == 1
+        if tInd == 1
+            currT = selectTimes(tInd);
+            save3DTiff(uint16(labeledObjs1),fullfile(saveDir,sprintf(saveName,currT)));
+        end
+        save3DTiff(uint16(inheritMat),fullfile(saveDir,sprintf(saveName,nextT)));    
+        % Save masked images and connected component objects
+        if maskBool == 1
+            if tInd == 1
+                currT = selectTimes(tInd);
+                save3DTiff(uint16(zeros(size(inheritMat))),...
+                    fullfile(saveDir,'Masked Blobs',sprintf(saveName,currT)));
+                [currCC,storeStruct] = blobMat2CCProps(false(size(inheritMat)),ccFields);
+                save(fullfile(saveDir,'Masked CCs',sprintf('objIDs_T%06i.mat',currT)),'currCC');
+                storeStruct(tInd).FrameNum = currT;
+            end
+            maskedMat = consMatLnB(inheritMat,~logical(frameOne));
+            save3DTiff(uint16(maskedMat),fullfile(saveDir,'Masked Blobs',sprintf(saveName,nextT)));
+            [currCC,storeStruct] = blobMat2CCProps(logical(maskedMat),ccFields,storeStruct);
+            save(fullfile(saveDir,'Masked CCs',sprintf('objIDs_T%06i.mat',nextT)),'currCC');
+            storeStruct(tInd+1).FrameNum = nextT;
+        end
+    end
+            
+% Assign frame two info to frame 1
+    frameOneLogical = frameTwoLogical;
+    labeledObjs1 = inheritMat;
+    indVec1 = find(frameOneLogical); 
+
+end
+
+end
+if maskBool == 1
+    storeStruct(1).Centroid = [0 0 0];
+    storeStruct(1).Volume = 0;
+    storeStruct(1).PrincipalAxisLength = [0 0 0];
+    save(fullfile(saveDir,'Masked CCs','storageStruct.mat'),'storeStruct');
+end
+
+end

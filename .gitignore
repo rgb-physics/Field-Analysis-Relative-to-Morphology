@@ -1,0 +1,37 @@
+# MATLAB autosaves, backups, and generated code
+*.asv
+*.m~
+*.autosave
+*.mex*
+*.p
+slprj/
+codegen/
+
+# MATLAB datasets and generated figures
+*.mat
+*.fig
+
+# Microscopy acquisition and image data (keep local data out of source control)
+*.tif
+*.tiff
+*.nd2
+*.h5
+*.hdf5
+*.czi
+*.lif
+*.ims
+*.oir
+*.vsi
+*.avi
+*.mp4
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp

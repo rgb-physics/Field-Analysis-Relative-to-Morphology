@@ -2,7 +2,7 @@
 
 This is the proposed organization for the **future analysis project family**, based on the merged `Active Foam Archive`, the ImageStackIO package, and the SegmentationTools proposal. The umbrella name is provisional. The tree groups reusable APIs separately from dataset workflows and separates material that should not enter active APIs. Function names are first-pass placements; files are not moved or rewritten by this document.
 
-**Scope rules:** internal image arrays use `[Y X Z C T]`; ImageStackIO owns image-file boundaries; SegmentationTools owns masks and labels; geometry and field analysis build on those outputs. Completed 3D PIV remains its own repository and is excluded. Text-file reference conversion remains a separate utility. `.asv` autosaves are omitted from this tree.
+**Scope rules:** internal image arrays use `[Y X Z C T]`; ImageStackIO owns image-file boundaries; SegmentationTools owns masks and labels; geometry and field analysis build on those outputs. Completed 3D PIV remains its own repository and is excluded. Text-file reference conversion is outside this project's scope. `.asv` autosaves are omitted from this tree.
 
 ```text
 Field-Analysis-Relative-to-Morphology/       [GitHub repository root]
@@ -242,11 +242,6 @@ Field-Analysis-Relative-to-Morphology/       [GitHub repository root]
 │   │           ├── manVlnPlot.m
 │   │           ├── plotVlns.m
 │   │           └── progressBar.m
-│   └── TextReferenceConversion/
-│       └── src/+textreferenceconversion/
-│           ├── nbib2bibtex.m
-│           ├── padTags.m
-│           └── prepareOutLines.m
 ├── Workflows/
 │   ├── imagePreparation/                       [Tiff/H5 manipulation, correction, cropping, reslicing]
 │   │   ├── AccentuateFeatures.m

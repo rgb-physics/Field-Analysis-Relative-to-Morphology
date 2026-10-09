@@ -7,3 +7,4 @@ The local `MeMo` checkout is a first-pass organization of the files named in `PR
 - The one planned source file without an implementation, `readND2.m`, remains a placeholder in the tree plan; the ND2 SDK dependency is unresolved.
 - The copy preserves source contents. No MATLAB validation, refactoring, or API compatibility work was performed during this first-pass organization.
 - The 140 paths explicitly left out of the proposal remain excluded from this copy. 3D PIV, Chan-Vese files, `.asv` autosaves, and private datasets are not included.
+- `TextReferenceConversion` was present in the first-pass copy but has since been removed because reference conversion is outside this project's scope.

@@ -8,15 +8,15 @@ The workflows begin with microscopy stacks and pixel-classification probability 
 
 Internal image arrays use `[Y X Z C T]`. Workflows combine the following APIs for specific datasets and analyses:
 
-**FieldAnalysis** - Fourier analysis, spatial averaging and cross-correlation
-**ImageStackIO** - Stack reading and writing for .tifs, .nd2s, and .h5s
-**ObjectGeometry** - Define geometric qualities of objects: line-like skeletonization, sheet-like midplanes via homeotropic thinning, filament orientations and other properties, and boundaries
-**ObjectRelativeProfiles** - Sample fields relative to object geometry
-**ObjectTracking** - Track objects via overlapping IDs, define lineages, identify merging and splitting, and isolate objects. Also hosts particle tracking via trackpy.
-**SegmentationTools** - Generate objects from pixel segmentations*
-**SharedUtilities** - Functions used across the package
-**SurfaceFieldMapping** - Point cloud to mesh conversion, mesh operations, field-sampling on mesh faces; relies on external installation**
-**VisualizationTools** - Visualize results at different stages of analysis
+**FieldAnalysis** - Fourier analysis, spatial averaging and cross-correlation<br>
+**ImageStackIO** - Stack reading and writing for .tifs, .nd2s, and .h5s<br>
+**ObjectGeometry** - Define geometric qualities of objects: line-like skeletonization, sheet-like midplanes via homeotropic thinning, filament orientations and other properties, and boundaries<br>
+**ObjectRelativeProfiles** - Sample fields relative to object geometry<br>
+**ObjectTracking** - Track objects via overlapping IDs, define lineages, identify merging and splitting, and isolate objects. Also hosts particle tracking via trackpy.<br>
+**SegmentationTools** - Generate objects from pixel segmentations <br> _Requires external pixel segmentation*_<br>
+**SharedUtilities** - Functions used across the package<br>
+**SurfaceFieldMapping** - Point cloud to mesh conversion, mesh operations, field-sampling on mesh faces; <br> _Requires external installation**_<br>
+**VisualizationTools** - Visualize results at different stages of analysis<br>
 
 *Ilastik is an upstream source of pixel-classification probabilities; this codebase does not provide Ilastik's pixel classifier. https://www.ilastik.org/
 **https://www.meshlab.net/

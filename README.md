@@ -9,7 +9,7 @@ The workflows begin with microscopy stacks and pixel-classification probability 
 Internal image arrays use `[Y X Z C T]`. Workflows combine the following APIs for specific datasets and analyses:
 
 **FieldAnalysis** - Fourier analysis, spatial averaging and cross-correlation
-**ImageStiackIO** - Stack reading, writing, reslicing for .tifs, .nd2s, and .h5s
+**ImageStackIO** - Stack reading and writing for .tifs, .nd2s, and .h5s
 **ObjectGeometry** - Define geometric qualities of objects: line-like skeletonization, sheet-like midplanes via homeotropic thinning, filament orientations and other properties, and boundaries
 **ObjectRelativeProfiles** - Sample fields relative to object geometry
 **ObjectTracking** - Track objects via overlapping IDs, define lineages, identify merging and splitting, and isolate objects. Also hosts particle tracking via trackpy.

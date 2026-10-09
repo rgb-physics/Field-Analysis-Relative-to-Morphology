@@ -18,7 +18,7 @@ Internal image arrays use `[Y X Z C T]`. Workflows combine the following APIs fo
 **SurfaceFieldMapping** - Point cloud to mesh conversion, mesh operations, field-sampling on mesh faces; <br> _Requires external installation**_<br>
 **VisualizationTools** - Visualize results at different stages of analysis<br>
 
-*Ilastik is an upstream source of pixel-classification probabilities; this codebase does not provide Ilastik's pixel classifier. https://www.ilastik.org/
-**https://www.meshlab.net/
+*Ilastik is an upstream source of pixel-classification probabilities; this codebase does not provide Ilastik's pixel classifier. https://www.ilastik.org/<br> 
+**MeshLab must be installed and will be run from MATLAB https://www.meshlab.net/
 
 This repository is a first-pass organization of code from the private archive and the existing ImageStackIO package. Source code has not been refactored or validated in MATLAB as part of this organization. See `docs/PROPOSED_TREE.md` for the proposed architecture and `docs/MIGRATION_CHECKLIST.md` for the source mapping and copy record. 

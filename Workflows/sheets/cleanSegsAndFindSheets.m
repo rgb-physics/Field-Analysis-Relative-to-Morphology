@@ -1,3 +1,6 @@
+% Renamed from dilateErodeSegWeights.m to cleanSegsAndFindSheets.m.
+% Moved from SegmentationTools cleanup to Workflows/sheets for later review.
+
 %% Data info
 % dataDir = '<redacted original absolute path>';
 dataDir = 'Session 25, Exp 5';

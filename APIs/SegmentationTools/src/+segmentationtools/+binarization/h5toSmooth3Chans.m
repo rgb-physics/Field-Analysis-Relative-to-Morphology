@@ -11,32 +11,24 @@ function [cleanIns,cleanOuts,cleanOns] = h5toSmooth3Chans(currSeg,outInOnChans,t
 % the entire space (SPANBOOL). Doing so determines whether or not to fill
 % "over-trimmed" voxels into the layer channel.
 % 2023/10/18
+% Compatibility wrapper added 2026-10-10. New code should call
+% segmentationtools.binarization.smoothInOnOutProbabilities, whose channel
+% and output order is [inside, wall, outside]. This wrapper retains the
+% historical OUTINONCHANS input order [outside, inside, wall] and outputs
+% [inside, outside, wall].
 
-% Ensure that threshVec is defined for all three channels of interest
-if numel(threshVec) == 1
-    threshVec = repmat(threshVec,1,3);
-end
-% Define spanBool if not passed
 if nargin < 5
     spanBool = 0;
 end
-
-% Instantiate morphological object for trimming
-strelObj = strel('sphere',strelRad);
-
-% Threshold probability segmentations of inside and outside channels
-outInds = imbinarize(currSeg(:,:,:,outInOnChans(1)),threshVec(1));
-inInds = imbinarize(currSeg(:,:,:,outInOnChans(2)),threshVec(2));
-
-% Clean up binarizations and define filtered object ins, outs, and ons
-cleanIns = imdilate(imerode(inInds,strelObj),strelObj);
-cleanOuts = imdilate(imerode(outInds,strelObj),strelObj) & ~(cleanIns);
-if spanBool == 1
-    cleanOns = ~(cleanIns | cleanOuts);
-elseif spanBool == 0
-    onInds = imbinarize(currSeg(:,:,:,outInOnChans(3)),threshVec(3));
-    cleanOns = imdilate(imerode(onInds,strelObj),strelObj);
+if isscalar(threshVec)
+    threshVec = repmat(threshVec, 1, 3);
 end
-    
+semanticChannels = outInOnChans([2 3 1]);
+semanticThresholds = threshVec([2 3 1]);
+options = struct('OpeningRadius', strelRad, ...
+    'SpanSpace', logical(spanBool));
+[cleanIns, cleanOns, cleanOuts] = ...
+    segmentationtools.binarization.smoothInOnOutProbabilities( ...
+    currSeg, semanticChannels, semanticThresholds, options);
 end
 

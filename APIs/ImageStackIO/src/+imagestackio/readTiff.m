@@ -2,10 +2,13 @@ function image = readTiff(filePath, options)
 %READTIFF Read a TIFF file and normalize it to [Y X Z C T] array order.
 %   IMAGE = imagestackio.readTiff(FILEPATH, OPTIONS) reads a TIFF image or
 %   stack and returns a struct with normalized data and source metadata.
-%   OPTIONS is an optional struct with a SourceAxes field. SourceAxes labels
-%   the dimensions of the array assembled from TIFF pages, before
-%   normalization. For a grayscale page stack, examples include "YXZ" and
-%   "YXT". For ImageJ hyperstacks, embedded dimensions are used by default.
+%   OPTIONS is an optional struct. SourceAxes labels the dimensions of the
+%   array assembled from TIFF pages before normalization. For a grayscale
+%   page stack, examples include "YXZ" and "YXT". For ImageJ hyperstacks,
+%   embedded dimensions are used by default. Spacing gives spatial sample
+%   spacing in [Y X Z] order. SpacingUnit gives its unit, such as "um" or
+%   "nm". Explicit options override embedded TIFF/ImageJ calibration. When
+%   neither is available, spacing defaults to [1 1 1] in pixels.
 
 if nargin < 2 || isempty(options)
     options = struct();
@@ -25,6 +28,8 @@ if isfield(fileInfo(1), 'ImageDescription')
     description = fileInfo(1).ImageDescription;
 end
 imageJ = parseImageJDescription(description);
+[spacing, spacingUnit, spacingSource] = resolveTiffSpacing( ...
+    options, fileInfo(1), imageJ);
 metadataAxes = parseTiffAxisOrder(description);
 
 [firstPage, colorMap] = imread(filePath, 1);
@@ -126,7 +131,9 @@ image.SourceDimensions = sourceDimensions;
 image.FilePath = filePath;
 image.DatasetPath = '';
 image.DatasetInfo = fileInfo;
-image.Spacing = [];
+image.Spacing = spacing;
+image.SpacingUnit = spacingUnit;
+image.SpacingSource = spacingSource;
 image.Colormap = colorMap;
 image.ImageJ = imageJ;
 image.PageCount = numPages;

@@ -2,7 +2,8 @@ function metadata = parseImageJDescription(description)
 %PARSEIMAGEJDESCRIPTION Parse the channel/slice/frame fields in ImageJ tags.
 
 metadata = struct('IsImageJ', false, 'IsHyperstack', false, ...
-    'Channels', [], 'Slices', [], 'Frames', [], 'Mode', '');
+    'Channels', [], 'Slices', [], 'Frames', [], 'Mode', '', ...
+    'Spacing', [], 'Unit', '');
 if isstring(description) && isscalar(description)
     description = char(description);
 end
@@ -26,6 +27,11 @@ modeToken = regexp(description, '(?m)^mode=([^\r\n]+)', 'tokens', 'once');
 if ~isempty(modeToken)
     metadata.Mode = modeToken{1};
 end
+metadata.Spacing = localReadPositiveScalar(description, 'spacing');
+unitToken = regexp(description, '(?m)^unit=([^\r\n]+)', 'tokens', 'once');
+if ~isempty(unitToken)
+    metadata.Unit = strtrim(unitToken{1});
+end
 end
 
 function value = localReadPositiveInteger(description, fieldName)
@@ -35,6 +41,19 @@ value = [];
 if ~isempty(token)
     parsed = str2double(token{1});
     if isfinite(parsed) && parsed >= 1 && parsed == fix(parsed)
+        value = parsed;
+    end
+end
+end
+
+function value = localReadPositiveScalar(description, fieldName)
+numberPattern = '([+]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?)';
+token = regexp(description, ...
+    ['(?m)^' fieldName '=' numberPattern '\s*$'], 'tokens', 'once');
+value = [];
+if ~isempty(token)
+    parsed = str2double(token{1});
+    if isfinite(parsed) && parsed > 0
         value = parsed;
     end
 end

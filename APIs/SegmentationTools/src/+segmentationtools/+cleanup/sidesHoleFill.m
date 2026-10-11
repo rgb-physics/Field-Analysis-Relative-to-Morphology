@@ -2,7 +2,7 @@ function [outMat] = sidesHoleFill(inMat)
 %SIDESHOLEFILL Patches holes using imfill in logical matrix inMat, taking
 %into account "holes" on matrix boundaries. This is done crudely by cycling
 %through each dimension of the matrix, padding with 1s, then using imfill
-%'holes'. Obviouly note suitable for patching objects at corners, nor
+%'holes'. Obviously not suitable for patching objects at corners, nor
 %objects with linked/connected topologies.
 % 2024-08-13 - Rémi Boros
 

@@ -16,19 +16,10 @@ function [outBounds] = returnSmoothBlobsBW(ogBW,layerMean,layerWidth,gKern)
 %2025-04-18 - Rémi Boros
 % Reimplemented 2026-04-28
 
-% Define the signed-distance transform
-signedDist = signedBWDist(ogBW);
-layerWidth = abs(layerWidth);
-
-% Smooth with a Gaussian kernel
-if size(ogBW,3) > 1
-    smDist = imgaussfilt(signedDist,gKern);
-else
-    smDist = imgaussfilt3(signedDist,gKern);
-end
-
-% Isolate contour centered around layerMean with half-width layerWidth
-outBounds = (smDist < (layerMean + layerWidth));
+% Compatibility wrapper added 2026-10-10. Mask cleanup now resides in
+% SegmentationTools; this path remains available to existing callers.
+outBounds = segmentationtools.cleanup.returnSmoothBlobsBW( ...
+    ogBW,layerMean,layerWidth,gKern);
 
 end
 

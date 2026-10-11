@@ -10,6 +10,10 @@ function image = readH5(filePath, datasetPath, options)
 %                   supported MATLAB_AXIS_ORDER attribute.
 %       Channels    Channel indices to retain after normalization. By
 %                   default, all channels are retained.
+%       Spacing     Spatial sample spacing in [Y X Z] order. The default
+%                   is [1 1 1].
+%       SpacingUnit Unit for Spacing, such as "um" or "nm". The default
+%                   is "pixel".
 %
 %   The only automatically recognized axis attribute is
 %   MATLAB_AXIS_ORDER. Its value must describe the order returned by
@@ -26,6 +30,7 @@ if ~isstruct(options) || ~isscalar(options)
     error('imagestackio:InvalidOptions', ...
         'OPTIONS must be a scalar struct.');
 end
+[spacing, spacingUnit] = parseSpacingOptions(options);
 
 filePath = localTextScalar(filePath, 'filePath');
 datasetPath = localTextScalar(datasetPath, 'datasetPath');
@@ -93,7 +98,8 @@ image.SourceDimensions = sourceDimensions;
 image.FilePath = filePath;
 image.DatasetPath = datasetPath;
 image.DatasetInfo = datasetInfo;
-image.Spacing = [];
+image.Spacing = spacing;
+image.SpacingUnit = spacingUnit;
 end
 
 function value = localTextScalar(value, argumentName)

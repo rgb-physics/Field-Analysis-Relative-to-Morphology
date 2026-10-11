@@ -23,40 +23,10 @@ function [outMat] = returnSmoothBlobsIDed(inMat,layerMean,layerWidth,gKern,calcS
 %2025-04-18 - Rémi Boros
 % Reimplemented 2026-06-11
 
-% Ensure width is positive
-layerWidth = abs(layerWidth);
-
-% 'fast' boundary assignment: calculate in one go via dilation
-if matches(calcSpeed,'fast')
-    % Binarize matrix
-    bwMat = (inMat > 0);
-    % Get boundaries from the binarized matrix
-    boundMat = returnSmoothBlobsBW(bwMat,layerMean,layerWidth,gKern);
-    % Dilate the original matrix
-    outerBound = round(max([1, layerWidth,layerMean+layerWidth]));
-    fillMat = imdilate(inMat,strel('sphere',outerBound));
-    % Sample the dilated image on the constructed boundaries
-    outMat = consMatLnB(fillMat, boundMat);
-
-% 'slow' boundary assignment: dilate and assign values for each object sep.
-elseif matches(calcSpeed,'slow')
-    outMat = zeros(size(inMat));
-    % Get unique object IDs
-    allIDs = unique(inMat(inMat>0));
-    % Iterate over each ID, individually calculate shell boundaries, assign
-    for index = 1:numel(allIDs)
-        % tic
-        currID = allIDs(index);
-        currBlob = inMat == currID;
-        % Construct boundary
-        currBnd = returnSmoothBlobsBW(currBlob, layerMean, layerWidth, gKern);
-        outMat(currBnd) = currID;
-        % toc
-        % pause(.01)
-    end
-else
-    fprintf('Invalid calcSpeed: calcSpeed must be fast or slow')
-end
+% Compatibility wrapper added 2026-10-10. Mask cleanup now resides in
+% SegmentationTools; this path remains available to existing callers.
+outMat = segmentationtools.cleanup.returnSmoothBlobsIDed( ...
+    inMat,layerMean,layerWidth,gKern,calcSpeed);
 
 end
 

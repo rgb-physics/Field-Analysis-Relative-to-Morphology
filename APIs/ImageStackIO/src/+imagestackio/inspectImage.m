@@ -1,7 +1,9 @@
 function info = inspectImage(filePath, options)
 %INSPECTIMAGE Inspect TIFF or HDF5 image metadata without loading pixels.
 %   INFO = imagestackio.inspectImage(FILEPATH, OPTIONS) supports TIFF and
-%   HDF5 files. For HDF5, OPTIONS.DatasetPath is required.
+%   HDF5 files. For HDF5, OPTIONS.DatasetPath is required. OPTIONS.Spacing
+%   is [Y X Z] and defaults to [1 1 1]. OPTIONS.SpacingUnit defaults to
+%   "pixel".
 
 if nargin < 2 || isempty(options)
     options = struct();
@@ -10,6 +12,7 @@ if ~isstruct(options) || ~isscalar(options)
     error('imagestackio:InvalidOptions', ...
         'OPTIONS must be a scalar struct.');
 end
+[spacing, spacingUnit] = parseSpacingOptions(options);
 if isstring(filePath) && isscalar(filePath)
     filePath = char(filePath);
 end
@@ -21,7 +24,12 @@ end
 [~, ~, extension] = fileparts(filePath);
 extension = lower(extension);
 info = struct('FilePath', filePath, 'Format', '', 'Axes', '', ...
-    'AxisMetadataSource', '', 'Metadata', [], 'Spacing', []);
+    'AxisMetadataSource', '', 'Metadata', [], 'Spacing', spacing, ...
+    'SpacingUnit', spacingUnit, 'SpacingSource', 'options');
+if ~(isfield(options, 'Spacing') && ~isempty(options.Spacing)) && ...
+        ~(isfield(options, 'SpacingUnit') && ~isempty(options.SpacingUnit))
+    info.SpacingSource = 'default';
+end
 
 switch extension
     case {'.tif', '.tiff'}
@@ -35,6 +43,8 @@ switch extension
             description = tiffInfo(1).ImageDescription;
         end
         imageJ = parseImageJDescription(description);
+        [info.Spacing, info.SpacingUnit, info.SpacingSource] = ...
+            resolveTiffSpacing(options, tiffInfo(1), imageJ);
         axes = parseTiffAxisOrder(description);
         if ~isempty(axes)
             info.Axes = axes;

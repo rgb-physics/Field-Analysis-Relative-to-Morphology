@@ -17,28 +17,36 @@ elseif nargin == 2
     modeStr = "large";
 end
 
-%Apply bwconncomp and regionprops(3)
+% Apply connected-component analysis. Component voxel counts work for both
+% 2-D and 3-D inputs and avoid switching between Area and Volume fields.
 objInfo = bwconncomp(logicMat);
-if numel(size(logicMat)) == 2
-    objProps = regionprops(objInfo,"Area");
-elseif numel(size(logicMat)) == 3
-    objProps = regionprops3(objInfo,"Volume");
-end
+objSizes = cellfun(@numel, objInfo.PixelIdxList);
 
 %Get indices of objects to remove
 switch modeStr
 
     case "large"
-        [~,sizeInds] = sort([objProps.Volume]);
-        objInds = sizeInds(1:end-toKeep);
+        validateattributes(toKeep, {'numeric'}, ...
+            {'real','finite','scalar','integer','nonnegative'}, ...
+            mfilename, 'toKeep');
+        [~,sizeInds] = sort(objSizes);
+        numToRemove = max(0, objInfo.NumObjects - double(toKeep));
+        objInds = sizeInds(1:numToRemove);
 
     case "indices"
-        objInds = ~ismember(toKeep, 1:numel([objProps.Volume]));
+        validateattributes(toKeep, {'numeric'}, ...
+            {'real','finite','vector','integer','positive'}, ...
+            mfilename, 'toKeep');
+        objInds = find(~ismember(1:objInfo.NumObjects, toKeep));
+
+    otherwise
+        error('segmentationtools:InvalidRemovalMode', ...
+            'modeStr must be "large" or "indices".');
     
 end
 
 %Remove objects
-toRemove = cell2mat([objInfo.PixelIdxList(objInds)]');
+toRemove = vertcat(objInfo.PixelIdxList{objInds});
 logicMat(toRemove) = false;
 
 

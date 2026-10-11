@@ -5,7 +5,11 @@ function writeTiff(imageInput, filePath, options)
 %   Data in [Y X Z C T] order. C and T must be singleton dimensions.
 %   Numeric input is interpreted as [Y X Z]. Supported pixel classes are
 %   uint8, uint16, and logical. OPTIONS fields: Overwrite (false by default)
-%   and Compression ('LZW' by default; also 'Deflate' or 'None').
+%   Compression ('LZW' by default; also 'Deflate' or 'None'), Spacing in
+%   [Y X Z] order, and SpacingUnit. Spacing and SpacingUnit are taken from
+%   an input image struct when present, then overridden by OPTIONS. Their
+%   defaults are [1 1 1] and 'pixel'. FIJI receives X/Y calibration through
+%   TIFF resolution tags and Z calibration through ImageJ metadata.
 
 if nargin < 3 || isempty(options)
     options = struct();
@@ -15,6 +19,7 @@ if ~isstruct(options) || ~isscalar(options)
         'OPTIONS must be a scalar struct.');
 end
 filePath = localTextScalar(filePath, 'filePath');
+[spacing, spacingUnit] = localGetSpacing(imageInput, options);
 data = localGetData(imageInput);
 if size(data, 4) ~= 1 || size(data, 5) ~= 1
     error('imagestackio:UseImageJWriter', ...
@@ -25,8 +30,36 @@ data = data(:, :, :, 1, 1);
 data = localSupportedPixelType(data);
 writerOptions = localWriterOptions(options);
 localCheckOutputPath(filePath, writerOptions.Overwrite);
-description = sprintf('MATLAB_AXIS_ORDER=YXZ');
-writeTiffPages(data, filePath, description, writerOptions.Compression);
+numZ = size(data, 3);
+description = sprintf([ ...
+    'ImageJ=1.54c\n' ...
+    'images=%d\n' ...
+    'slices=%d\n' ...
+    'unit=%s\n' ...
+    'spacing=%.17g\n' ...
+    'MATLAB_AXIS_ORDER=YXZ'], ...
+    numZ, numZ, spacingUnit, spacing(3));
+calibration = struct( ...
+    'XResolution', 1 / spacing(2), ...
+    'YResolution', 1 / spacing(1));
+writeTiffPages(data, filePath, description, ...
+    writerOptions.Compression, calibration);
+end
+
+function [spacing, spacingUnit] = localGetSpacing(imageInput, options)
+spacingOptions = options;
+if isstruct(imageInput)
+    if (~isfield(spacingOptions, 'Spacing') || ...
+            isempty(spacingOptions.Spacing)) && isfield(imageInput, 'Spacing')
+        spacingOptions.Spacing = imageInput.Spacing;
+    end
+    if (~isfield(spacingOptions, 'SpacingUnit') || ...
+            isempty(spacingOptions.SpacingUnit)) && ...
+            isfield(imageInput, 'SpacingUnit')
+        spacingOptions.SpacingUnit = imageInput.SpacingUnit;
+    end
+end
+[spacing, spacingUnit] = parseSpacingOptions(spacingOptions);
 end
 
 function data = localGetData(imageInput)
@@ -102,5 +135,17 @@ end
 if isfile(filePath) && ~overwrite
     error('imagestackio:OutputExists', ...
         'Output already exists. Set OPTIONS.Overwrite=true to replace it.');
+end
+end
+
+function value = localTextScalar(value, argumentName)
+if isstring(value) && isscalar(value)
+    value = char(value);
+elseif ~ischar(value) || ~isrow(value)
+    error('imagestackio:InvalidTextInput', ...
+        '%s must be a character row vector or string scalar.', argumentName);
+end
+if isempty(value)
+    error('imagestackio:EmptyTextInput', '%s cannot be empty.', argumentName);
 end
 end

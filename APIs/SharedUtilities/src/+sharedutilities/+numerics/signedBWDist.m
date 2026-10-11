@@ -6,7 +6,7 @@ function [outMat] = signedBWDist(inMat)
 posMat = bwdist(inMat);
 negMatPre = bwdist(~inMat);
 % Enforce zero layer by shifting negMat by 1
-negMat = consMatLnB(negMatPre - 1,inMat);   
+negMat = sharedutilities.arrays.consMatLnB(negMatPre - 1,inMat);
 % Combine matrices 
 outMat = posMat - negMat;
 

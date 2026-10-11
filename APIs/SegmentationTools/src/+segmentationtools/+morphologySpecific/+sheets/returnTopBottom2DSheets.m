@@ -5,7 +5,8 @@ function [topLayer,botLayer,topLayerZs,botLayerZs, centerSlice,centerSliceZs,spl
 %values. It is assumed that material is 1s and background pixels are 0
 
 %% Get z layer with least protein nearest center
-splitSlice = getCentralSlice(inputData);
+splitSlice = ...
+    segmentationtools.morphologySpecific.sheets.getCentralSlice(inputData);
 
 %% Artifically set "mid" layer to 0
 cutData = inputData;

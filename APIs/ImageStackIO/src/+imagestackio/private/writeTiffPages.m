@@ -1,5 +1,9 @@
-function writeTiffPages(pageData, filePath, imageDescription, compression)
+function writeTiffPages(pageData, filePath, imageDescription, compression, calibration)
 %WRITETIFFPAGES Write grayscale pages with a shared TIFF tag structure.
+
+if nargin < 5
+    calibration = struct();
+end
 
 if isa(pageData, 'uint8')
     bitsPerSample = 8;
@@ -32,6 +36,16 @@ try
         tags.PlanarConfiguration = Tiff.PlanarConfiguration.Chunky;
         tags.Compression = compressionTag;
         tags.SampleFormat = Tiff.SampleFormat.UInt;
+        if isfield(calibration, 'XResolution')
+            tags.XResolution = calibration.XResolution;
+        end
+        if isfield(calibration, 'YResolution')
+            tags.YResolution = calibration.YResolution;
+        end
+        if isfield(calibration, 'XResolution') || ...
+                isfield(calibration, 'YResolution')
+            tags.ResolutionUnit = Tiff.ResolutionUnit.None;
+        end
         if pageIndex == 1 && ~isempty(imageDescription)
             tags.ImageDescription = imageDescription;
         end

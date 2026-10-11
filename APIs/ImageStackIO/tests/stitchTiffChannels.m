@@ -48,4 +48,3 @@ imagestackio.writeImageJHyperstack(stitchedImage, outputPath, writeOptions);
 fprintf('Stitched size [Y X Z C]: %s\n', mat2str(size(stitchedStackYXZC)));
 fprintf('Channel 1: 560 nm; channel 2: 647 nm\n');
 fprintf('Saved ImageJ hyperstack: %s\n', outputPath);
-

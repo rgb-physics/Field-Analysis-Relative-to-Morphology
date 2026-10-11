@@ -12,4 +12,3 @@ testDataRoot = memotest.dataRoot();
 ```
 
 Tests must write generated files to a temporary folder rather than modifying these fixtures. Small, representative datasets should be preferred over complete microscopy acquisitions.
-

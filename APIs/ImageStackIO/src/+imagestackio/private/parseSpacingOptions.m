@@ -31,4 +31,3 @@ if any(spacingUnit == newline) || any(spacingUnit == char(13))
         'OPTIONS.SpacingUnit cannot contain newline characters.');
 end
 end
-

@@ -363,4 +363,3 @@ deprecated. No new public extrusion function is introduced yet.
   private strategies will be considered after validation exposes degeneracy.
 - A project-wide `retired` directory will record original paths. Files move there
   only after synthetic comparison; real-data confirmation remains prepared.
-

@@ -10,4 +10,3 @@ if ~isfolder(folder)
         'The repository test-data folder does not exist: %s', folder);
 end
 end
-

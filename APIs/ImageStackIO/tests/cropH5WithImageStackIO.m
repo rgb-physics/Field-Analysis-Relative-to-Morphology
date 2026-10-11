@@ -59,4 +59,3 @@ h5writeatt(outputPath, datasetPath, 'MATLAB_AXIS_ORDER', 'CYXZ');
 fprintf('Loaded size [Y X Z C T]: %s\n', mat2str(size(dataYXZC)));
 fprintf('Cropped size [Y X Z C T]: %s\n', mat2str(size(croppedYXZCT)));
 fprintf('Saved cropped HDF5: %s\n', outputPath);
-

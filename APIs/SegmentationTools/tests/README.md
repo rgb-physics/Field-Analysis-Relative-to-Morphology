@@ -1,5 +1,24 @@
 # SegmentationTools tests
 
+## Complete non-active-contour suite
+
+`runSegmentationToolsTests.m` runs 18 synthetic tests covering every public
+function currently stored under `SegmentationTools/src` except the three
+functions in `+activeContours`. The coverage-manifest test fails if a new
+source function is added without being listed in the suite.
+
+```matlab
+cd(fullfile(repositoryRoot,'APIs','SegmentationTools','tests'))
+results = runSegmentationToolsTests();
+```
+
+The runner prints detailed results and writes
+`SegmentationToolsTestDiagnostics.log` beside the test files. Temporary TIFF
+round-trip fixtures are deleted after the run. MATLAB R2023a with Image
+Processing Toolbox and Signal Processing Toolbox is expected.
+
+## Focused visual comparison
+
 `validateInOnOutImplementations.m` is a runnable comparison script. With no
 arguments it generates two synthetic closed-wall volumetric structures,
 compares the generalized disjoint classifier with the historical opening

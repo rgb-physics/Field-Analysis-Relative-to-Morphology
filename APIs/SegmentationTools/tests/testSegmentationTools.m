@@ -1,0 +1,284 @@
+function tests = testSegmentationTools
+%TESTSEGMENTATIONTOOLS Synthetic tests for public SegmentationTools functions.
+% Active-contour functions are intentionally excluded from this suite.
+tests = functiontests(localfunctions);
+end
+
+function setupOnce(testCase)
+testsDirectory = fileparts(mfilename('fullpath'));
+repositoryRoot = fullfile(testsDirectory, '..', '..', '..');
+testCase.TestData.RepositoryRoot = repositoryRoot;
+testCase.TestData.SourceRoot = fullfile(repositoryRoot, 'APIs', ...
+    'SegmentationTools', 'src');
+addpath(testCase.TestData.SourceRoot);
+addpath(fullfile(repositoryRoot, 'APIs', 'ImageStackIO', 'src'));
+addpath(fullfile(repositoryRoot, 'APIs', 'SharedUtilities', 'src'));
+testCase.TestData.WorkDirectory = tempname;
+mkdir(testCase.TestData.WorkDirectory);
+end
+
+function teardownOnce(testCase)
+if isfolder(testCase.TestData.WorkDirectory)
+    rmdir(testCase.TestData.WorkDirectory, 's');
+end
+end
+
+function testCoverageManifest(testCase)
+expected = sort({ ...
+    'classifyProbabilities.m'; 'classifyProbabilityChannels.m'; ...
+    'flatFill3D.m'; 'getCentralSlice.m'; 'h5toSmooth3Chans.m'; ...
+    'imbinarize3_4D.m'; 'makeClassConfig.m'; ...
+    'readProbabilityTiff.m'; 'remapClassLabels.m'; 'removeConObjs.m'; ...
+    'returnCorrectedBinarizedSurfaceIndices.m'; ...
+    'returnSmoothBlobsBW.m'; 'returnSmoothBlobsIDed.m'; ...
+    'returnTopBottom2DSheets.m'; ...
+    'returnTopBottom2DSheetsConfigurable.m'; ...
+    'segmentInOnOutProbabilities.m'; 'sidesHoleFill.m'; ...
+    'smoothInOnOutProbabilities.m'; 'thresholdProbabilityGroup.m'; ...
+    'writeMaskTiff.m'});
+entries = dir(fullfile(testCase.TestData.SourceRoot, '**', '*.m'));
+paths = arrayfun(@(entry) fullfile(entry.folder, entry.name), entries, ...
+    'UniformOutput', false);
+activeContour = contains(paths, [filesep '+activeContours' filesep]);
+actual = sort({entries(~activeContour).name}.');
+verifyEqual(testCase, actual, expected, ...
+    ['The coverage manifest must list every SegmentationTools source file ' ...
+     'outside +activeContours. Add a focused test when adding a function.']);
+end
+
+function testMakeClassConfig(testCase)
+options = struct('Names', ["inside" "wall" "outside"], ...
+    'CombineMethods', ["sum" "union" "sum"], 'IDs', [10 20 30]);
+classes = segmentationtools.binarization.makeClassConfig( ...
+    {1, [3 4], 2}, {0.2, [0.5 0.6], 0.4}, options);
+verifyEqual(testCase, {classes.Name}, {'inside','wall','outside'});
+verifyEqual(testCase, classes(2).Channels, [3 4]);
+verifyEqual(testCase, classes(2).Thresholds, [0.5 0.6]);
+verifyEqual(testCase, [classes.ID], [10 20 30]);
+
+arrayClasses = segmentationtools.binarization.makeClassConfig( ...
+    [1 3 2], [0.2 0.5 0.5], ...
+    struct('Names', ["inside" "wall" "outside"]));
+verifyEqual(testCase, [arrayClasses.Channels], [1 3 2]);
+verifyEqual(testCase, [arrayClasses.Thresholds], [0.2 0.5 0.5]);
+end
+
+function testThresholdProbabilityGroup(testCase)
+p = zeros(2,2,1,2);
+p(:,:,1,1) = [0.2 0.4; 0.6 0.1];
+p(:,:,1,2) = [0.3 0.1; 0.2 0.8];
+[sumMask, sumInfo] = segmentationtools.binarization.thresholdProbabilityGroup( ...
+    p, [1 2], 0.5, struct('CombineMethod','sum','ReturnScore',true));
+verifyEqual(testCase, sumMask, (p(:,:,:,1) + p(:,:,:,2)) > 0.5);
+verifyEqual(testCase, sumInfo.Score, p(:,:,:,1) + p(:,:,:,2));
+
+unionMask = segmentationtools.binarization.thresholdProbabilityGroup( ...
+    p, [1 2], [0.5 0.7], struct('CombineMethod','union'));
+expected = p(:,:,:,1) > 0.5 | p(:,:,:,2) > 0.7;
+verifyEqual(testCase, unionMask, expected);
+verifyFalse(testCase, sumMask(1,1,1)); % strict: 0.2 + 0.3 == 0.5
+end
+
+function testClassifyProbabilities(testCase)
+p = zeros(1,4,1,2);
+p(1,:,1,1) = [0.8 0.7 0.1 0.6];
+p(1,:,1,2) = [0.2 0.7 0.1 0.9];
+classes = segmentationtools.binarization.makeClassConfig( ...
+    [1 2], [0.5 0.5], struct('Names',["first" "second"], 'IDs',[4 9]));
+options = struct('ReturnLabelVolume',true,'ReturnMasks',true, ...
+    'ReturnCandidateMasks',true,'ReturnOverlapMask',true, ...
+    'ReturnUnclassifiedMask',true,'ReturnChangedVoxelMask',true, ...
+    'CountComponents',true);
+result = segmentationtools.binarization.classifyProbabilities(p,classes,options);
+verifyEqual(testCase, squeeze(result.LabelVolume), uint8([4 4 0 9]));
+verifyTrue(testCase, result.OverlapMask(1,2,1));
+verifyTrue(testCase, result.UnclassifiedMask(1,3,1));
+verifyEqual(testCase, sum(result.Masks,4) <= 1, true(size(result.LabelVolume)));
+
+options.AssignUnclassified = true;
+exhaustive = segmentationtools.binarization.classifyProbabilities(p,classes,options);
+verifyNotEqual(testCase, exhaustive.LabelVolume(1,3,1), uint8(0));
+end
+
+function testClassifyProbabilityChannels(testCase)
+p = zeros(2,2,1,3);
+p(:,:,:,1) = 0.8; p(:,:,:,2) = 0.2; p(:,:,:,3) = 0.6;
+options = struct('Names',["one" "two" "three"], ...
+    'IDs',[3 5 7], 'ClassifyOptions',struct('ReturnMasks',true));
+result = segmentationtools.binarization.classifyProbabilityChannels( ...
+    p, [], [0.5 0.5 0.5], options);
+verifyEqual(testCase, [result.Classes.ID], [3 5 7]);
+verifyEqual(testCase, result.VoxelCounts, [4 0 0]);
+end
+
+function testInOnOutAndHistoricalWrapper(testCase)
+p = localSemanticProbabilities();
+classification = struct('ReturnMasks',true,'ReturnLabelVolume',true);
+result = segmentationtools.binarization.segmentInOnOutProbabilities( ...
+    p, [1 2 3], [0.5 0.5 0.5], struct('ClassifyOptions',classification));
+verifyEqual(testCase, result.SemanticOrder, {'inside','wall','outside'});
+verifyEqual(testCase, sum(result.Masks,4) <= 1, true(size(p,1),size(p,2),size(p,3)));
+
+[inside,wall,outside] = ...
+    segmentationtools.binarization.smoothInOnOutProbabilities( ...
+    p,[1 2 3],[0.5 0.5 0.5],struct('OpeningRadius',0,'SpanSpace',false));
+[legacyInside,legacyOutside,legacyWall] = ...
+    segmentationtools.binarization.h5toSmooth3Chans( ...
+    p,[3 1 2],[0.5 0.5 0.5],0,false);
+verifyEqual(testCase, legacyInside, inside);
+verifyEqual(testCase, legacyOutside, outside);
+verifyEqual(testCase, legacyWall, wall);
+end
+
+function testImbinarize3_4D(testCase)
+data = cat(4, [0.2 0.8; 0.5 0.6], [0.7 0.1; 0.4 0.9]);
+result = segmentationtools.binarization.imbinarize3_4D(data,[0.5 0.6]);
+verifyClass(testCase,result,'logical');
+verifyEqual(testCase,result(:,:,:,1),data(:,:,:,1) > 0.5);
+verifyEqual(testCase,result(:,:,:,2),data(:,:,:,2) > 0.6);
+end
+
+function testRemapClassLabels(testCase)
+labels = uint8([0 1 2; 3 2 1]);
+mapped = segmentationtools.binarization.remapClassLabels( ...
+    labels,[1 2 3],[85 170 255]);
+verifyEqual(testCase,mapped,uint8([0 85 170; 255 170 85]));
+end
+
+function testFlatFill3D(testCase)
+mask = false(7,7,3);
+mask([2 6],2:6,2) = true;
+mask(2:6,[2 6],2) = true;
+filled = segmentationtools.cleanup.flatFill3D(mask,0);
+verifyTrue(testCase,filled(4,4,2));
+verifyFalse(testCase,filled(4,4,1));
+end
+
+function testRemoveConObjs(testCase)
+mask2 = false(12,12);
+mask2(2:6,2:6) = true; mask2(10,10) = true;
+[largest2,removed2] = segmentationtools.cleanup.removeConObjs(mask2,1,'large');
+verifyEqual(testCase,nnz(largest2),25);
+verifyEqual(testCase,numel(removed2),1);
+
+mask3 = false(12,12,4);
+mask3(2:5,2:5,2:3) = true; mask3(10,10,2) = true;
+components = bwconncomp(mask3);
+[kept,removed] = segmentationtools.cleanup.removeConObjs(mask3,1,'indices');
+verifyEqual(testCase,nnz(kept),numel(components.PixelIdxList{1}));
+verifyEqual(testCase,numel(removed),numel(components.PixelIdxList{2}));
+end
+
+function testSidesHoleFill(testCase)
+mask = true(9,9,9);
+mask(3:7,3:7,3:7) = false;
+filled = segmentationtools.cleanup.sidesHoleFill(mask);
+verifySize(testCase,filled,size(mask));
+verifyTrue(testCase,filled(5,5,5));
+end
+
+function testSmoothBlobCleanup(testCase)
+mask = false(21,21,9);
+mask(6:16,6:16,3:7) = true;
+binary = segmentationtools.cleanup.returnSmoothBlobsBW(mask,0,0,0.5);
+verifyClass(testCase,binary,'logical');
+verifySize(testCase,binary,size(mask));
+
+labels = zeros(size(mask),'uint8');
+labels(4:9,4:9,3:6) = 1;
+labels(13:18,13:18,3:6) = 2;
+fast = segmentationtools.cleanup.returnSmoothBlobsIDed(labels,0,0,0.5,'fast');
+slow = segmentationtools.cleanup.returnSmoothBlobsIDed(labels,0,0,0.5,'slow');
+verifySize(testCase,fast,size(labels));
+verifySize(testCase,slow,size(labels));
+verifyTrue(testCase,all(ismember(unique(fast),uint8([0 1 2]))));
+verifyTrue(testCase,all(ismember(unique(slow),uint8([0 1 2]))));
+end
+
+function testMaskTiffRoundTrips(testCase)
+folder = testCase.TestData.WorkDirectory;
+single = uint8(reshape(1:60,[4 5 3]));
+singlePath = fullfile(folder,'single_mask.tif');
+segmentationtools.io.writeMaskTiff(single,singlePath,struct('Overwrite',true));
+[singleRead,singleImage] = segmentationtools.io.readProbabilityTiff(singlePath);
+verifyEqual(testCase,singleRead,single);
+verifyEqual(testCase,singleImage.Axes,'YXZCT');
+
+multi = zeros(4,5,3,2,'uint8');
+multi(:,:,:,1) = 11; multi(:,:,:,2) = 22;
+multiPath = fullfile(folder,'multi_mask.tif');
+segmentationtools.io.writeMaskTiff(multi,multiPath,struct('Overwrite',true));
+multiRead = segmentationtools.io.readProbabilityTiff(multiPath);
+verifyEqual(testCase,multiRead,multi);
+end
+
+function testReadProbabilityTiffTimeHandling(testCase)
+data = zeros(3,4,2,1,2,'uint8');
+data(:,:,:,:,1) = 7; data(:,:,:,:,2) = 13;
+path = fullfile(testCase.TestData.WorkDirectory,'time_stack.tif');
+imagestackio.writeImageJHyperstack( ...
+    struct('Data',data,'Axes','YXZCT'),path,struct('Overwrite',true));
+selected = segmentationtools.io.readProbabilityTiff(path,struct('TimeIndex',2));
+verifyEqual(testCase,selected,data(:,:,:,:,2));
+asChannels = segmentationtools.io.readProbabilityTiff( ...
+    path,struct('TimeAsChannels',true));
+verifySize(testCase,asChannels,[3 4 2 2]);
+verifyEqual(testCase,asChannels(:,:,:,1),data(:,:,:,:,1));
+verifyEqual(testCase,asChannels(:,:,:,2),data(:,:,:,:,2));
+end
+
+function testGetCentralSlice(testCase)
+mask = localTwoSheetMask();
+split = segmentationtools.morphologySpecific.sheets.getCentralSlice(mask);
+verifyEqual(testCase,split,6);
+end
+
+function testCorrectedSurfaceIndices(testCase)
+surface = 3*ones(5,5);
+surface(3,3) = 0;
+[indices,holes] = segmentationtools.morphologySpecific.sheets. ...
+    returnCorrectedBinarizedSurfaceIndices(surface,[5 5 6]);
+[~,~,z] = ind2sub([5 5 6],indices);
+verifyEqual(testCase,z,3*ones(25,1));
+verifyEqual(testCase,nnz(holes),1);
+end
+
+function testOriginalTwoSheetWorkflow(testCase)
+mask = localTwoSheetMask();
+[top,bottom,topZ,bottomZ,removed,removedZ,split] = ...
+    segmentationtools.morphologySpecific.sheets.returnTopBottom2DSheets(mask);
+verifyEqual(testCase,split,6);
+verifyTrue(testCase,mean(topZ(top)) < mean(bottomZ(bottom)));
+verifyEqual(testCase,nnz(top & bottom),0);
+verifyEqual(testCase,nnz(removedZ > 0),nnz(removed));
+end
+
+function testConfigurableTwoSheetWorkflow(testCase)
+mask = localTwoSheetMask();
+options = struct('SplitSlice',6,'GapHalfWidth',1,'Connectivity',26);
+[top,bottom,topZ,bottomZ,removed,removedZ,split] = ...
+    segmentationtools.morphologySpecific.sheets. ...
+    returnTopBottom2DSheetsConfigurable(mask,options);
+verifyEqual(testCase,split,6);
+verifyTrue(testCase,mean(topZ(top)) < mean(bottomZ(bottom)));
+verifyEqual(testCase,nnz(top & bottom),0);
+verifyEqual(testCase,nnz(removedZ > 0),nnz(removed));
+end
+
+function probabilities = localSemanticProbabilities()
+[y,x,z] = ndgrid(1:21,1:21,1:9);
+distance = sqrt((y-11).^2 + (x-11).^2 + (z-5).^2);
+inside = double(distance < 5);
+wall = double(distance >= 5 & distance < 7);
+outside = double(distance >= 7);
+probabilities = cat(4,inside,wall,outside);
+end
+
+function mask = localTwoSheetMask()
+mask = false(20,20,11);
+mask(3:18,3:18,2:4) = true;
+mask(3:18,3:18,8:10) = true;
+mask(9:12,9:12,5) = true;
+mask(10,10,6) = true;
+mask(9:12,9:12,7) = true;
+end

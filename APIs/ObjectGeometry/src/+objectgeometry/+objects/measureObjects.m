@@ -19,13 +19,26 @@ if ~isempty(intensity)&&~isequal(size(intensity),cc.ImageSize)
     error('objectgeometry:GridMismatch','Intensity dimensions must match the current object grid.');
 end
 names=cellstr(string(requested)); names=names(:).';
+% 'all' is a native selector, not a property name inside a cell list.
+% Forward names as separate arguments so MATLAB recognizes that selector.
+if any(strcmpi(names,'all')), names={'all'}; end
+measurementCC=cc;
+emptyForeground=cc.NumObjects==0;
+if emptyForeground
+    % Native zero-object tables can lose vector-column widths (0x0).
+    % Measure a single template voxel, then discard its row to retain the
+    % release-specific schema for EVERY requested native property.
+    measurementCC.NumObjects=1;
+    measurementCC.PixelIdxList={1};
+end
 if numel(cc.ImageSize)==3
     if ~isempty(intensity), error('objectgeometry:NativeIntensity3D','regionprops3 does not accept intensity input. Use the separate field-query API.'); end
-    native=regionprops3(cc,names);
+    native=regionprops3(measurementCC,names{:});
 else
-    if isempty(intensity), native=regionprops('table',cc,names);
-    else, native=regionprops('table',cc,intensity,names); end
+    if isempty(intensity), native=regionprops('table',measurementCC,names{:});
+    else, native=regionprops('table',measurementCC,intensity,names{:}); end
 end
+if emptyForeground, native=native([],:); end
 if height(native)~=numel(objects.ObjectIDs)
     error('objectgeometry:PropertyRowMismatch','Native measurements did not preserve component count.');
 end

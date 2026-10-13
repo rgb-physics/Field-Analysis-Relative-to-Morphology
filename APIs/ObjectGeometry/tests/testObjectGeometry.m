@@ -41,11 +41,31 @@ t=objectgeometry.objects.measureObjects(false(8,9,4),{'Volume','Centroid'});
 verifyEqual(testCase,height(t),0); verifySize(testCase,t.Centroid,[0 3]);
 [p,s]=objectgeometry.centerlines.storeFilCCs(false(8,9,4));
 verifyEqual(testCase,height(p),0); verifyEmpty(testCase,s);
+verifySize(testCase,p.Lengths,[0 1]);
+verifySize(testCase,p.PrincipalAxisLength,[0 3]);
+verifySize(testCase,p.Directors,[0 3]);
+flat=objectgeometry.objects.measureObjects(false(8,9),{'Centroid','BoundingBox','Area'});
+verifySize(testCase,flat.Centroid,[0 2]);
+verifySize(testCase,flat.BoundingBox,[0 4]);
+verifySize(testCase,flat.Area,[0 1]);
 end
 function testNativeAll(testCase)
 mask=false(8); mask(3:5,3:6)=true;
 t=objectgeometry.objects.measureObjects(mask,'all');
 verifyTrue(testCase,all(ismember({'Area','Centroid','PixelIdxList','Orientation'},t.Properties.VariableNames)));
+explicit=objectgeometry.objects.measureObjects(mask,{'Area','Centroid'});
+verifyEqual(testCase,t.Area,explicit.Area);
+verifyEqual(testCase,t.Centroid,explicit.Centroid);
+volume=false(8,9,5); volume(3:5,3:6,2:4)=true;
+all3D=objectgeometry.objects.measureObjects(volume,"all");
+verifyEqual(testCase,all3D.Volume,36);
+verifyTrue(testCase,ismember('EigenVectors',all3D.Properties.VariableNames));
+emptyAll=objectgeometry.objects.measureObjects(false(size(volume)),{'all'});
+verifyEqual(testCase,height(emptyAll),0);
+verifySize(testCase,emptyAll.Centroid,[0 3]);
+filaments=objectgeometry.centerlines.measureFilaments(volume,{'all','Directors'});
+verifyEqual(testCase,height(filaments),1);
+verifyTrue(testCase,ismember('Directors',filaments.Properties.VariableNames));
 end
 function testIntensityAndMismatch(testCase)
 mask=false(6); mask(2:3,2:3)=true; field=reshape(1:36,6,6);

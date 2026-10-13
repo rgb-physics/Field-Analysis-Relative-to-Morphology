@@ -2,8 +2,7 @@ function outBounds = returnSmoothBlobsBW(ogBW, layerMean, layerWidth, gKern)
 %RETURNSMOOTHBLOBSBW Historical signed-distance cleanup for binary masks.
 %   INPUT must have isotropic voxels: layerMean, layerWidth, and Gaussian
 %   sigma are all in those voxel units. The historical operation returns
-%   samples below layerMean + abs(layerWidth); it does not enforce the
-%   documented lower side of a layerMean +/- layerWidth shell.
+%   samples below layerMean + abs(layerWidth); 
 
 signedDist = sharedutilities.numerics.signedBWDist(ogBW);
 layerWidth = abs(layerWidth);

@@ -33,8 +33,8 @@ expected = sort({ ...
     'returnSmoothBlobsBW.m'; 'returnSmoothBlobsIDed.m'; ...
     'returnTopBottom2DSheets.m'; ...
     'returnTopBottom2DSheetsConfigurable.m'; ...
-    'segmentInOnOutProbabilities.m'; 'sidesHoleFill.m'; ...
-    'smoothInOnOutProbabilities.m'; 'thresholdProbabilityGroup.m'; ...
+    'segmentInOnOutProbabilities.m'; 'segmentIntensity.m'; 'sidesHoleFill.m'; ...
+    'smoothInOnOutProbabilities.m'; 'smoothNChannelProbabilities.m'; 'thresholdProbabilityGroup.m'; ...
     'writeMaskTiff.m'});
 entries = dir(fullfile(testCase.TestData.SourceRoot, '**', '*.m'));
 paths = arrayfun(@(entry) fullfile(entry.folder, entry.name), entries, ...
@@ -44,6 +44,83 @@ actual = sort({entries(~activeContour).name}.');
 verifyEqual(testCase, actual, expected, ...
     ['The coverage manifest must list every SegmentationTools source file ' ...
      'outside +activeContours. Add a focused test when adding a function.']);
+end
+
+function testIntensityFixedAndCleanup(testCase)
+image = zeros(9,9,3,'uint16');
+image(2:5,2:5,2)=1200; image(8,8,2)=1500; image(1,1,1)=1000;
+r = segmentationtools.binarization.segmentIntensity(image, ...
+    struct('Method','fixed','Threshold',1000,'MinObjectSize',2,'ReturnLabels',true));
+verifyEqual(testCase,nnz(r.CandidateMask),17);
+verifyEqual(testCase,r.VoxelCount,16);
+verifyEqual(testCase,r.ComponentCount,1);
+verifyEqual(testCase,r.LabelVolume>0,r.Mask);
+dark = segmentationtools.binarization.segmentIntensity(uint16([100 200 300]), ...
+    struct('Method','fixed','Threshold',200,'Foreground','dark'));
+verifyEqual(testCase,dark.Mask,logical([1 0 0]));
+end
+
+function testIntensityOtsuReferenceAndConstant(testCase)
+image = [zeros(4,4) 100*ones(4,4)];
+r = segmentationtools.binarization.segmentIntensity(image);
+verifyEqual(testCase,r.Mask,image>50);
+scaled = segmentationtools.binarization.segmentIntensity(uint16(image*10+200));
+verifyEqual(testCase,scaled.Mask,r.Mask);
+constant = segmentationtools.binarization.segmentIntensity(ones(4,4)*7);
+verifyEqual(testCase,constant.VoxelCount,0);
+reference = false(size(image)); reference(:,1:4)=true;
+r = segmentationtools.binarization.segmentIntensity(image,struct('EstimationMask',reference));
+verifyTrue(testCase,all(r.Mask(:,5:8),'all')); % reference does not restrict output
+end
+
+function testIntensityHolesLargestAndValidation(testCase)
+image=zeros(10,10); image(2:6,2:6)=10; image(4,4)=0; image(9,9)=10;
+r=segmentationtools.binarization.segmentIntensity(image, ...
+    struct('Method','fixed','Threshold',5,'FillHoles',true,'KeepLargest',1));
+verifyEqual(testCase,r.VoxelCount,25);
+verifyFalse(testCase,r.CandidateMask(4,4)); verifyTrue(testCase,r.Mask(4,4));
+verifyError(testCase,@() segmentationtools.binarization.segmentIntensity( ...
+    zeros(2,2,2,2)),'segmentationtools:InvalidIntensityDimensions');
+verifyError(testCase,@() segmentationtools.binarization.segmentIntensity( ...
+    image,struct('Typo',true)),'segmentationtools:UnknownOption');
+end
+
+function testNChannelPrecedence(testCase)
+p=zeros(2,3,1,4); p(:,:,:,1)=0.7; p(:,:,:,3)=0.9; p(:,:,:,4)=0.5;
+[m,info]=segmentationtools.binarization.smoothNChannelProbabilities( ...
+    p,[1 3 4],0.5,struct('OpeningRadius',0,'ReturnOpenedMasks',true));
+verifyTrue(testCase,all(m(:,:,:,1),'all')); % priority beats larger score
+verifyEqual(testCase,info.VoxelCounts,[6 0 0]);
+verifyEqual(testCase,info.OverlapVoxelCountBeforeResolution,6);
+verifyFalse(testCase,any(info.OpenedMasks(:,:,:,3),'all')); % exact threshold excluded
+[m,info]=segmentationtools.binarization.smoothNChannelProbabilities( ...
+    p,[1 3 4],[0.5 0.5 0.5],struct('OpeningRadius',0,'ChannelPrecedence',[3 4 1]));
+verifyTrue(testCase,all(m(:,:,:,2),'all')); % output order unchanged
+verifyEqual(testCase,info.VoxelCounts,[0 6 0]);
+allMasks=segmentationtools.binarization.smoothNChannelProbabilities( ...
+    p,[],0.5,struct('OpeningRadius',0));
+verifySize(testCase,allMasks,[2 3 1 4]);
+verifyError(testCase,@() segmentationtools.binarization.smoothNChannelProbabilities( ...
+    p,[1 3],0.5,struct('ChannelPrecedence',[1 2])), ...
+    'segmentationtools:InvalidChannelPrecedence');
+verifyError(testCase,@() segmentationtools.binarization.smoothNChannelProbabilities( ...
+    p,[1 3],0.5,struct('ChannelPrecedence',[1 1])), ...
+    'segmentationtools:InvalidChannelPrecedence');
+end
+
+function testNChannelOpeningAndUnclassified(testCase)
+p=zeros(11,11,7,2); p(3:9,3:9,2:6,1)=0.8; p(1,1,1,1)=0.9;
+p(4:8,4:8,3:5,2)=0.9;
+[m,info]=segmentationtools.binarization.smoothNChannelProbabilities( ...
+    p,[2 1],[0.5 0.6],struct('OpeningRadius',1,'ReturnOpenedMasks',true));
+kernel=strel('sphere',1);
+first=imdilate(imerode(p(:,:,:,2)>0.5,kernel),kernel);
+second=imdilate(imerode(p(:,:,:,1)>0.6,kernel),kernel);
+verifyEqual(testCase,m(:,:,:,1),first);
+verifyEqual(testCase,m(:,:,:,2),second & ~first);
+verifyFalse(testCase,m(1,1,1,2));
+verifyEqual(testCase,info.UnclassifiedVoxelCount,nnz(~(first|second)));
+verifyFalse(testCase,any(sum(m,4)>1,'all'));
 end
 
 function testMakeClassConfig(testCase)

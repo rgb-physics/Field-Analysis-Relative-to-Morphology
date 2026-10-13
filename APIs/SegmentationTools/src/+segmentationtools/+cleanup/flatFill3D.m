@@ -24,7 +24,7 @@ outMat = logical(inMat);
 for fillAxis = double(dimFills(:).')
     currentKernel = permute(flatConnectivity, ...
         circshift(permutation, fillAxis));
-    currentFill = imfill(logical(inMat), currentKernel);
+    currentFill = imfill(logical(inMat), currentKernel, 'holes');
     outMat = outMat | currentFill;
 end
 end

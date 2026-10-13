@@ -1,5 +1,26 @@
 # SegmentationTools tests
 
+## Real-data visual experiments
+
+Run `exploreRealSegmentationData` from this folder. Edit the settings at the
+top before running, especially `semanticChannels`: `[1 3 2]` is an assumption
+to confirm using the exported original-channel preview.
+
+The script reads the shared HDF5 fixture and every TIFF under
+`test-data/image-stacks/tiff`, using the first time point. It creates a fresh
+temporary folder containing threshold sweeps, disjoint class labels,
+historical opening comparisons, sum-versus-union masks, component filtering,
+directional hole filling, a voxel-count CSV, and settings/reports in a MAT file.
+Every output TIFF is read back to check that its stored values are preserved.
+Intensity thresholds refer to each channel's min-max scaled intensity, not
+class probabilities. Preview intensities are scaled to 16-bit for viewing.
+
+Distance cleanup is optional and assumes verified isotropic voxels. Sheet
+splitting is optional and requires a suitable two-sheet wall mask. Outputs
+are exploratory comparisons, not known-correct real-data segmentations.
+Inspect the same slice in each comparison channel, plus XZ and YZ views.
+Inputs are never overwritten; generated outputs remain outside the repository.
+
 ## Complete non-active-contour suite
 
 `runSegmentationToolsTests.m` runs 18 synthetic tests covering every public

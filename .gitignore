@@ -25,14 +25,6 @@ codegen/
 *.avi
 *.mp4
 
-# Repository test fixtures are intentionally versioned.
-!test-data/
-!test-data/**/
-!test-data/**/*.tif
-!test-data/**/*.tiff
-!test-data/**/*.h5
-!test-data/**/*.hdf5
-
 # Editor and operating-system files
 .vscode/
 .idea/

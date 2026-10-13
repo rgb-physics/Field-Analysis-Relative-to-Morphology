@@ -18,21 +18,19 @@ function [allGrads,distMat] = getDistGrads(fullSegDir,h5Chans,outInOnChans,h5thr
 % 2023-11-28
 
 % Load the h5
-currH5 = loadH5(fullSegDir,'/exported_data',h5Chans);
+currH5 = imagestackio.legacy.loadH5(fullSegDir,'/exported_data',h5Chans);
 % Separate into ins, outs, ons
-[cleanIns,cleanOuts,cleanOns] = h5toSmooth3Chans(imresize3_4mat(currH5,...
+[cleanIns,cleanOuts,cleanOns] = segmentationtools.binarization.h5toSmooth3Chans(sharedutilities.arrays.imresize3_4mat(currH5,...
     imgSize.*imgScaling),outInOnChans,h5thresh,1,1);
 % Calculate the distance transform
 if inOnDist == 1
-    distMat = distTransFromBoundary(cleanOns, cleanOuts, cleanIns, 1);
+    distMat = objectgeometry.objects.distTransFromBoundary(cleanOns, cleanOuts, cleanIns, 1);
 else
-    distMat = distTransFromBoundary(cleanOns|cleanIns, cleanOuts, false(size(cleanIns)), 1);
+    distMat = objectgeometry.objects.distTransFromBoundary(cleanOns|cleanIns, cleanOuts, false(size(cleanIns)), 1);
 end
 % Take the gradient, rescale to image size, then return.
-[gradx,grady,gradz] = gradient(distMat);
-allGrads = zeros([size(gradx) 3]);
-allGrads(:,:,:,1) = gradx; allGrads(:,:,:,2) = -grady; allGrads(:,:,:,3) = gradz;
-allGrads = imresize3_4mat(allGrads,imgSize);
+allGrads = objectgeometry.objects.distanceGradients(distMat,struct('FlipY',true));
+allGrads = sharedutilities.arrays.imresize3_4mat(allGrads,imgSize);
 
 end
 

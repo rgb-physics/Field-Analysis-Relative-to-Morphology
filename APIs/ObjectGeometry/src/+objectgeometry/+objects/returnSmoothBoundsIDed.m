@@ -31,31 +31,30 @@ if matches(calcSpeed,'fast')
     % Binarize matrix
     bwMat = (inMat > 0);
     % Get boundaries from the binarized matrix
-    boundMat = returnSmoothBoundsBW(bwMat,layerMean,layerWidth,gKern);
+    boundMat = objectgeometry.objects.returnSmoothBoundsBW(bwMat,layerMean,layerWidth,gKern);
     % Dilate the original matrix
     outerBound = round(max(layerWidth,layerMean+layerWidth));
-    fillMat = imdilate(inMat,strel('sphere',outerBound));
+    if ndims(inMat)==2, kernel=strel('disk',max(0,outerBound),0);
+    else, kernel=strel('sphere',max(0,outerBound)); end
+    fillMat = imdilate(inMat,kernel);
     % Sample the dilated image on the constructed boundaries
-    outMat = consMatLnB(fillMat, boundMat);
+    outMat = sharedutilities.arrays.consMatLnB(fillMat, boundMat);
 
 % 'slow' boundary assignment: dilate and assign values for each object sep.
 elseif matches(calcSpeed,'slow')
-    outMat = zeros(size(inMat));
+    outMat = zeros(size(inMat),'like',inMat);
     % Get unique object IDs
     allIDs = unique(inMat(inMat>0));
     % Iterate over each ID, individually calculate shell boundaries, assign
     for index = 1:numel(allIDs)
-        tic
         currID = allIDs(index);
         currBlob = inMat == currID;
         % Construct boundary
-        currBnd = returnSmoothBoundsBW(currBlob, layerMean, layerWidth, gKern);
+        currBnd = objectgeometry.objects.returnSmoothBoundsBW(currBlob, layerMean, layerWidth, gKern);
         outMat(currBnd) = currID;
-        toc
-        pause(.01)
     end
 else
-    fprintf('Invalid calcSpeed: calcSpeed must be fast or slow')
+    error('objectgeometry:InvalidCalculationMode','calcSpeed must be fast or slow.');
 end
 
 end

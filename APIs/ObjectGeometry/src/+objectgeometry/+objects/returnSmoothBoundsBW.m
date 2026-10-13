@@ -17,14 +17,16 @@ function [outBounds] = returnSmoothBoundsBW(ogBW,layerMean,layerWidth,gKern)
 % Reimplemented 2026-04-28
 
 % Define the signed-distance transform
-signedDist = signedBWDist(ogBW);
+signedDist = sharedutilities.numerics.signedBWDist(ogBW);
 layerWidth = abs(layerWidth);
 
 % Smooth with a Gaussian kernel
-if size(ogBW,3) > 1
-    smDist = imgaussfilt(signedDist,gKern);
-else
+if gKern == 0
+    smDist = signedDist;
+elseif size(ogBW,3) > 1
     smDist = imgaussfilt3(signedDist,gKern);
+else
+    smDist = imgaussfilt(signedDist,gKern);
 end
 
 % Isolate contour centered around layerMean with half-width layerWidth

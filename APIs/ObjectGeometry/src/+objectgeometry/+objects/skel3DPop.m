@@ -15,20 +15,21 @@ function [ptCloud, orMat, andMat] = skel3DPop(inputMat, andOrFrac, cutOff, orMat
 if nargin == 1
     andOrFrac = 0.5;
     cutOff = 2;
-    [orMat, andMat] = skel3Dfrom2D(inputMat);
+    [orMat, andMat] = objectgeometry.objects.skel3Dfrom2D(inputMat);
 elseif nargin == 2
     cutOff = 2;
-    [orMat, andMat] = skel3Dfrom2D(inputMat);
+    [orMat, andMat] = objectgeometry.objects.skel3Dfrom2D(inputMat);
 elseif nargin == 3
-    [orMat, andMat] = skel3Dfrom2D(inputMat);
+    [orMat, andMat] = objectgeometry.objects.skel3Dfrom2D(inputMat);
 end
 
 % Populate matrix with random subpopulation of or matrix
 segDist = bwdist(~inputMat);
 cutoffOR = find(segDist.*orMat >= cutOff);
 sampLen = min(numel(cutoffOR), numel(find(andMat))*andOrFrac );
-subSampOR = randsample(cutoffOR,round(sampLen));
-ptCloud = consMatLnB(ones(size(inputMat)),[subSampOR; find(andMat)]);
+sampleCount = min(numel(cutoffOR),round(sampLen));
+subSampOR = cutoffOR(randperm(numel(cutoffOR),sampleCount));
+ptCloud = sharedutilities.arrays.consMatLnB(ones(size(inputMat)),[subSampOR; find(andMat)]);
 
 end
 

@@ -19,7 +19,7 @@ elseif nargin == 3
     dilateRad = 3;
 end
 if numel(size(primChan)) == 2
-    strelObj = strel('disk',dilateRad);
+    strelObj = strel('disk',dilateRad,0);
 elseif numel(size(primChan)) == 3
     strelObj = strel('sphere',dilateRad);
 end
@@ -37,7 +37,7 @@ primProximalInds = (ooDist<=ioDist);
 
 % Distance transforms and distinguishing logic matrices
 globalDistMat = bwdist(secbgInds | primbgInds).*regionFlip;
-distMat = consMatLnB(globalDistMat,primProximalInds);
+distMat = sharedutilities.arrays.consMatLnB(globalDistMat,primProximalInds);
 
 end
 

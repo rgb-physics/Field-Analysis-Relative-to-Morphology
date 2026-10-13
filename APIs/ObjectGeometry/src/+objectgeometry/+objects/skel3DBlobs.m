@@ -6,6 +6,9 @@ function [validCores,coreMat] = skel3DBlobs(inMat,gradCut,sigma,hBool)
 % https://www.mathworks.com/matlabcentral/fileexchange/19696-gaussdiff
 % Rémi Boros - 2026-01-27
 
+if exist('gfilter','file') ~= 2
+    error('objectgeometry:MissingGaussianDerivative','skel3DBlobs requires the historical gaussdiff gfilter dependency.');
+end
 % Generate variables and matrices for analysis/tasks
 matSize = size(inMat);
 bndBox = padarray(ones(matSize-2),[1 1 1],'both');
@@ -21,10 +24,10 @@ dyL = gfilter(distMat,sigma,[1 0 0]);
 dzL = gfilter(distMat,sigma,[0 0 1]);
 maxGrads = max(max(abs(dxL),abs(dyL)),abs(dzL));
 % Remove erroneous zero-gradients at image boundaries
-maxGrads = (maxGrads + consMatLnB(ones(matSize),~bwMat)).*bndBox  + (1-bndBox);
+maxGrads = (maxGrads + sharedutilities.arrays.consMatLnB(ones(matSize),~bwMat)).*bndBox  + (1-bndBox);
 
 % Isolate voxels that are candidates for blob cores
-coreMat = consMatLnB(maxGrads < gradCut,blobBndFilt);
+coreMat = sharedutilities.arrays.consMatLnB(maxGrads < gradCut,blobBndFilt);
 % Remove eroneous detections at drop boundaries
 if floor(sigma/2) > 0
     coreMat = imerode(coreMat,strel('sphere',round(sigma/2)));
@@ -47,9 +50,10 @@ else
     tic
     % Iterate through candidate points, calculate eigenvalues
     for index = 1:numel(candInds)
-        currH = [dyyL(index) dxyL(index) dyzL(index); ...
-                 dxyL(index) dxxL(index) dxzL(index); ...
-                 dyzL(index) dxzL(index) dzzL(index) ];
+        voxelIndex = candInds(index);
+        currH = [dyyL(voxelIndex) dxyL(voxelIndex) dyzL(voxelIndex); ...
+                 dxyL(voxelIndex) dxxL(voxelIndex) dxzL(voxelIndex); ...
+                 dyzL(voxelIndex) dxzL(voxelIndex) dzzL(voxelIndex) ];
         eVals(index,:) = eig(currH)';
     end
     toc
@@ -60,7 +64,7 @@ else
     linesFilt2 = max(abs(eigenAspectRatios2),[],2)>2;
     % Retrieve valid subset of coordinates
     validCores = candInds(linesFilt2);
-    coreMat = consMatLnB(ones(matSize),validCores);
+    coreMat = sharedutilities.arrays.consMatLnB(ones(matSize),validCores);
 end
 
 end

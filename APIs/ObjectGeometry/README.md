@@ -1,0 +1,197 @@
+# ObjectGeometry
+
+Reusable measurements and index-based geometry for 2-D masks and 3-D volumes.
+Target: MATLAB R2023a with Image Processing Toolbox. Add this API's `src`,
+SharedUtilities `src`, and ImageStackIO `src` to the MATLAB path. Historical
+`getDistGrads` also requires SegmentationTools. Do not use `genpath` on the
+API root: it would expose archived implementations.
+
+## Identity and selected measurements
+
+```matlab
+opts = struct('DatasetID','experiment-1','Frame',12, ...
+    'Spacing',[0.4 0.4 0.4],'SpacingUnit','um');
+[properties,objects] = objectgeometry.objects.measureObjects(mask, ...
+    {'Volume','Centroid','BoundingBox','PrincipalAxisLength'},opts);
+```
+
+`measureObjects` passes requested property names (including `'all'`) to native
+`regionprops` for 2-D or `regionprops3` for 3-D. Property availability follows
+the installed MATLAB release. All native properties are supported; potentially
+large lists/images are returned only when requested. Native measurements remain
+in pixel/voxel units. For native 2-D intensity properties, supply `Intensity`
+with matching spatial dimensions. Native `regionprops3` has no grayscale input
+argument; general 3-D field statistics belong in the later field-query API.
+
+Inputs may be a binary mask, object labels, TIFF path, normalized ImageStackIO
+image struct, `bwconncomp` structure, or a cell array of index groups. Numeric
+zeros/ones default to a binary mask; use `InputType='labels'` to explicitly
+preserve label 1 across disconnected pieces. Otherwise nonzero numeric IDs
+are retained as one object per unique ID, whether connected or not. Classes
+such as inside/wall/outside are NOT individual object IDs: select a class mask
+before component measurement when individual entities are intended.
+
+Index groups avoid constructing a full label volume:
+
+```matlab
+objects = objectgeometry.objects.prepareObjects(indexGroups, ...
+    struct('ImageSize',[100 120 40],'ObjectIDs',[7 42],'Frame',12));
+properties = objectgeometry.objects.measureObjects(objects,{'Volume','Centroid'});
+```
+
+Prepared objects store membership indices, IDs and grid metadata. TIFF/image
+inputs use `Channel=1`, `TimeIndex=1` by default; set them explicitly as needed.
+ImageStackIO calibration is inherited unless overridden. Frame is an explicit
+identity key and is not inferred from file names or TimeIndex.
+
+Tables contain `DatasetID`, `Frame`, `ObjectID` plus selected properties.
+Empty foreground produces a zero-row table. Tiny objects remain measurable;
+no filtering is implicit. DatasetID defaults to `'default'`, so assign unique
+dataset names before combining independent experiments. IDs are positive
+integers through `flintmax`, preventing silent precision loss in joins.
+
+## Filaments are image objects, not skeletons
+
+```matlab
+filaments = objectgeometry.centerlines.measureFilaments(objects, ...
+    {'Volume','Centroid','Directors','Lengths','AspectRatios'});
+scaled = objectgeometry.centerlines.measureFilaments(objects, ...
+    {'ScaledDirectors','ProjectedExtent','ScaledAspectRatios'});
+```
+
+The historical `storeFilCCs` principal-axis calculation is reused. Directors
+use XYZ (XY in 2-D), with Y increasing along image rows. Raw native 3-D
+EigenVectors are retained unmodified; Directors apply the historical `[2 1 3]`
+row conversion confirmed by the known-X-axis audit. Eigenvector sign is
+arbitrary. Two-dimensional Orientation retains MATLAB's native degrees;
+Directors convert it into image-coordinate vectors.
+
+`Lengths` preserves the historical voxel-unit major principal-axis length.
+`AspectRatios` is major/second principal-axis length, not skeleton-sampled width.
+Scaled properties reuse the coordinate-scaled covariance/eigenvector method
+from `COMBINED_Fils2Aligns_InOnOut_TIFS.m`, WITHOUT resampling the matrix.
+`ProjectedExtent` is max-minus-min projection of voxel centers onto the new
+principal direction, in SpacingUnit. It is not equivalent-ellipsoid length.
+`ExtentWidthFloor` defaults to positive `eps` in those units; set it explicitly
+for a meaningful experimental width floor. Degenerate scaled principal axes
+have NaN directors. Geometry never triggers skeletonization here.
+
+## Independent optional geometry
+
+```matlab
+shells = objectgeometry.objects.generateGeometry(objects,'boundary', ...
+    struct('LayerMean',0,'LayerWidth',1,'Sigma',1));
+cores = objectgeometry.objects.generateGeometry(objects,'skeleton', ...
+    struct('Method','blob','GradientCutoff',0.2,'Sigma',1,'Hessian',false));
+```
+
+Output `Records` contain DatasetID/Frame/ObjectID/ComponentID, current-grid
+Indices, Status and optional Fallback. Objects with a disconnected lineage ID
+get separate component geometries while keeping their parent ID. Each method
+runs on an isolated component bounding box with a background halo; resulting
+indices are mapped back and clipped to the current image grid. Component IDs
+are local to that representation and are not tracking identities.
+
+An empty skeleton has Status=`empty`, no indices, and centroid/principal-axis
+fallback metadata. An unrequested representation is absent. Geometry output
+stores Grid.Size, Axes, Spacing in YXZ order and SpacingUnit, plus optional
+SourceGrid and Transform. Linear indices are meaningful only on this grid;
+if membership/grid changes, regenerate geometry. The API never silently rescales
+the input or updates source metadata by guessing a transform.
+
+Historical methods retained:
+- `blob`: `skel3DBlobs` interrogation cores; requires gaussdiff's external
+  `gfilter`. Missing dependency raises an informative error. Sigma is an
+  integer voxel radius because the historical method uses spherical erosion.
+- `sheet`: `skel3Dfrom2D` union/intersection; retains the historical flattened
+  reslice construction and is NOT claimed to generalize arbitrary sheet shapes.
+- `sheet-sampled`: `skel3DPop` random subpopulation. Set `rng` for reproducibility.
+  `randperm` replaces `randsample`, removing the Statistics Toolbox dependency.
+- `boundary`: two-sided signed-distance shell from `returnSmoothBoundsBW`.
+  `returnSmoothBoundsIDed` remains available for historical fast/slow ID assignment.
+
+Shell/core scientific validation and general sheet-midplane design remain
+pending. BoundsBW/BoundsIDed are geometric shells; the BlobsBW/BlobsIDed
+compatibility functions remain SegmentationTools mask-cleanup operations.
+
+## Reusable distance gradients
+
+```matlab
+[gradients,meta,valid] = objectgeometry.objects.distanceGradients(distanceField, ...
+    struct('Sigma',1,'SmoothingOrder','gradient-first','Normalize',false));
+[gradients,distanceField,meta,valid] = objectgeometry.objects.objectDistanceGradients( ...
+    mask,struct('DistanceType','signed','Sigma',1));
+```
+
+DistanceType is signed/interior/exterior. Signed reuses your `signedBWDist`
+convention: object boundary zero, deeper interior negative. Gradients are
+`[Y X Z D]` with XY or XYZ components; no Y flip unless `FlipY=true`.
+Sigma is a scalar or spatial vector in voxel units, all positive or all zero.
+Gradient-first preserves historical gradient-then-Gaussian-smoothing behavior;
+distance-first is selectable. Normalize optionally returns unit vectors and a
+validity mask; zero vectors stay zero and invalid. Empty/full masks with an
+infinite distance field return NaN gradients and false validity.
+
+Spacing is recorded; `DerivativeUnits='physical'` divides derivatives by grid
+spacing, but DOES NOT correct an anisotropic voxel-distance transform. Its
+distance values are still in voxel units. Physical distance transforms remain
+deferred. Smoothing sigma is always in current voxel units.
+
+## Nematic alignment
+
+```matlab
+alignment = objectgeometry.orientation.nematicAlignment(directors,normals);
+projected = objectgeometry.orientation.nematicAlignment(directors,normals, ...
+    struct('Plane',[1 2],'MaxNormalComponent',0.5));
+```
+
+Uses the Display_AvgAlign_FromRBins ordering: normalize, optionally select by
+ABSOLUTE normal component, project, renormalize, dot, calculate order.
+2-D order is `2*dot^2-1`; 3-D order is `(3*dot^2-1)/2`. Unsigned separation is
+`acos(abs(dot))`. SignedAngle is defined only in an ordered 2-D plane, as the
+director angle minus reference angle modulo pi in `[-pi/2,pi/2)`. Invalid zero
+vectors/projections return NaNs with Valid=false. Plane/component ordering must
+be the same for both fields. No polar orientation or head-tail differentiation.
+Aggregation and arbitrary field sampling are separate future API work.
+
+## Safe concatenation and late-added fields
+
+```matlab
+combined = objectgeometry.objects.concatenateMeasurements({frame1,frame2});
+combined = objectgeometry.objects.attachMeasurements(combined,newQueries);
+```
+
+Frame tables require matching schemas; metadata from EVERY frame is retained
+in Properties.UserData.FrameMetadata. Keys must be unique. NewQueries contains
+DatasetID/Frame/ObjectID plus new columns; attachment matches KEYS, preserves
+destination order, and rejects duplicates and missing matches by default.
+Extra query rows are allowed for filtered destination tables. MissingPolicy=
+`'missing'` explicitly allows absent results (numeric NaNs, missing strings,
+empty cells); integer/logical missing columns become double to retain NaNs.
+Overwrite=true explicitly allows replacement. No positional column assignments.
+Query results must be generated for the same object membership/grid revision;
+keys alone do not establish spatial compatibility. Grid matching is checked
+where fields are sampled, not guessed during table joins.
+
+## Tests, examples and compatibility
+
+From `tests`, run `results=runObjectGeometryTests(); table(results)`.
+The suite covers new measurement/storage/gradient/alignment operations, known
+axis conventions, disconnected labels, empty masks and shell smoothing. It does
+not claim coverage of every historical prototype or the external gfilter
+algorithm. `examples/exploreObjectGeometry.m` produces real-data shell and
+gradient previews for visual assessment. Runtime verification is required in
+your licensed MATLAB session; initial verification used MATLAB's code analyzer.
+
+Original implementations updated in this pass are retained under
+`archive/2026-10-12` with original names. Active entry points remain compatible:
+`blobMat2CCProps`, `storeFilCCs`, `getDistGrads`, `distTransFromBoundary`,
+`returnSmoothBoundsBW`, `returnSmoothBoundsIDed`, `skel3DBlobs`, `skel3DPop`.
+Their repairs address 2-D property storage, empty outputs, package-qualified
+dependencies, shell Gaussian dispatch and Hessian candidate indexing. Other
+historical functions/workflows remain active; no scientific method was retired
+solely because a newer interface exists.
+
+Deferred: general sheets/midplanes, field-query reductions, filtering,
+anisotropy/PSF corrections, head-tail polarity and final direct-intensity
+filament-segmentation validation in SegmentationTools.

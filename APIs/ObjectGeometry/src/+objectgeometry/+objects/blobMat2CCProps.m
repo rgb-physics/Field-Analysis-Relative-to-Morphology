@@ -1,33 +1,11 @@
 function [ccObj,storeStruct] = blobMat2CCProps(logicMat,reqFields,storeStruct)
-%BLOBMAT2CCPROPS Takes in a logical matrix, returns connected component
-%structure and structure of requested regionproperties. If storeStruct is
-%passed, updates storeStruct by appending values to struct end. reqFields
-%is a cell of strings representing different fields from regionprops(3)
-
-% Instantiate structure, if needed, and current index
-if nargin == 2
-    storeStruct = struct();
+%BLOBMAT2CCPROPS Compatible historical per-frame property storage.
+% Native properties now use measureObjects, fixing multiple-object 2-D output.
+if nargin<3 || isempty(storeStruct), storeStruct=struct(); end
+[properties,objects]=objectgeometry.objects.measureObjects(logicMat,reqFields,struct('InputType','mask'));
+ccObj=objects.Components;
+if isempty(fieldnames(storeStruct)), currInd=1; else, currInd=numel(storeStruct)+1; end
+names=properties.Properties.VariableNames;
+names=setdiff(names,{'DatasetID','Frame','ObjectID'},'stable');
+for i=1:numel(names), storeStruct(currInd).(names{i})=properties.(names{i}); end
 end
-if isempty(fieldnames(storeStruct))
-    currInd = 1;
-else
-    currInd = numel(storeStruct) + 1;
-end
-
-% Get region properties
-ccObj = bwconncomp(logicMat);
-
-if numel(size(logicMat)) == 3
-    currProps = regionprops3(ccObj,reqFields);
-elseif numel(size(logicMat)) == 2
-    currProps = regionprops(ccObj,reqFields);
-end
-
-% Store in structure
-for fieldInd = 1:numel(reqFields)
-    currField = reqFields{fieldInd};
-    storeStruct(currInd).(currField) = currProps.(currField);
-end
-
-end
-

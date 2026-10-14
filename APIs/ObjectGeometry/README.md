@@ -76,6 +76,20 @@ principal direction, in SpacingUnit. It is not equivalent-ellipsoid length.
 for a meaningful experimental width floor. Degenerate scaled principal axes
 have NaN directors. Geometry never triggers skeletonization here.
 
+## Local occupancy inertia at supplied locations
+
+objects.localInertia(mask,indices,options) extracts the neighborhood tensor
+calculation from blobPropsFromTrajs_R_Inertia.m. Users supply arbitrary current
+grid indices, Radius, Sigma, optional Spacing/SpacingUnit, SampleLimit, and
+BatchSize. Mirrored padding and smoothed total occupancy preserve neighboring
+objects' contributions. Kernels/tensor axes are YXZ; optional spacing scales
+their coordinates. Results retain indices, Computed flags, eigenvalues,
+fractional anisotropy, eigenvalue ratios, grid metadata and optional tensors.
+This is separate from vector-field covariance and global principal axes.
+Skeleton generation/fallback is caller-owned. No geometry is generated here.
+Bounded matrix batches compute neighborhood moments; each small tensor then
+uses native eig. See Workflows/examples and runWorkflowExampleTests.
+
 ## Independent optional geometry
 
 ```matlab

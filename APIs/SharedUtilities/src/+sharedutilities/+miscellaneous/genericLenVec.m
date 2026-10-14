@@ -4,7 +4,7 @@ function [outVec] = genericLenVec(inVec)
 %element. i.e. [3 4 1] yields [3 3 3 4 4 4 4 1]
 % 2024-06-04 - Rémi Boros
 
-outVec = genLenVec(inVec,inVec);
+outVec = sharedutilities.coordinates.genLenVec(inVec,inVec);
 
 end
 

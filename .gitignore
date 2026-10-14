@@ -11,6 +11,10 @@ codegen/
 *.mat
 *.fig
 
+# Generated workflow/validation outputs remain local.
+test-data/workflow-results/
+test-data/imagestackio-validation/
+
 # Microscopy acquisition and image data (keep local data out of source control)
 *.tif
 *.tiff

@@ -1,36 +1,16 @@
-function [ringIndMat] = generateRadialMatrix(matSize,ringNum)
-%GENERATERADIALMATRIX Takes in a matrix size and generates a matrix of
-%ringNum concentric rings with indices indicating bin separation from the
-%matrix center. The matrix can be 2D or 3D, depending on the dimension of
-%matSize
-
-%Generate vectors for each dimension
-rowVec = -floor(matSize(1)/2):floor(matSize(1)/2);
-colVec = -floor(matSize(2)/2):floor(matSize(2)/2);
-
-if numel(matSize) == 2
-    [rowInds, colInds] = ndgrid(rowVec,colVec);
-else
-    depthVec = -floor(matSize(3)/2):floor(matSize(3)/2);
-    [rowInds, colInds, depthInds] = ndgrid(rowVec,colVec,depthVec);
+function ringIndMat=generateRadialMatrix(matSize,ringNum)
+%GENERATERADIALMATRIX Centered YX/YXZ ring IDs; zero outside included radius.
+% Corrected even-sized grids. Origin follows fftshift: floor(N/2)+1.
+validateattributes(matSize,{'numeric'},{'vector','integer','positive','finite'});
+validateattributes(ringNum,{'numeric'},{'scalar','integer','positive','finite'});
+if ~ismember(numel(matSize),[2 3]), error('fieldanalysis:Dimensions','Specify YX or YXZ dimensions.'); end
+matSize=matSize(:)'; r2=zeros(matSize);
+for d=1:numel(matSize)
+    shape=ones(1,numel(matSize)); shape(d)=matSize(d);
+    axis=(1:matSize(d))-(floor(matSize(d)/2)+1);
+    r2=r2+reshape(axis.^2,shape);
 end
-
-%Instantiate ring matrix and bin values
-ringIndMat = zeros(size(rowInds));
-maxRad = ceil(min(matSize(:)/2)); radVals = 0:maxRad/ringNum:maxRad;
-
-%Generate matrix of indices of rings to average over
-if numel(matSize) == 2
-    for currRing = 2:numel(radVals)
-        ringIndMat( (rowInds.^2 + colInds.^2) > radVals(currRing-1)^2 & ...
-            (rowInds.^2 + colInds.^2) <= radVals(currRing)^2) = currRing - 1;
-    end
-else
-    for currRing = 2:numel(radVals)
-        ringIndMat( (rowInds.^2 + colInds.^2 + depthInds.^2) > radVals(currRing-1)^2 & ...
-            (rowInds.^2 + colInds.^2 + depthInds.^2) <= radVals(currRing)^2) = currRing - 1;
-    end
+edges=linspace(0,ceil(min(matSize)/2),ringNum+1);
+[~,~,bins]=histcounts(sqrt(r2(:)),edges);
+ringIndMat=reshape(bins,matSize);
 end
-
-end
-

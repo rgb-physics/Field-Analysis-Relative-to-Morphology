@@ -28,9 +28,13 @@ recover links without shared voxels. Same dimensions are checked; no movement
 or resampling correction is guessed. Use explicit label mode for binary-valued
 label matrices when label 1 should remain a disconnected group.
 
-Frames are processed as consecutive increasing pairs; no gap bridging or
-reverse tracking. A missing file/load error stops execution rather than linking
-across a gap. Only the current pair's spatial data is held; compact tables of
+Frames are processed as successive entries in the supplied vector, with
+arbitrary intervals and order (for example 10:2:30 or [12 16 17 23 34]).
+Repeated frame numbers are omitted, keeping their first occurrence. Descending
+order is allowed. Source/target links and ancestry refer to processing order;
+with reverse order, graph ancestors are not chronological ancestors.
+Skipped acquisition frames are not loaded or searched for missing detections.
+A missing file/load error stops execution. Only the current pair's spatial data is held; compact tables of
 observations and relationships accumulate. `overlapLinks` exposes the reusable
 intersection -> label pairs -> counts primitive, preserving the historical
 method without constructing full label volumes from index inputs.

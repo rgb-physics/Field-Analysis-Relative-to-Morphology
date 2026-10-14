@@ -9,6 +9,9 @@ function image = readTiff(filePath, options)
 %   spacing in [Y X Z] order. SpacingUnit gives its unit, such as "um" or
 %   "nm". Explicit options override embedded TIFF/ImageJ calibration. When
 %   neither is available, spacing defaults to [1 1 1] in pixels.
+%   Grayscale multipage TIFFs without axis metadata default to YXZ (Z pages).
+%   Explicit SourceAxes or recognized metadata take precedence; specify YXT
+%   for a metadata-free time stack. Single-page/color layouts are preserved.
 
 if nargin < 2 || isempty(options)
     options = struct();
@@ -116,10 +119,14 @@ elseif ~isempty(inferredAxes)
     sourceAxes = inferredAxes;
     axisSource = 'single-page TIFF layout';
     [data, sourceDimensions] = normalizeAxes(rawData, sourceAxes);
+elseif ndims(firstPage)==2
+    sourceAxes = 'YXZ';
+    axisSource = 'default YXZ page stack';
+    [data, sourceDimensions] = normalizeAxes(rawData, sourceAxes);
 else
     error('imagestackio:SourceAxesRequired', ...
-        ['This TIFF has multiple pages but no recognized axis metadata. ' ...
-         'Set OPTIONS.SourceAxes, for example "YXZ" or "YXT".']);
+        ['This color TIFF has multiple pages but no recognized axis metadata. ' ...
+         'Set OPTIONS.SourceAxes explicitly, for example "YXCZ".']);
 end
 
 image = struct();

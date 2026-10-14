@@ -17,23 +17,23 @@ frameZero = 34;
 deltaT = .5;
 xVals = (objInertias(:,2)-frameZero)*deltaT;    
 xBins = (selTimes - frameZero)*deltaT;
-[bndMeans,bndMeds] = plotVlns(xVals,objInertias(:,3)./objInertias(:,5),xBins,30,1);
+[bndMeans,bndMeds] = visualizationtools.display.plotVlns(xVals,objInertias(:,3)./objInertias(:,5),xBins,30,1);
 box on
 title('Boundary Coordinates')
 ylabel('<sum(\rho r)/sum(\rho) (um)>')
 xlabel('Time (min)')
 set(gca,'FontSize',12)
-figSaves(gca,saveDir,'BndCoords_ViolinPlots_RvT',fileExts,saveBool)
+visualizationtools.export.figSaves(gca,saveDir,'BndCoords_ViolinPlots_RvT',fileExts,saveBool)
 
 % ylim([0 10^10])
-[skelMeans,skelMeds] = plotVlns(xVals,objInertias(:,4)./objInertias(:,5),xBins,30,1);
+[skelMeans,skelMeds] = visualizationtools.display.plotVlns(xVals,objInertias(:,4)./objInertias(:,5),xBins,30,1);
 box on
 title('Skeleton Coordinates')
 ylabel('<sum(\rho r)/sum(\rho) (um)>')
 xlabel('Time (min)')
 set(gca,'FontSize',12)
 % ylim([0 3*10^10])
-figSaves(gca,saveDir,'SkelCoords_ViolinPlots_RvT',fileExts,saveBool)
+visualizationtools.export.figSaves(gca,saveDir,'SkelCoords_ViolinPlots_RvT',fileExts,saveBool)
 
 %% Compare violins to aspect ratios
 % sphDir = '<redacted original absolute path>';
@@ -100,7 +100,7 @@ tickCell = cell(numel(subTimes),1);
 [tickCell{[1 end]}] = deal(cVals(1),cVals(end));
 cbh.TickLabels = tickCell;   
 
-figSaves(gca,saveDir,saveName,fileExts,saveBool)
+visualizationtools.export.figSaves(gca,saveDir,saveName,fileExts,saveBool)
 
 % sphCoords(mapVec(existLogic),:)
 %% Make violin plots of all objects that fall within 3um diff between methods
@@ -143,23 +143,23 @@ deltaT = .5;
 
 xVals = (objInertias(newLogic,2)-frameZero)*deltaT;    
 xBins = (selTimes - frameZero)*deltaT;
-[bndMeans,bndMeds] = plotVlns(xVals,objInertias(newLogic,3)./objInertias(newLogic,5),xBins,30,1);
+[bndMeans,bndMeds] = visualizationtools.display.plotVlns(xVals,objInertias(newLogic,3)./objInertias(newLogic,5),xBins,30,1);
 box on
 title('Boundary Coordinates')
 ylabel('<sum(\rho r)/sum(\rho) (um)>')
 xlabel('Time (min)')
 set(gca,'FontSize',12)
-figSaves(gca,saveDir,'BndCoords_ViolinPlots_RvT',fileExts,saveBool)
+visualizationtools.export.figSaves(gca,saveDir,'BndCoords_ViolinPlots_RvT',fileExts,saveBool)
 
 % ylim([0 10^10])
-[skelMeans,skelMeds] = plotVlns(xVals,objInertias(newLogic,4)./objInertias(newLogic,5),xBins,30,1);
+[skelMeans,skelMeds] = visualizationtools.display.plotVlns(xVals,objInertias(newLogic,4)./objInertias(newLogic,5),xBins,30,1);
 box on
 title('Skeleton Coordinates')
 ylabel('<sum(\rho r)/sum(\rho) (um)>')
 xlabel('Time (min)')
 set(gca,'FontSize',12)
 % ylim([0 3*10^10])
-figSaves(gca,saveDir,'SkelCoords_ViolinPlots_RvT',fileExts,saveBool)
+visualizationtools.export.figSaves(gca,saveDir,'SkelCoords_ViolinPlots_RvT',fileExts,saveBool)
 
 %% Plot violin plots after removing data that are not spheroidal
 sphVals = meanMat(mapVec(existLogic),3);
@@ -167,22 +167,22 @@ validLogic = sphVals > 0.7;
 newLogic = existLogic(validLogic);
 xVals = (objInertias(newLogic,2)-frameZero)*deltaT;    
 xBins = (selTimes - frameZero)*deltaT;
-[bndMeans,bndMeds] = plotVlns(xVals,objInertias(newLogic,3)./objInertias(newLogic,5),xBins,30,1);
+[bndMeans,bndMeds] = visualizationtools.display.plotVlns(xVals,objInertias(newLogic,3)./objInertias(newLogic,5),xBins,30,1);
 box on
 title('Boundary Coordinates')
 ylabel('<sum(\rho r)/sum(\rho) (um)>')
 xlabel('Time (min)')
 set(gca,'FontSize',12)
-figSaves(gca,saveDir,'BndCoords_ViolinPlots_RvT',fileExts,saveBool)
+visualizationtools.export.figSaves(gca,saveDir,'BndCoords_ViolinPlots_RvT',fileExts,saveBool)
 
 % ylim([0 10^10])
-[skelMeans,skelMeds] = plotVlns(xVals,objInertias(newLogic,4)./objInertias(newLogic,5),xBins,30,1);
+[skelMeans,skelMeds] = visualizationtools.display.plotVlns(xVals,objInertias(newLogic,4)./objInertias(newLogic,5),xBins,30,1);
 box on
 title('Skeleton Coordinates')
 ylabel('<sum(\rho r)/sum(\rho) (um)>')
 xlabel('Time (min)')
 set(gca,'FontSize',12)
 % ylim([0 3*10^10])
-figSaves(gca,saveDir,'SkelCoords_ViolinPlots_RvT',fileExts,saveBool)
+visualizationtools.export.figSaves(gca,saveDir,'SkelCoords_ViolinPlots_RvT',fileExts,saveBool)
 
 

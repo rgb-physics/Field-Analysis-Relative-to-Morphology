@@ -1,10 +1,7 @@
-function [outMat] = getUnitVecs(inMat)
-%GETUNITVECS Normalizes an array corresponding to rows of unit vectors. The
-%output is an array. Row_i outMat is vector-normalized Row_i of inMat
-% 2025-02-22 - Rémi Boros
-
-rowMags = vecnorm(inMat')';
-outMat = inMat./rowMags;
-
+function outMat=getUnitVecs(inMat)
+%GETUNITVECS Normalize row vectors; zero or nonfinite rows are undefined (NaN).
+validateattributes(inMat,{'numeric'},{'2d','real'});
+outMat=double(inMat); magnitudes=vecnorm(outMat,2,2);
+valid=all(isfinite(outMat),2)&magnitudes>0&isfinite(magnitudes);
+outMat(:)=NaN; outMat(valid,:)=double(inMat(valid,:))./magnitudes(valid);
 end
-

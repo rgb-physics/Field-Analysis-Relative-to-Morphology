@@ -66,14 +66,14 @@ frameZero = 34;
 deltaT = .5;
 xVals = (objInertias(:,2)-frameZero)*deltaT;    
 xBins = (selTimes - frameZero)*deltaT;
-plotVlns(xVals,objInertias(:,3)./objInertias(:,5),xBins,30,1);
+visualizationtools.display.plotVlns(xVals,objInertias(:,3)./objInertias(:,5),xBins,30,1);
 box on
 title('Boundary Coordinates')
 ylabel('<sum(\rho r)/sum(\rho) (um)>')
 xlabel('Time (min)')
 set(gca,'FontSize',12)
 % ylim([0 10^10])
-plotVlns(xVals,objInertias(:,4)./objInertias(:,5),xBins,30,1);
+visualizationtools.display.plotVlns(xVals,objInertias(:,4)./objInertias(:,5),xBins,30,1);
 box on
 title('Skeleton Coordinates')
 ylabel('<sum(\rho r)/sum(\rho) (um)>')

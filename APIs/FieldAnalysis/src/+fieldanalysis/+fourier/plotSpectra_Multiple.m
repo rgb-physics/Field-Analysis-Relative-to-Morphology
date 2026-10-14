@@ -203,7 +203,7 @@ cbh.TickLabels = num2cell(([min(selZ) max(selZ)])) ;
 box on
 title('q_{max} from pure data')
 ylim([0 100])
-figSaves(gca,saveDir,'PkQ_AllZandT_noAvg',saveExts,saveBool);
+visualizationtools.export.figSaves(gca,saveDir,'PkQ_AllZandT_noAvg',saveExts,saveBool);
 
 
 % Plot averaged
@@ -229,7 +229,7 @@ cbh.TickLabels = num2cell(([min(selZ) max(selZ)])) ;
 box on
 title('q_{max} after moving average in q')
 ylim([0 100])
-figSaves(gca,saveDir,'PkQ_AllZandT_MovMeanQ',saveExts,saveBool);
+visualizationtools.export.figSaves(gca,saveDir,'PkQ_AllZandT_MovMeanQ',saveExts,saveBool);
 
 %% Concatenate all of S88 data
 
@@ -312,7 +312,7 @@ cbh.TickLabels = num2cell(([min(selZ) max(selZ)])) ;
 box on
 title('q_{max} from pure data')
 ylim([0 100])
-figSaves(gca,saveDir,'PkQ_AllZandT_noAvg',saveExts,saveBool);
+visualizationtools.export.figSaves(gca,saveDir,'PkQ_AllZandT_noAvg',saveExts,saveBool);
 
 % Plot averaged
 figure
@@ -337,7 +337,7 @@ cbh.TickLabels = num2cell(([min(selZ) max(selZ)])) ;
 box on
 title('q_{max} after moving average in q')
 ylim([0 100])
-figSaves(gca,saveDir,'PkQ_AllZandT_MovMeanQ',saveExts,saveBool);
+visualizationtools.export.figSaves(gca,saveDir,'PkQ_AllZandT_MovMeanQ',saveExts,saveBool);
 
 %% Imagesc max matrices
 % Sort matrix by global time

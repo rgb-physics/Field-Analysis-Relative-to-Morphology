@@ -12,7 +12,7 @@ else
     if isa(baseMat,"logical")
         outMat = false(size(baseMat));
     else
-        outMat = zeros(size(baseMat));
+        outMat = zeros(size(baseMat),'like',baseMat);
     end
     outMat(indices) = baseMat(indices);
 end

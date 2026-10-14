@@ -1,54 +1,39 @@
-function [meanVals,r_bin,r_counts,binnedInds] = radiallyAverageMatrix(inputMat,sigma,polBool,ringSpace)
-%RADIALLYAVERAGEMATRIX Radially averages the contents of a matrix INPUTMAT
-%over a series of concentric rings centered at each pixel. If polBool == 1,
-%the script will asume cylindrical coordinates over spherical (2D slice
-%circular averages rather than 3D sphere shell averages). ringSpace can be
-%a scalar value, indicating the spacing of rings (in pixels) over which to
-%average. Alternatively, ringSpace can be a vector which represents the set
-%of rings over which to average.
-
-% Define ringSpace if omitted by user
-if nargin == 2
-    polBool = 0;
-    ringSpace = 1;
-elseif nargin == 3
-    ringSpace = 1;
-end
-
-% Prep radial coords for binning
-[rows, cols, depths] = size(inputMat);
-y = (1:rows) - round(rows/2) - 1;
-x = (1:cols) - round(cols/2) - 1;
-if numel(size(inputMat)) == 2
-    [xMat,yMat] = meshgrid(x,y);
-    [~,rCoords]  = cart2pol(xMat,yMat);
-elseif numel(size(inputMat)) == 3 && (polBool == 0)
-    z = (1:depths) - round(depths/2);
-    [xMat,yMat,zMat] = meshgrid(x,y,z);
-    [~,~,rCoords]  = cart2sph(xMat,yMat,zMat);
-elseif numel(size(inputMat)) == 3 && (polBool == 1)
-    z = (1:depths) - round(depths/2);
-    [xMat,yMat,zMat] = meshgrid(x,y,z);
-    [~,rCoords,~]  = cart2pol(xMat,yMat,zMat);
-end
-
-% Average over rings of radius rCoords(i)
-if numel(ringSpace) == 1
-    r_bin = 1:ringSpace:max(round(size(inputMat)/2));
+function [meanVals,r_bin,r_counts,binnedInds]=radiallyAverageMatrix(inputMat,sigma,polBool,ringSpace)
+%RADIALLYAVERAGEMATRIX Legacy interface with corrected centers/bin length.
+% Prefer fieldanalysis.fourier.radialAverage for explicit coordinates.
+% polBool=1 pools cylindrical XY radii over Z; it does not return each slice.
+% Gaussian weighting retains the historical left-edge evaluation convention.
+% Empty bins are NaN. There is one output value per bin, not per edge.
+if nargin<2, sigma=0; end
+if nargin<3, polBool=0; end
+if nargin<4, ringSpace=1; end
+inputMat=fieldanalysis.internal.field(inputMat);
+validateattributes(sigma,{'numeric'},{'scalar','nonnegative','finite'});
+validateattributes(polBool,{'numeric','logical'},{'scalar'});
+dims=size(inputMat); coords=cell(1,ndims(inputMat));
+for d=1:numel(dims), coords{d}=(1:dims(d))-(floor(dims(d)/2)+1); end
+if ndims(inputMat)==3&&polBool, coords{3}=zeros(1,dims(3)); end
+if isscalar(ringSpace)
+    validateattributes(ringSpace,{'numeric'},{'positive','finite'});
+    r_bin=0:ringSpace:ceil(max(dims)/2);
+    if numel(r_bin)<2, r_bin=[0 ringSpace]; end
 else
-    r_bin = ringSpace;
+    r_bin=ringSpace(:)';
 end
-[r_counts,~,binnedInds] = histcounts(rCoords,r_bin);
-meanVals = zeros(numel(r_bin),1);
-for ringInd = 1:numel(r_counts)    
-    if sigma == 0
-        % Average over binned values
-        meanVals(ringInd) = sum(inputMat(binnedInds == ringInd))/r_counts(ringInd);
-    else
-        % With gaussian profile if sigma is non-zero (look at again)
-        meanVals(ringInd) = sum(inputMat(:).*exp(-(rCoords(:)-r_bin(ringInd)).^2/2/sigma^2))/...
-            sum(exp(-(rCoords(:)-r_bin(ringInd)).^2/2/sigma^2));
+r=fieldanalysis.fourier.radialAverage(inputMat,struct('Coordinates',{coords},'Edges',r_bin));
+meanVals=r.Mean; r_counts=r.Counts';
+r2=zeros(dims);
+for d=1:numel(dims)
+    shape=ones(1,numel(dims)); shape(d)=dims(d);
+    r2=r2+reshape(coords{d}.^2,shape);
+end
+radius=sqrt(r2);
+[~,~,bins]=histcounts(radius(:),r_bin); binnedInds=reshape(bins,dims);
+if sigma>0
+    for k=1:numel(r_counts)
+        if r_counts(k)==0, continue; end
+        w=exp(-((radius(:)-r_bin(k))/sigma).^2/2);
+        if sum(w)>0, meanVals(k)=sum(inputMat(:).*w)/sum(w); else, meanVals(k)=NaN; end
     end
 end
 end
-

@@ -1,5 +1,5 @@
 function convolved = myconvn(stack, filter)
-    % convn with periodic bcs
+    % convn with mirrored padding (historical implementation)
     %
     % myconvn(stack,filter)
     
@@ -38,27 +38,27 @@ function convolved = myconvn(stack, filter)
     dim = 1;
     if padsize(dim) > 0
 
-        padding = flipdim(stack(end-padsize(dim) + 1:end, :, :), dim);
+        padding = flip(stack(end-padsize(dim) + 1:end, :, :), dim);
         stack = cat(dim, stack, padding);
-        padding = flipdim(stack(1: padsize(dim), :, :), dim);
+        padding = flip(stack(1: padsize(dim), :, :), dim);
         stack = cat(dim, padding, stack);
     end
     
     dim = 2;
     if padsize(dim) > 0 
 
-        padding = flipdim(stack(:, end-padsize(dim) + 1:end, :), dim);
+        padding = flip(stack(:, end-padsize(dim) + 1:end, :), dim);
         stack = cat(dim, stack, padding);
-        padding = flipdim(stack(:, 1: padsize(dim), :), dim);
+        padding = flip(stack(:, 1: padsize(dim), :), dim);
         stack = cat(dim, padding, stack);
     end
     
     dim = 3;
     if numel(padsize) > 2 && padsize(dim) > 0
 
-        padding = flipdim(stack(:, :, end-padsize(dim) + 1:end), dim);
+        padding = flip(stack(:, :, end-padsize(dim) + 1:end), dim);
         stack = cat(dim, stack, padding);
-        padding = flipdim(stack(:, :, 1: padsize(dim)), dim);
+        padding = flip(stack(:, :, 1: padsize(dim)), dim);
         stack = cat(dim, padding, stack);
     end
 

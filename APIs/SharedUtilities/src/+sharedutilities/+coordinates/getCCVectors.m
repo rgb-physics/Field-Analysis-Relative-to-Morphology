@@ -1,15 +1,9 @@
-function [objSizes,objVoxels,objIDs] = getCCVectors(currCC)
-%GETCCVECTORS Takes in a connected components object currCC with a field
-%PixelIdxList. PixelIdxList is a cell of vectors, each containing a set of
-%scalars corresponding to matrix indices wherein each connected component
-%is defined. Returns vectors of concatenated connected component sizes,
-% indices, and a string of component IDs for indexing
-% 2024-08-16 Rémi Boros
-
-voxelIdxCell = currCC.PixelIdxList;
-objSizes = cellIndSizes(voxelIdxCell');
-objVoxels = vertcat(voxelIdxCell{:});
-objIDs = genLenVec(1:numel(objSizes),objSizes);
-
+function [objSizes,objVoxels,objIDs]=getCCVectors(currCC)
+%GETCCVECTORS Concatenated indices with LOCAL component-position IDs.
+% IDs are not persistent labels. Row/column PixelIdxList cell arrays are accepted.
+cells=cellfun(@(x)x(:),currCC.PixelIdxList(:),'UniformOutput',false);
+objSizes=sharedutilities.miscellaneous.cellIndSizes(cells);
+if isempty(cells), objVoxels=zeros(0,1); objIDs=zeros(0,1); return; end
+objVoxels=vertcat(cells{:});
+objIDs=sharedutilities.coordinates.genLenVec(1:numel(objSizes),objSizes);
 end
-

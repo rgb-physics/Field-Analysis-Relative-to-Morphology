@@ -1,12 +1,14 @@
 function tracking = trackOverlaps(frames, loader, options)
-%TRACKOVERLAPS Stream adjacent frames using historical overlap inheritance.
+%TRACKOVERLAPS Stream successive supplied frames using overlap inheritance.
 % LOADER=@(frame) -> mask, label array, TIFF path or prepared objects.
 % Numeric binary input defaults to components; InputType='labels' preserves
 % disconnected pieces carrying label 1. Other label IDs are preserved.
 % OPTIONS.DatasetID='default'; Identity=struct() prepareObjects options;
 % Ranking='overlap'|'volume'; MergePolicy='inherit'|'new'; SplitPolicy likewise;
-% ExportDirectory=''; Overwrite=false. No gap bridging: frame numbers must
-% increase by one; load failure stops processing. Frames need not start at 1.
+% ExportDirectory=''; Overwrite=false. Arbitrary spacing/order is accepted.
+% Repeated frame numbers are omitted, retaining their first occurrence.
+% No missing-detection gap recovery; load failure stops processing.
+% Ancestry follows the supplied processing order, including reverse order.
 % Ranking volume uses source+target voxel count: largest parent at pure merges
 % and largest child at pure splits. For many-to-many events, ranked greedy
 % one-to-one inheritance is deterministic (not global assignment optimization).
@@ -17,8 +19,7 @@ options=objectgeometry.internal.options(options,struct('DatasetID','default','Id
     'Ranking','overlap','MergePolicy','inherit','SplitPolicy','inherit', ...
     'ExportDirectory','','Overwrite',false));
 validateattributes(frames,{'numeric'},{'vector','finite','integer','nonnegative','nonempty'});
-frames=double(frames(:));
-if any(diff(frames)~=1), error('objecttracking:FrameGap','Overlap tracking requires consecutive increasing frames; gap bridging is disabled.'); end
+frames=unique(double(frames(:)),'stable');
 if ~isa(loader,'function_handle'), error('objecttracking:InvalidLoader','Supply @(frame) loader.'); end
 options.Ranking=validatestring(options.Ranking,{'overlap','volume'});
 options.MergePolicy=validatestring(options.MergePolicy,{'inherit','new'});

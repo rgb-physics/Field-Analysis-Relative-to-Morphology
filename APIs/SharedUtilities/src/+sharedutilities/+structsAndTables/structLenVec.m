@@ -5,7 +5,7 @@ function [outVec] = structLenVec(inStruct,desField)
 % the field. ( [1 1 1 1 2 2 3 3 3 4 5 5 5] for a five index structure in
 % which is contained 5, 2, 3, 1, and 3 objects, respectively
 
-lenVec = structFieldSizes(inStruct,desField);
+lenVec = sharedutilities.structsAndTables.structFieldSizes(inStruct,desField);
 cellRepVec = arrayfun( @(x) repmat(x, lenVec(x), 1), 1:numel(inStruct), 'UniformOutput', false);
 outVec = vertcat(cellRepVec{:});
 

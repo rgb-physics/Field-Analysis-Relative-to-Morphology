@@ -104,7 +104,7 @@ for tInd = 1:numel(selTimes)
         if sum(currInds) > 1000
             indsImg = rescaleCoords_Inds(vertInds(currInds),round(imgSize.*ogVoxSize),imgSize);
             currInts = currImg(indsImg);
-            manVlnPlot(currBin,currInts*int2uM,intBins*int2uM,2)
+            visualizationtools.display.manVlnPlot(currBin,currInts*int2uM,intBins*int2uM,2)
             hold on
         else
             continue
@@ -171,7 +171,7 @@ for tInd = 1:numel(selTimes)
         if sum(currInds) > 200
             indsImg = rescaleCoords_Inds(vertInds(currInds),round(imgSize.*ogVoxSize),imgSize);
             currInts = currImg(indsImg);
-            manVlnPlot(currBin,currInts*int2uM,intBins*int2uM,.02)
+            visualizationtools.display.manVlnPlot(currBin,currInts*int2uM,intBins*int2uM,.02)
             hold on
         else
             continue
@@ -231,7 +231,7 @@ for tInd = 1:numel(selTimes)
         if sum(currInds) > 200
             indsImg = rescaleCoords_Inds(vertInds(currInds),round(imgSize.*ogVoxSize),imgSize);
             currInts = currImg(indsImg);
-            manVlnPlot(currBin,currInts*int2uM,intBins*int2uM,.02)
+            visualizationtools.display.manVlnPlot(currBin,currInts*int2uM,intBins*int2uM,.02)
             hold on
         else
             continue

@@ -15,11 +15,15 @@ addpath(apiFolder);
 addpath(transformFolder);
 
 [h5Path, tiffPaths] = localFindInputs(memotest.dataRoot());
-tempFolder = tempname;
+outputRoot=fullfile(repositoryRoot,'test-data','imagestackio-validation');
+if ~isfolder(outputRoot), mkdir(outputRoot); end
+tempFolder = tempname(outputRoot);
 mkdir(tempFolder);
 cleanup = onCleanup(@() localRemoveFolder(tempFolder)); %#ok<NASGU>
 
 checks = {
+    'readTiff: metadata-free YXZ default and explicit YXT override', ...
+        @() localCheckDefaultTiffAxes(tempFolder)
     'readTiff: load both XYZ inputs', ...
         @() localCheckReadTiffs(tiffPaths)
     'inspectImage: inspect source TIFF', ...
@@ -122,6 +126,24 @@ assert(isequal(size(first.Data), size(second.Data)));
 assert(all(isfinite(first.Spacing)) && all(first.Spacing > 0));
 assert(~isempty(first.SpacingUnit));
 assert(~isempty(first.SpacingSource));
+end
+
+function localCheckDefaultTiffAxes(folder)
+path=fullfile(folder,'metadata-free.tif');
+expected=reshape(uint16(1:60),[3 5 4]);
+for z=1:4
+    if z==1, imwrite(expected(:,:,z),path,'tif');
+    else, imwrite(expected(:,:,z),path,'tif','WriteMode','append'); end
+end
+image=imagestackio.readTiff(path);
+assert(strcmp(image.SourceAxes,'YXZ'));
+assert(strcmp(image.SourceAxesSource,'default YXZ page stack'));
+assert(isequal(image.Data(:,:,:,1,1),expected));
+timeImage=imagestackio.readTiff(path,struct('SourceAxes','YXT'));
+assert(strcmp(timeImage.SourceAxes,'YXT'));
+assert(strcmp(timeImage.SourceAxesSource,'options.SourceAxes'));
+assert(isequal(reshape(timeImage.Data,[3 5 4]),expected));
+assert(size(timeImage.Data,3)==1&&size(timeImage.Data,5)==4);
 end
 
 function localCheckInspectTiff(tiffPath)

@@ -16,7 +16,7 @@ else
 end
 
 % Generate indices dividing collated trajectories when written as single vector
-totInds1 = arrayCumSum(vecLens1); totInds2 = arrayCumSum(vecLens2);
+totInds1 = sharedutilities.arrays.arrayCumSum(vecLens1); totInds2 = sharedutilities.arrays.arrayCumSum(vecLens2);
 indexProds = arrayfun(@(x) sum(vecLens1(1:x).*vecLens2(1:x)), 1:numel(vecLens1));
 
 % Generate logical block matrix

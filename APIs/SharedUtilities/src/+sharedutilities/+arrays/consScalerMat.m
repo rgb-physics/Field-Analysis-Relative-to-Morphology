@@ -6,7 +6,7 @@ function [scalerMat] = consScalerMat(inputData,patchProbs)
 %the input data at the corresponding (x,y) coordinates
 % Rémi Boros
 
-scalerMat = max(consMatLnB(inputData,logical(patchProbs)),[],3);
+scalerMat = max(sharedutilities.arrays.consMatLnB(inputData,logical(patchProbs)),[],3);
 if ~isempty(find(scalerMat == 0, 1))
     maxVals = max(inputData,[],3);
     scalerMat(scalerMat == 0) = maxVals(scalerMat == 0);

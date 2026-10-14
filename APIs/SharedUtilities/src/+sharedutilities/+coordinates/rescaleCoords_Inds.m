@@ -1,18 +1,15 @@
-function [scaleInds] = rescaleCoords_Inds(inputInds,ogDims,newDims)
-%RESCALECOORDS_INDS Take in indices corresponding to coordinates in a
-%matrix with size ogDims. Return indices of corresponding coordinates in a
-%matrix with size newDims. 
-% 2025-04-21 - Rémi Boros
-
-if numel(ogDims) == 3
-    [censRows,censCols,censDepths] = ind2sub(ogDims,inputInds);
-    scaleCoords = rescaleCoords([censCols censRows censDepths], ogDims, newDims);
-    scaleInds = sub2ind(newDims,scaleCoords(:,2),scaleCoords(:,1),scaleCoords(:,3));
-elseif numel(ogDims) == 2
-    [censRows,censCols] = ind2sub(ogDims,inputInds);
-    scaleCoords = rescaleCoords([censCols censRows], ogDims, newDims);
-    scaleInds = sub2ind(newDims,scaleCoords(:,2),scaleCoords(:,1));
+function scaleInds=rescaleCoords_Inds(inputInds,ogDims,newDims)
+%RESCALECOORDS_INDS Map source voxel centers, preserving index-vector shape.
+validateattributes(ogDims,{'numeric'},{'vector','integer','positive','finite'});
+validateattributes(newDims,{'numeric'},{'vector','integer','positive','finite'});
+ogDims=double(ogDims(:)'); newDims=double(newDims(:)');
+nD=numel(ogDims);
+if ~ismember(nD,[2 3])||numel(newDims)~=nD, error('sharedutilities:Dimensions','Use matching YX/YXZ grids.'); end
+if isempty(inputInds), scaleInds=zeros(size(inputInds)); return; end
+validateattributes(inputInds,{'numeric'},{'vector','integer','positive','finite','<=',prod(ogDims)});
+subs=cell(1,nD); [subs{:}]=ind2sub(ogDims,inputInds(:));
+points=cat(2,subs{:}); points(:,[1 2])=points(:,[2 1]);
+mapped=sharedutilities.arrays.rescaleCoords(points,ogDims,newDims);
+mapped(:,[1 2])=mapped(:,[2 1]); subs=num2cell(mapped,1);
+scaleInds=reshape(sub2ind(newDims,subs{:}),size(inputInds));
 end
-
-end
-

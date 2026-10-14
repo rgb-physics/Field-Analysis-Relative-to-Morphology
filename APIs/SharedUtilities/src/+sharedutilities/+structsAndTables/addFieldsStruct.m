@@ -1,21 +1,14 @@
-function [structObj] = addFieldsStruct(structObj,fieldNames,fieldVals,structInds)
-%ADDFIELDSSTRUCT Takes in a structure, adds the values stored in fieldVals
-%to the fields with names stored in fieldNames. Both of the latter two
-%variables should be cell arrays ordered with corresponding name and values
-%in the same indices. structInds is an optional parameter indicating which
-%indices to assign passed fieldVals to. By default, structInds will span
-%the entire struct
-% 2023-11-16
-if nargin == 3
-    structInds = numel(fieldVals{1});
+function structObj=addFieldsStruct(structObj,fieldNames,fieldVals,structInds)
+%ADDFIELDSSTRUCT Forward explicit indices for each source-indexed field.
+fieldNames=cellstr(string(fieldNames));
+if ~iscell(fieldVals)||numel(fieldNames)~=numel(fieldVals)
+    error('sharedutilities:Fields','Supply one value array per field name.');
 end
-
-% Iterate through each field and add corresponding values to struct
-for fieldInd = 1:numel(fieldNames)
-    currField = fieldNames{fieldInd};
-    currVals = fieldVals{fieldInd};
-    structObj = addFieldStruct(structObj,currField,currVals);
+for k=1:numel(fieldNames)
+    if nargin<4
+        structObj=sharedutilities.structsAndTables.addFieldStruct(structObj,fieldNames{k},fieldVals{k});
+    else
+        structObj=sharedutilities.structsAndTables.addFieldStruct(structObj,fieldNames{k},fieldVals{k},structInds);
+    end
 end
-
 end
-

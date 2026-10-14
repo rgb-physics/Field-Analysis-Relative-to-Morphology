@@ -58,13 +58,31 @@ verifyTrue(testCase,any(r.Events.Type=="appearance")); verifyTrue(testCase,any(r
 empty=objecttracking.trackOverlaps(1:3,@(t) zeros(4));
 verifyEmpty(testCase,empty.Detections); verifyEmpty(testCase,empty.Events);
 end
-function testNoGapAndSparseLabels(testCase)
-verifyError(testCase,@() objecttracking.trackOverlaps([1 3],@(t) ones(4)),'objecttracking:FrameGap');
+function testFlexibleFramesAndSparseLabels(testCase)
+r=objecttracking.trackOverlaps([12 16 17 23 34],@(t) ones(4));
+verifyEqual(testCase,r.Detections.Frame,[12;16;17;23;34]);
+verifyEqual(testCase,r.Links.SourceFrame,[12;16;17;23]);
+verifyEqual(testCase,r.Links.TargetFrame,[16;17;23;34]);
+verifyEqual(testCase,r.Detections.TrajectoryID,ones(5,1));
 a=zeros(4); a([1 2])=1000; b=zeros(4); b([2 3])=50000;
 source=objectgeometry.objects.prepareObjects(a); target=objectgeometry.objects.prepareObjects(b);
 e=objecttracking.overlapLinks(source,target);
 verifyEqual(testCase,e.OverlapCount,1); verifyEqual(testCase,e.SourceObjectID,1000);
 verifyEqual(testCase,e.TargetObjectID,50000); verifyEqual(testCase,e.IoU,1/3,'AbsTol',1e-12);
+end
+function testRepeatedAndReverseFrames(testCase)
+loaded=[];
+r=objecttracking.trackOverlaps([34 17 34 12 17],@loadFrame);
+verifyEqual(testCase,loaded,[34 17 12]);
+verifyEqual(testCase,r.Detections.Frame,[34;17;12]);
+verifyEqual(testCase,r.Links.SourceFrame,[34;17]);
+verifyEqual(testCase,r.Links.TargetFrame,[17;12]);
+s=objecttracking.selectLineage(r,struct('ObjectIDs',1,'Frame',12));
+verifyEqual(testCase,s.Detections.Frame,[34;17;12]);
+    function mask=loadFrame(frame)
+        loaded(end+1)=frame;
+        mask=ones(4);
+    end
 end
 function testCoordinateBackgroundAndDescendants(testCase)
 frames=localBranches(); r=objecttracking.trackOverlaps(1:3,@(t) frames{t});

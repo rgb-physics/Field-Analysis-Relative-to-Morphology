@@ -11,7 +11,7 @@ hiVal = (max(dataMat(:))+2);
 % Get minimum values along desired dimension by setting zero-values to hiVal
 minMat = squeeze(min(dataMat + (1-logicMat)*hiVal, [], dimension));
 % Set high values back to zero
-minMat = consMatLnB(minMat, ~(minMat==hiVal));
+minMat = sharedutilities.arrays.consMatLnB(minMat, ~(minMat==hiVal));
 
 end
 

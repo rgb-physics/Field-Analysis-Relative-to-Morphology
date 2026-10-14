@@ -35,8 +35,8 @@ function logstack = LOG(stack, sigma)
         for j = 1:D
             % 2nd derivative if i == j
             n = 2*(i==j);
-            % d2{i} = convn(d2{i}, GaussD(sigma, n, j), 'same');
-            d2{i} = myconvn(d2{i}, GaussD(sigma, n, j));
+            % d2{i} = convn(d2{i}, sharedutilities.numerics.GaussD(sigma, n, j), 'same');
+            d2{i} = sharedutilities.numerics.myconvn(d2{i}, sharedutilities.numerics.GaussD(sigma, n, j));
         end
     end
     

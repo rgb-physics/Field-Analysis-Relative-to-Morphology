@@ -229,3 +229,107 @@ end
 function t=localKeys(ids,frames,datasets)
 t=table(datasets,frames,ids,'VariableNames',{'DatasetID','Frame','ObjectID'});
 end
+
+function testGeometryMatrixIdentityAndSelection(t)
+labels=zeros(5,6,3); labels(2,3,1)=7; labels(4,5,3)=7; labels(3,2,2)=42;
+objects=objectgeometry.objects.prepareObjects(labels, ...
+    struct('InputType','labels','Spacing',[.2 .3 .7],'SpacingUnit','um'));
+[mask,grid]=objectgeometry.representation.geometryToMatrix(objects);
+verifyEqual(t,mask,labels>0); verifyEqual(t,grid,objects.Grid);
+mapped=objectgeometry.representation.geometryToMatrix(objects,'OutputType','labels');
+verifyEqual(t,mapped,labels);
+selected=objectgeometry.representation.geometryToMatrix(objects,'ObjectIDs',7);
+verifyEqual(t,selected,labels==7);
+empty=objectgeometry.representation.geometryToMatrix(objects,'ObjectIDs',99);
+verifyFalse(t,any(empty(:)));
+objects=objectgeometry.objects.prepareObjects(false(5,6,3));
+empty=objectgeometry.representation.geometryToMatrix(objects);
+verifySize(t,empty,[5 6 3]); verifyFalse(t,any(empty(:)));
+end
+function testGeometryMatrixOverlapPolicy(t)
+grid=struct('Size',[4 5]);
+records=struct('ObjectID',{7,42},'Indices',{[1;2],[2;3]});
+geometry=struct('Type','boundary','Grid',grid,'Records',records);
+mask=objectgeometry.representation.geometryToMatrix(geometry);
+verifyEqual(t,find(mask),[1;2;3]);
+verifyError(t,@()objectgeometry.representation.geometryToMatrix(geometry, ...
+    'OutputType','labels'),'objectgeometry:GeometryOverlap');
+first=objectgeometry.representation.geometryToMatrix(geometry, ...
+    'OutputType','labels','OverlapPolicy','first');
+last=objectgeometry.representation.geometryToMatrix(geometry, ...
+    'OutputType','labels','OverlapPolicy','last');
+verifyEqual(t,first(1:3),[7 7 42]); verifyEqual(t,last(1:3),[7 42 42]);
+end
+function testGeometryMatrixFallbackAndMidplane(t)
+grid=struct('Size',[4 5 3],'Spacing',[1 2 3],'SpacingUnit','um');
+record=struct('ObjectID',8,'Indices',[],'Fallback',struct('Centroid',[3 2 2]));
+geometry=struct('Type','skeleton','Method','sheet','Grid',grid,'Records',record);
+mask=objectgeometry.representation.geometryToMatrix(geometry);
+verifyFalse(t,any(mask(:)));
+[mask,~,info]=objectgeometry.representation.geometryToMatrix(geometry,'IncludeFallback',true);
+verifyTrue(t,mask(2,3,2)); verifyEqual(t,nnz(mask),1);
+verifyEqual(t,info.IncludedFallbackCount,1);
+geometry.Records.Indices=[1;5]; % stored sheet point indices use same converter
+mask=objectgeometry.representation.geometryToMatrix(geometry);
+verifyEqual(t,find(mask),[1;5]);
+end
+function testPointsCoordinateOrderBoundsAndEmpty(t)
+grid=struct('Size',[5 7 3]);
+mask=objectgeometry.representation.pointsToMatrix([4 2 3;4 2 3],grid);
+verifyTrue(t,mask(2,4,3)); verifyEqual(t,nnz(mask),1);
+yxz=objectgeometry.representation.pointsToMatrix([2 4 3],grid,'CoordinateOrder','YXZ');
+verifyEqual(t,mask,yxz);
+rounded=objectgeometry.representation.pointsToMatrix([3.8 2.2 2.7],grid);
+verifyEqual(t,mask,rounded);
+verifyError(t,@()objectgeometry.representation.pointsToMatrix([8 2 1],grid), ...
+    'objectgeometry:RepresentationBounds');
+[clipped,~,info]=objectgeometry.representation.pointsToMatrix([8 2 1],grid,'BoundsPolicy','omit');
+verifyFalse(t,any(clipped(:))); verifyEqual(t,info.OmittedPointCount,1);
+empty=objectgeometry.representation.pointsToMatrix(zeros(0,3),grid);
+verifySize(t,empty,[5 7 3]); verifyFalse(t,any(empty(:)));
+end
+function testGaussianOccupancyAndThreshold(t)
+grid=struct('Size',[15 15]);
+[field,~,info]=objectgeometry.representation.pointsToMatrix([8 8],grid,'Sigma',1);
+verifyClass(t,field,'double'); verifyEqual(t,sum(field(:)),1,'AbsTol',1e-12);
+verifyGreaterThan(t,field(8,8),field(8,9)); verifyGreaterThan(t,field(8,9),0);
+mask=objectgeometry.representation.pointsToMatrix([8 8],grid,'Sigma',1,'Threshold',.05);
+verifyEqual(t,mask,field>.05); verifyClass(t,mask,'logical');
+verifyEqual(t,info.Options.Sigma,1);
+anisotropic=objectgeometry.representation.pointsToMatrix([8 8],grid,'Sigma',[1 0]);
+verifyEqual(t,nnz(anisotropic(:,[1:7 9:15])),0);
+verifyGreaterThan(t,nnz(anisotropic(:,8)),1);
+verifyError(t,@()objectgeometry.representation.pointsToMatrix([8 8],grid,'Sigma',[1 1 1]), ...
+    'objectgeometry:SigmaDimensions');
+end
+function testSingletonAxisGaussian(t)
+grid=struct('Size',[9 9 1]);
+field=objectgeometry.representation.pointsToMatrix([5 5 1],grid,'Sigma',[0 0 1]);
+verifyGreaterThan(t,field(5,5),0); verifyLessThan(t,field(5,5),1);
+verifyEqual(t,nnz(field),1);
+end
+function testSegmentsEndpointsReversalAndWidth(t)
+grid=struct('Size',[9 10]);
+mask=objectgeometry.representation.segmentsToMatrix([2 4],[7 4],grid);
+expected=false(9,10); expected(4,2:7)=true;
+verifyEqual(t,mask,expected);
+reverse=objectgeometry.representation.segmentsToMatrix([7 4],[2 4],grid);
+verifyEqual(t,reverse,mask);
+point=objectgeometry.representation.segmentsToMatrix([2 4],[2 4],grid);
+verifyEqual(t,nnz(point),1); verifyTrue(t,point(4,2));
+field=objectgeometry.representation.segmentsToMatrix([2 4],[7 4],grid,'Sigma',1);
+wide=objectgeometry.representation.segmentsToMatrix([2 4],[7 4],grid,'Sigma',1,'Threshold',.1);
+verifyEqual(t,wide,field>.1); verifyTrue(t,any(wide(3,:)));
+empty=objectgeometry.representation.segmentsToMatrix(zeros(0,2),zeros(0,2),grid);
+verifyEqual(t,empty,false(9,10));
+end
+function testSegments3DAndClipping(t)
+grid=struct('Size',[5 6 4]);
+mask=objectgeometry.representation.segmentsToMatrix([2 3 1],[2 3 4],grid);
+expected=false(5,6,4); expected(3,2,:)=true;
+verifyEqual(t,mask,expected);
+verifyError(t,@()objectgeometry.representation.segmentsToMatrix([0 3 1],[2 3 1],grid), ...
+    'objectgeometry:RepresentationBounds');
+clipped=objectgeometry.representation.segmentsToMatrix([0 3 1],[2 3 1],grid,'BoundsPolicy','omit');
+verifyTrue(t,clipped(3,1,1)); verifyTrue(t,clipped(3,2,1));
+end

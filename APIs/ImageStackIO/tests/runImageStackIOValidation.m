@@ -1,9 +1,13 @@
-function results = runImageStackIOValidation()
+function results = runImageStackIOValidation(throwOnFailure)
 %RUNIMAGESTACKIOVALIDATION Exercise ImageStackIO with the bundled data.
 %   RESULTS = runImageStackIOValidation() runs independent checks for the
 %   public API, spatial calibration, round trips, validation errors, legacy
 %   package functions, and historical stack transforms. All generated files
 %   are placed in a temporary subfolder and removed when the run finishes.
+%   Pass false to return failed-check rows without throwing at the end.
+
+if nargin<1, throwOnFailure=true; end
+validateattributes(throwOnFailure,{'logical'},{'scalar'});
 
 testFolder = fileparts(mfilename('fullpath'));
 repositoryRoot = fileparts(fileparts(fileparts(testFolder)));
@@ -91,8 +95,10 @@ if any(~passed)
     for index = find(~passed)'
         fprintf('\n%s\n%s\n', names(index), messages(index));
     end
-    error('imagestackio:ValidationFailed', ...
-        '%d of %d ImageStackIO checks failed.', sum(~passed), numChecks);
+    if throwOnFailure
+        error('imagestackio:ValidationFailed', ...
+            '%d of %d ImageStackIO checks failed.', sum(~passed), numChecks);
+    end
 end
 end
 

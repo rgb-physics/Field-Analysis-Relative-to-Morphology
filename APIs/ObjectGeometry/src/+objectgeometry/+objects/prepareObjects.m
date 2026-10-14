@@ -21,10 +21,7 @@ if isstruct(input)&&isscalar(input)&&isfield(input,'ObjectGeometryVersion')
     objects=input; return
 end
 explicitSpacing=isfield(options,'Spacing'); explicitUnit=isfield(options,'SpacingUnit');
-options=objectgeometry.internal.options(options,struct('InputType','auto', ...
-    'ImageSize',[],'ObjectIDs',[],'Connectivity',[],'DatasetID','default', ...
-    'Frame',1,'Spacing',[1 1 1],'SpacingUnit','pixel','SourceGrid',[], 'Transform',[], ...
-    'Channel',1,'TimeIndex',1));
+options=objectgeometry.internal.options(options,objectgeometry.config.makeObjectOptions());
 if ischar(input)||(isstring(input)&&isscalar(input))
     input=imagestackio.readTiff(input);
 end

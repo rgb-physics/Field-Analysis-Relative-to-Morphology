@@ -6,6 +6,39 @@ overwritten by the workflows. No output is written beside source data.
 
 ## Start here
 
+For standalone manual input, open the numbered setup scripts:
+
+| Combined script | Analysis |
+|---|---|
+| [setupWorkflow1.m](setupWorkflow1.m) | Objects, geometry supports and field statistics |
+| [setupWorkflow2.m](setupWorkflow2.m) | Filament orientation relative to semantic/distance reference |
+| [setupWorkflow3.m](setupWorkflow3.m) | Overlap lineage, selected ancestry and time measurements |
+| [setupWorkflow4.m](setupWorkflow4.m) | Selected slices, projection, 3-D spectra and correlation |
+| [setupWorkflow5.m](setupWorkflow5.m) | Conditional intensity profiles and optional stored alignment |
+
+Each contains SETUP, DATA, ANALYSIS, PREVIEW and RUN sections, with the workflow
+implementation at the bottom as a local function. Set the explicit repo path
+and run sections in order. Paths/calibration/semantic channels remain editable.
+None of the manual setup sections calls experiment4Config.
+
+The old workflow1Objects through workflow5Profiles files are compatibility
+entry points: they forward existing configurations to the local implementation
+without running manual setup or previews. Tests and older calls remain usable.
+The workflowInput/workflowExtra variables in those wrappers are internal dispatch
+variables; they do not belong in an experiment configuration.
+
+Named sources in workflows 2–5 use Intensity560 for primary/density,
+Intensity647 for filament/secondary, and Probabilities for semantic/object inputs.
+These role names do not require filenames to contain those numbers. Both
+intensity sources must share the configured analysis calibration and be registered.
+Workflow 3 requires all tracking/selected/seed frames in the experiment Frames.
+Workflow 5 currently pools intensity over the whole XYZ; per-object profiles
+are a separate user-directed sampling choice, not implied by this example.
+
+All outputs remain under package test-data. Inspect OUTPUT CHOICES and result
+assignments in each local helper to change retained results. Preparation remains
+the separate preparationExample; it is not one of the numbered analysis pairs.
+
 From the repository root in MATLAB R2023a:
 ```matlab
 addpath(fullfile(pwd,'Workflows','examples'));
@@ -100,6 +133,34 @@ The numbering above counts preparation first; function names preserve the
 agreed workflows 1–5.
 
 ## Modularity and extension points
+
+Workflow 1 returns a compact Measurements table by default. Counts of finite,
+NaN and infinite samples, empty selections/geometry and fallback flags remain
+available in result.Diagnostics and each frame's saved result.Diagnostics.
+Set c.IncludeDiagnostics=true to include these columns in Measurements too.
+Direct FieldSampling calls retain their existing full diagnostic output.
+
+Workflow 1's ANALYSIS section declares ObjectProperties, MeasurementOptions,
+PhysicalVolume, per-support GeometryOptions, and complete Queries including
+statistics/output names/query Options. The helper passes these requests to
+the APIs. Queries=[] permits a properties-only run. Legacy callers lacking
+these fields retain their earlier defaults; custom requests replace rather
+than extend those defaults.
+
+Workflow 1's OUTPUT CHOICES blocks explicitly assemble saved payloads. Geometry
+indices are not saved by default; uncomment payload.Geometry or payload.Supports
+to retain them. Comment out payload.Diagnostics and manifest.Diagnostics to omit
+diagnostic tables from both per-frame and combined outputs. Requested geometry
+is still generated temporarily for sampling. Regenerating supports later requires
+the original data and saved configuration when indices were not retained.
+
+For named dataset sources and configuration builders, see
+[Configuration builders](../../CONFIGURATION-BUILDERS.md).
+The editable [setupWorkflow1.m](setupWorkflow1.m) uses the new builders.
+Run `runConfigBuilderTests` for builder/consumer integration tests.
+
+See [Experiment configuration and inter-API fields](EXPERIMENT-CONFIGURATION.md)
+for the configuration reference, identity keys, naming and grid conventions.
 
 experiment4Config is ordinary editable configuration. ObjectLoader and
 FilamentLoader can supply prepared masks without H5/intensity segmentation.

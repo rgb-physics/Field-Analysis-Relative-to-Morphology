@@ -1,6 +1,8 @@
 # ObjectGeometry
 
 Reusable measurements and index-based geometry for 2-D masks and 3-D volumes.
+The [representation helpers](REPRESENTATION.md) convert index geometry, points
+and line segments to masks/labels, with optional Gaussian point/segment width.
 Target: MATLAB R2023a with Image Processing Toolbox. Add this API's `src`,
 SharedUtilities `src`, and ImageStackIO `src` to the MATLAB path. Historical
 `getDistGrads` also requires SegmentationTools. Do not use `genpath` on the

@@ -37,9 +37,7 @@ end
 if ~(isstruct(options) && isscalar(options))
     error('segmentationtools:InvalidOptions','Options must be a scalar struct.');
 end
-defaults = struct('Method','otsu','Threshold',[],'Foreground','bright', ...
-    'IntensityRange',[],'EstimationMask',[],'FillHoles',false, ...
-    'MinObjectSize',0,'KeepLargest',[],'Connectivity',[],'ReturnLabels',false);
+defaults = segmentationtools.config.makeIntensityOptions();
 unknown = setdiff(fieldnames(options),fieldnames(defaults));
 if ~isempty(unknown)
     error('segmentationtools:UnknownOption','Unknown option: %s',unknown{1});

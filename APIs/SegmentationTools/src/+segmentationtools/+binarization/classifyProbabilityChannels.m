@@ -30,7 +30,7 @@ if isfield(options,'IDs')
     classOptions.IDs = options.IDs;
 end
 classOptions.CombineMethods = repmat("sum",1,numel(channels));
-classes = segmentationtools.binarization.makeClassConfig( ...
+classes = segmentationtools.config.makeClasses( ...
     channels,thresholds,classOptions);
 if isfield(options,'ClassifyOptions')
     classifyOptions = options.ClassifyOptions;

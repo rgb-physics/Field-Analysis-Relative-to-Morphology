@@ -1,0 +1,46 @@
+function experiment=makeExperiment(varargin)
+%MAKEEXPERIMENT Collect named sources, identity and acquisition timing.
+% DatasetID required; Sources required scalar struct of makeSource outputs;
+% Frames required nonnegative integer vector (duplicates removed stably);
+% TimeStep=[] optional positive acquisition-frame interval; TimeUnit=''
+% required when TimeStep is supplied. Both can remain unspecified.
+% TimeStepSeconds is a legacy alias for TimeStep with TimeUnit='s'.
+% Does not inspect/load files; output contains only canonical time fields.
+experiment=sharedutilities.config.parseOptions(struct('DatasetID','', ...
+    'Sources',struct(),'Frames',[],'TimeStep',[],'TimeUnit','', ...
+    'TimeStepSeconds',[]),varargin{:});
+id=string(experiment.DatasetID);
+if ~isscalar(id)||ismissing(id)||strlength(id)==0, error('memoworkflow:ExperimentConfig','Specify a nonempty DatasetID.'); end
+experiment.DatasetID=char(id);
+validateattributes(experiment.Frames,{'numeric'},{'vector','nonempty','integer','nonnegative','finite'});
+experiment.Frames=unique(double(experiment.Frames(:).'),'stable');
+unit=string(experiment.TimeUnit);
+if ~isscalar(unit)||ismissing(unit)
+    error('memoworkflow:ExperimentConfig','TimeUnit must be scalar text.');
+end
+experiment.TimeUnit=char(unit);
+if ~isempty(experiment.TimeStepSeconds)
+    validateattributes(experiment.TimeStepSeconds,{'numeric'},{'scalar','positive','finite','real'});
+    if (~isempty(experiment.TimeStep)&&~isequal(double(experiment.TimeStep),double(experiment.TimeStepSeconds))) ...
+            ||(~isempty(experiment.TimeUnit)&&~strcmp(experiment.TimeUnit,'s'))
+        error('memoworkflow:ExperimentConfig','TimeStepSeconds conflicts with TimeStep/TimeUnit.');
+    end
+    experiment.TimeStep=experiment.TimeStepSeconds; experiment.TimeUnit='s';
+end
+experiment=rmfield(experiment,'TimeStepSeconds');
+if ~isempty(experiment.TimeStep)
+    validateattributes(experiment.TimeStep,{'numeric'},{'scalar','positive','finite','real'});
+    if isempty(strtrim(experiment.TimeUnit))
+        error('memoworkflow:ExperimentConfig','Specify TimeUnit when providing TimeStep.');
+    end
+elseif ~isempty(experiment.TimeUnit)
+    error('memoworkflow:ExperimentConfig','Specify TimeStep when providing TimeUnit.');
+end
+if ~isstruct(experiment.Sources)||~isscalar(experiment.Sources)||isempty(fieldnames(experiment.Sources))
+    error('memoworkflow:ExperimentConfig','Provide named Sources built with imagestackio.config.makeSource.');
+end
+names=fieldnames(experiment.Sources);
+for k=1:numel(names)
+    experiment.Sources.(names{k})=imagestackio.config.makeSource(experiment.Sources.(names{k}));
+end
+end

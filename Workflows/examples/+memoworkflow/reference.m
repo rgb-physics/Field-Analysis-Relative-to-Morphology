@@ -7,7 +7,8 @@ work=imresize3(regions,workingSize,'nearest');
 if any(~isfinite(d(:))), error('memoworkflow:Reference','No usable boundary reference; inspect semantic preview.'); end
 distance=imresize3(d*iso,targetSize,'nearest');
 [gradients,~,directionValid]=objectgeometry.objects.distanceGradients(distance, ...
-    struct('Sigma',c.ProfileSigma,'Spacing',c.Spacing,'DerivativeUnits','physical','DistanceUnit','um'));
+    struct('Sigma',c.ProfileSigma,'Spacing',c.Spacing,'SpacingUnit',c.SpacingUnit, ...
+    'DerivativeUnits','physical','DistanceUnit',c.SpacingUnit));
 valid=imresize3(keep,targetSize,'nearest');
 info.DirectionValid=directionValid; info.WorkingSpacing=iso;
 end

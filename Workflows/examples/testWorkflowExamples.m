@@ -67,3 +67,72 @@ end
 function mask=localMask
 mask=false(8,9,4); mask(3:5,3:6,2:3)=true;
 end
+
+function testSyntheticWorkflow2CombinedScript(t)
+c=localNamedWorkflowFixture;
+r=workflow2Filaments(c); % compatibility entry executes combined script's helper
+verifyEqual(t,height(r.Filaments),1);
+verifyEqual(t,r.Filaments.Frame,1);
+verifyEqual(t,double(r.Filaments.RegionClass),1);
+verifyTrue(t,isfinite(r.Filaments.BoundaryDistance));
+saved=load(fullfile(r.Directory,'frame001.mat'));
+verifyTrue(t,isfield(saved.result,'ReferenceInfo'));
+verifyFalse(t,isfield(saved.result,'FilamentMask'));
+end
+function testSyntheticWorkflow3CombinedScript(t)
+c=localNamedWorkflowFixture;
+c.TrackingFrames=1; c.SeedFrame=1; c.SeedObjectID=[];
+c.ExportTrackingTiffs=false; c.RetainMasks=false;
+c.ExportMaskedIntensity=false; c.TrackingLabelMode='trajectory';
+r=workflow3Lineage(c);
+verifyEqual(t,height(r.Tracking.Detections),1);
+verifyEqual(t,r.Measurements.Intensity_Mean,17);
+verifyEqual(t,r.Measurements.Frame,1);
+verifyFalse(t,isfield(r,'HeavyMasks'));
+end
+function testSyntheticWorkflow4CombinedScript(t)
+c=localNamedWorkflowFixture;
+c.SpectrumFrames=1; c.SelectedSlices=[2 4]; c.NumBins=4;
+c.MeanSubtract=false; c.Window=true; c.Projection='max';
+c.CorrelationMode='2d'; c.CorrelationCrossChannel=true;
+r=workflow4Spectra(c); saved=load(r.Files{1}); data=saved.result;
+verifyEqual(t,numel(data.Slices),2);
+verifyEqual(t,data.Projection.Method,'max');
+verifyEqual(t,data.Volume.SpacingUnit,'um');
+verifyTrue(t,isfield(data,'CrossCorrelation'));
+end
+function testSyntheticWorkflow5CombinedScript(t)
+c=localNamedWorkflowFixture;
+c.ProfileReference='boundary'; c.ProfileEdges=-20:2:20;
+c.ProfileChannels={'560','647'}; c.GeometrySigma=1;
+r=workflow5Profiles(c); saved=load(r.Files{1});
+stats=saved.result.Channel560.Statistics;
+verifyEqual(t,stats.Mean(isfinite(stats.Mean)),17*ones(nnz(isfinite(stats.Mean)),1));
+verifyTrue(t,isfield(saved.result,'Channel647'));
+% Optional second argument must also be forwarded through compatibility entry.
+filaments=workflow2Filaments(c);
+r=workflow5Profiles(c,filaments); saved=load(r.Files{1});
+verifyTrue(t,isfield(saved.result,'Alignment'));
+end
+function c=localNamedWorkflowFixture
+c=experiment4Config; c.Frames=1; c.Spacing=[1 1 1]; c.SpacingUnit='um';
+inside=false(14,15,10); inside(4:10,5:11,4:7)=true;
+wall=imdilate(inside,strel('sphere',1)) & ~inside;
+outside=~(inside|wall);
+p=cat(4,double(outside),double(wall),double(inside));
+probabilityImage=struct('Data',p,'Axes','YXZCT','Spacing',[1 1 1],'SpacingUnit','um');
+density=imagestackio.config.makeSource('Format','custom','Loader',@(~)17*ones(size(inside)), ...
+    'Spacing',[1 1 1],'SpacingUnit','um');
+filaments=imagestackio.config.makeSource('Format','custom','Loader',@(~)ones(size(inside)), ...
+    'Spacing',[1 1 1],'SpacingUnit','um');
+probabilities=imagestackio.config.makeSource('Format','custom','Loader',@(~)probabilityImage, ...
+    'Spacing',[1 1 1],'SpacingUnit','um');
+c.Experiment=memoworkflow.config.makeExperiment('DatasetID','synthetic-workflows', ...
+    'Frames',1,'TimeStep',2,'TimeUnit','s', ...
+    'Sources',struct('Intensity560',density,'Intensity647',filaments,'Probabilities',probabilities));
+c.DatasetID=c.Experiment.DatasetID; c.TimeStep=2; c.TimeUnit='s';
+filamentMask=false(size(inside)); filamentMask(5:9,7,5:6)=true;
+c.FilamentLoader=@(~)filamentMask; c.ObjectLoader=@(~)inside;
+c.SemanticChannels=[3 2 1]; c.Thresholds=[.5 .5 .5]; c.OpeningRadius=0;
+c.ProfileSigma=1;
+end

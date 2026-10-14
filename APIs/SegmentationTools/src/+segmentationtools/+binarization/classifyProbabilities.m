@@ -1,7 +1,7 @@
 function result = classifyProbabilities(probabilities, classes, options)
 %CLASSIFYPROBABILITIES Convert [Y X Z C] probabilities into class masks.
 %   RESULT = CLASSIFYPROBABILITIES(PROBABILITIES, CLASSES, OPTIONS) uses
-%   class definitions from makeClassConfig. Threshold comparisons are
+%   class definitions from segmentationtools.config.makeClasses. Comparisons are
 %   strict. Inputs are not normalized internally.
 %
 %   Default behavior is disjoint but not exhaustive: overlapping candidate
@@ -41,11 +41,7 @@ if ~(isnumeric(probabilities) && isreal(probabilities) && ...
 end
 localValidateClasses(classes, size(probabilities, 4));
 
-defaults = struct('EnsureDisjoint', true, 'AssignUnclassified', false, ...
-    'ReturnLabelVolume', true, 'ReturnMasks', false, ...
-    'ReturnCandidateMasks', false, 'ReturnOverlapMask', false, ...
-    'ReturnUnclassifiedMask', false, 'ReturnChangedVoxelMask', false, ...
-    'CountComponents', false, 'Connectivity', []);
+defaults = segmentationtools.config.makeProbabilityOptions();
 optionNames = fieldnames(defaults);
 for index = 1:numel(optionNames)
     name = optionNames{index};

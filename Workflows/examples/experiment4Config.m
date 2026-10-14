@@ -5,9 +5,12 @@ for api={'ImageStackIO','SegmentationTools','ObjectGeometry','ObjectTracking','O
     addpath(fullfile(repo,'APIs',api{1},'src'));
 end
 addpath(here);
+addpath(fullfile(repo,'Workflows','src'));
 c=struct;
+c.IncludeDiagnostics=false; % workflow 1 also retains a separate Diagnostics table
+c.RepositoryRoot=repo;
 c.DatasetID='Session88_Experiment4'; c.Frames=10:2:30; c.TrackingFrames=10:30;
-c.Spacing=[.55 .55 .7]; c.SpacingUnit='um'; c.TimeStepSeconds=30;
+c.Spacing=[.55 .55 .7]; c.SpacingUnit='um'; c.TimeStep=30; c.TimeUnit='s';
 c.RawDirectory='O:\Session 88\Exp 4 - Rmin Redo\0 Raw Tifs';
 c.IntensityDirectory='O:\Session 88\Exp 4 - Rmin Redo\3 Illumination Bleach Corrected 16bit';
 c.ProbabilityDirectory='O:\Session 88\all ilastik prep files';

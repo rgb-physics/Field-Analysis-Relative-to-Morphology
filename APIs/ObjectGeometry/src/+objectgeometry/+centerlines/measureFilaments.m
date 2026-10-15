@@ -1,35 +1,40 @@
 function [properties, objects] = measureFilaments(input, requested, options)
 %MEASUREFILAMENTS Native and selected derived filament properties; no skeleton.
 % REQUESTED: any native regionprops(3) name, plus Directors, AspectRatios,
-% Lengths (historical voxel principal-axis length), ScaledDirectors,
+% ExtentInVoxels (historical voxel principal-axis length), ScaledDirectors,
 % ProjectedExtent, ScaledAspectRatios. Derived values are opt-in.
 % 'all' requests native properties only. OPTIONS.Identity holds prepareObjects
 % options. ExtentWidthFloor=eps is positive in SpacingUnit units. Scaled values
 % reuse the historical coordinate-scaled covariance/PCA method, WITHOUT
 % resampling masks. Extent is max-minus-min of voxel CENTER projections, not
 % equivalent-ellipsoid axis length. Metadata explicitly distinguishes units.
+% Single voxels use ExtentInVoxels times spacing along the arbitrary native
+% director as a finite fallback; ScaledDirectors remains NaN for these points.
 % Directors use [X Y Z] or [X Y] in image coordinates (Y increases downwards).
 % Eigenvector sign is arbitrary; use nematic alignment, not polar direction.
-if nargin<2||isempty(requested), requested={'Directors','Lengths','AspectRatios'}; end
+if nargin<2||isempty(requested), requested={'Directors','ExtentInVoxels','AspectRatios'}; end
 if nargin<3, options=struct(); end
 options=objectgeometry.internal.options(options,struct('Identity',struct(),'ExtentWidthFloor',eps));
 validateattributes(options.ExtentWidthFloor,{'numeric'},{'real','finite','scalar','positive'});
 objects=objectgeometry.objects.prepareObjects(input,options.Identity);
 names=cellstr(string(requested)); names=names(:).';
-derived={'Directors','Lengths','AspectRatios','ScaledDirectors','ProjectedExtent','ScaledAspectRatios'};
+derived={'Directors','ExtentInVoxels','AspectRatios','ScaledDirectors','ProjectedExtent','ScaledAspectRatios'};
 for i=1:numel(names)
     matched=find(strcmpi(names{i},derived),1);
     if ~isempty(matched), names{i}=derived{matched}; end
 end
 native=setdiff(names,derived,'stable'); dims=numel(objects.Grid.Size);
-needAxes=any(ismember(names,{'Directors','Lengths','AspectRatios'}));
+scaledRequested=any(ismember(names,{'ScaledDirectors','ProjectedExtent','ScaledAspectRatios'}));
+pointGroups=cellfun(@numel,objects.Components.PixelIdxList(:))==1;
+scale=objects.Grid.Spacing([2 1 3]); scale=scale(1:dims);
+needAxes=any(ismember(names,{'Directors','ExtentInVoxels','AspectRatios'})) || (scaledRequested && any(pointGroups));
 if needAxes
     if dims==3, dependencies={'PrincipalAxisLength','EigenVectors'};
     else, dependencies={'MajorAxisLength','MinorAxisLength','Orientation'}; end
     native=unique([native dependencies],'stable');
 end
 [properties,objects]=objectgeometry.objects.measureObjects(objects,native);
-n=height(properties);
+n=height(properties); pointExtentFallback=zeros(n,1);
 if needAxes
     if dims==3
         dirs=zeros(n,3); lens=properties.PrincipalAxisLength;
@@ -39,14 +44,19 @@ if needAxes
         dirs=[cos(angle) sin(angle)];
         lens=[properties.MajorAxisLength properties.MinorAxisLength];
     end
+    pointExtentFallback=lens(:,1).*sqrt(sum((dirs.*scale).^2,2));
     if ismember('Directors',names), properties.Directors=dirs; end
-    if ismember('Lengths',names), properties.Lengths=lens(:,1); end
+    if ismember('ExtentInVoxels',names), properties.ExtentInVoxels=lens(:,1); end
     if ismember('AspectRatios',names), properties.AspectRatios=lens(:,1)./lens(:,2); end
 end
-if any(ismember(names,{'ScaledDirectors','ProjectedExtent','ScaledAspectRatios'}))
+if scaledRequested
     dirs=nan(n,dims); extents=zeros(n,1); ratios=nan(n,1);
-    scale=objects.Grid.Spacing([2 1 3]); scale=scale(1:dims);
+
     for i=1:n
+        if pointGroups(i)
+            extents(i)=pointExtentFallback(i); ratios(i)=0;
+            continue
+        end
         indices=objects.Components.PixelIdxList{i};
         if dims==3
             [y,x,z]=ind2sub(objects.Grid.Size,indices); coordinates=[x y z];
@@ -84,5 +94,7 @@ end
 properties.Properties.UserData=struct('Grid',objects.Grid,'SourceGrid',objects.SourceGrid, ...
     'Transform',objects.Transform,'DatasetID',objects.DatasetID,'Frame',objects.Frame, ...
     'NativeUnits','voxel','ProjectedExtentUnit',objects.Grid.SpacingUnit, ...
+    'PointExtentFallbackObjectIDs',objects.ObjectIDs(pointGroups & scaledRequested), ...
+    'PointExtentFallback','ExtentInVoxels times spacing along native director', ...
     'ExtentWidthFloor',options.ExtentWidthFloor,'DirectorAxes','XYZ','YDirection','increasing rows');
 end

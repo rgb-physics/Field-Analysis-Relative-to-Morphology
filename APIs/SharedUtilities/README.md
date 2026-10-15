@@ -4,6 +4,18 @@ General-purpose helpers and explicit keyed table operations.
 Use only this API's src directory on the MATLAB path. Do not add archives
 with genpath; dated archives preserve original package structures.
 
+## MATLAB glossary
+
+From the repository root, use `glossary("Experiment")` to display an entry,
+`glossary("search", "distance")` to search, or `catalog = glossary` to browse
+all entries as a table. Explicit getters live under
+`sharedutilities.documentation`, including `getGlossaryDataType`,
+`getGlossaryInputs` and `getGlossaryInputOptions`.
+See [MATLAB glossary usage](../../docs/MATLAB-GLOSSARY.md).
+The same document contains a Data Dictionary beginning with sampling diagnostics.
+Optional `Section` and `SearchIn` filters accept a name or a string array;
+the default searches all sections and all columns.
+
 ## Keyed attachment and concatenation
 
 ```matlab

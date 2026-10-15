@@ -19,7 +19,7 @@ for k=1:numel(cases)
     for frame=1:spec.Frames
         objects=objectgeometry.objects.prepareObjects(labels,struct('InputType','labels','Frame',frame));
         start=tic; objectgeometry.objects.measureObjects(objects,{'Volume','Centroid'}); measurementSeconds=measurementSeconds+toc(start);
-        start=tic; objectgeometry.centerlines.measureFilaments(objects,{'Directors','Lengths'}); filamentSeconds=filamentSeconds+toc(start);
+        start=tic; objectgeometry.centerlines.measureFilaments(objects,{'Directors','ExtentInVoxels'}); filamentSeconds=filamentSeconds+toc(start);
         for channel=1:spec.Channels
             field=ones(dims)*channel;
             start=tic; objectrelativeprofiles.fieldSampling.queryField(field,objects,{'Mean','Sum'}); sampleSeconds=sampleSeconds+toc(start);

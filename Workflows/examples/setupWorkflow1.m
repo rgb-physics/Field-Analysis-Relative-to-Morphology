@@ -1,3 +1,8 @@
+% READING GUIDE: edit SETUP / DATA / ANALYSIS first, inspect PREVIEW, then run RUN.
+% The local functions below WORKFLOW IMPLEMENTATION execute those choices.
+% Source descriptions/options are structs; loaded images are matrices; measurements are tables.
+
+
 %% Guided workflow 1 setup: edit DATA and ANALYSIS, then run the final section.
 % Run SETUP first, then DATA/ANALYSIS/PREVIEW/RUN in order.
 % Standalone setup: no experiment4Config or prior workspace variables needed.
@@ -7,6 +12,7 @@ if exist('workflowInput','var') && isstruct(workflowInput)
     result=workflow1Objects(workflowInput);
     return
 end
+
 
 %% SETUP -- explicit package location (works when running editor sections)
 % Change this if you move the package. Source data folders are defined below.
@@ -28,21 +34,25 @@ for k=1:numel(folders)
     addpath(folders{k});
 end
 
+
 %% DATA -- 
 % describe your dataset, store that info in an "experiment" object
+
+% ---- Choose acquisition frames; these are file frame numbers, not positions in a list. ----
 frames= 10:2:30;
+deltaT = 30;
+
 % intensity info
 intDir = 'O:\Session 88\Exp 4 - Rmin Redo\3 Illumination Bleach Corrected 16bit';
 intName = 't%03i_illBleachCorr16bit_560.tif';
 intVoxSize = [.55 .55 .7];
 intAxes = 'YXZ';
+
 % probability info
 segDir = 'O:\Session 88\all ilastik prep files';
 segName = 't%03i_illCorr8bit_560_E4_Probabilities Stage 2.h5';
 segVoxSize = [1.5 1.5 1.5];
 segAxes = 'CXYZ';
-% Other parameters
-deltaT = 30;
 
 % Assign properties before building data-reader objects
 intensity=imagestackio.config.makeSource( ...
@@ -54,14 +64,19 @@ probabilities=imagestackio.config.makeSource( ...
     'Spacing',segVoxSize,'SpacingUnit','um');
 
 % Store info on identity, selected frames, timing, and names in experiment
+
+% ---- EXPERIMENT: collect source descriptions and dataset identity; images are not loaded here. ----
 experiment=struct( ...
     'DatasetID','S88E4','Frames',frames,'TimeStep',deltaT,'TimeUnit','s', ...
     'Sources',struct('Intensity',intensity,'Probabilities',probabilities));
 experiment=memoworkflow.config.makeExperiment(experiment); % validate/normalize
 
 % Only the workflow 1 execution choices belong in c; dataset lives above.
+
+% ---- WORKFLOW OPTIONS: c carries the experiment and the analysis choices used below. ----
 c=struct('Experiment',experiment,'Frames',experiment.Frames);
 c.RepositoryRoot=repo; % same explicit package root used for paths and outputs
+
 
 %% ANALYSIS -- 
 % Select probability channels to segment, then support-geometries you wish
@@ -69,11 +84,13 @@ c.RepositoryRoot=repo; % same explicit package root used for paths and outputs
 
 % Segmentation channel settings/parameters
 c.ForegroundChannels=[3 2]; c.ForegroundThreshold=.6; c.ObjectSmoothSigma=2;
+
 % Geometry selection and settings
 c.Supports={'objects','boundary'};
 c.GeometryOptions=struct( ...
     'boundary',struct('Sigma',1,'LayerMean',0,'LayerWidth',1), ...
     'skeleton',struct('Method','blob','Sigma',1));
+
 % Geometry options above are passed directly to generateGeometry by name.
 c.ObjectProperties={'Volume','Centroid'}; % properties to measure using regionprops(3)
 c.PhysicalVolume=true; % separate physical-unit column; false omits it
@@ -94,11 +111,15 @@ c.Queries=[
     objectrelativeprofiles.config.makeQuery('Name','InteriorDistanceOnboundary', ...
         'Field','InteriorDistanceVoxels','Support','boundary','Statistics',{'Mean','Max'})
     ];
+
 % For a properties-only run: c.Queries=[]; c.Supports={'objects'};
 c.ObjectLoader=[]; c.ObjectInputType='auto';
 c.LocalInertia=false; % no inertia settings needed while disabled
 c.IncludeDiagnostics=false; % true also includes counts/flags in Measurements
+
 % Diagnostics remain available as result.Diagnostics and in each frame MAT.
+
+% ---- OUTPUT LOCATION: each run creates a new subfolder here. ----
 c.OutputRoot=fullfile(repo,'test-data','workflow-results');
 
 % To bypass probability segmentation, provide same-intensity-grid objects:
@@ -107,19 +128,24 @@ c.OutputRoot=fullfile(repo,'test-data','workflow-results');
 % InteriorDistanceVoxels is in voxels. Geometry and fields are reused
 % within one frame; neither all images nor all masks are preloaded.
 
+
 %% PREVIEW -- one quantitative field, without changing source files
 preview=memoworkflow.loadSource(c.Experiment,'Intensity',frames(10));
 imagesc(preview.Data(:,:,round(size(preview.Data,3)/2))); axis image; colorbar;
 title('Quantitative intensity: middle Z slice');
+
 % Verify probability/intensity registration before interpreting results.
 % Similar physical extents do not establish a shared origin/crop.
+
 
 %% RUN -- creates a fresh directory under package test-data
 result=workflow1Objects(c);
 disp(result.Measurements);
 
+
 %% WORKFLOW IMPLEMENTATION -- helper function, called by RUN above
 function manifest=workflow1Objects(c)
+
 %WORKFLOW1OBJECTS User-selected supports and same-frame fields.
 % Measure objects and sample fields within them and on requested geometry.
 % ObjectIDs are frame-local: this workflow does not track trajectories/ancestry.
@@ -127,6 +153,7 @@ function manifest=workflow1Objects(c)
 % always saved separately, keyed by object identity, for later inspection.
 if ~isfield(c,'IncludeDiagnostics'), c.IncludeDiagnostics=false; end
 validateattributes(c.IncludeDiagnostics,{'logical'},{'scalar'});
+
 % Compatibility defaults for older configurations; setup supplies these explicitly.
 if ~isfield(c,'ObjectProperties'), c.ObjectProperties={'Volume','Centroid'}; end
 if ~isfield(c,'PhysicalVolume'), c.PhysicalVolume=true; end
@@ -151,13 +178,19 @@ if ~isfield(c,'Queries')
     end
 end
 queries=c.Queries;
+
 % Create a fresh package test-data output folder and save configuration.mat.
 % Retain small per-frame tables; do not preload images/masks across all times.
+
+% ---- START RUN: create the output folder and keep small result tables/file paths in memory. ----
 out=memoworkflow.newRun(c,'workflow1'); tables=cell(numel(c.Frames),1);
 diagnosticTables=cell(numel(c.Frames),1);
+
+% ---- PROCESS ONE FRAME AT A TIME: load, calculate, save, then continue to the next frame. ----
 for k=1:numel(c.Frames)
     frame=c.Frames(k); timer=tic;
     current=c;
+
     % Load one quantitative intensity volume and its current-grid calibration.
     % Preserve intensity values; illumination/bleaching correction is upstream.
     if isfield(c,'Experiment')
@@ -169,6 +202,7 @@ for k=1:numel(c.Frames)
     else
         intensity=memoworkflow.intensity(c,frame,'560');
     end
+
     % Load matching probabilities; sum ForegroundChannels and threshold them,
     % smooth on the probability grid, then resize the mask to the intensity
     % grid with nearest-neighbor interpolation. prepareObjects assigns IDs
@@ -177,7 +211,10 @@ for k=1:numel(c.Frames)
     % IDs when ObjectInputType='labels'. Shared crop/registration is assumed;
     % matching volume extents alone cannot establish spatial registration.
     [objects,mask]=memoworkflow.objects(current,frame,size(intensity));
+
     % Pass setup measurement requests through; native properties keep native units.
+
+    % ---- MEASURE: requested native properties become columns, with one row per object ID. ----
     properties=objectgeometry.objects.measureObjects(objects,c.ObjectProperties,c.MeasurementOptions);
     if c.PhysicalVolume
         if ismember('Volume',properties.Properties.VariableNames), volumes=properties.Volume;
@@ -188,13 +225,19 @@ for k=1:numel(c.Frames)
         properties.PhysicalVolume=volumes*prod(current.Spacing);
         properties=memoworkflow.setColumnUnit(properties,'PhysicalVolume',[current.SpacingUnit '^3']);
     end
+
     % Interior distance magnitude to background, in voxels. This references
     % the combined foreground mask, not a separate distance field for each ID.
+
+    % ---- FIELD: build interior distance once; reuse it across the requested sampling locations. ----
     distance=bwdist(~logical(mask));
     fields=struct('Intensity',intensity,'InteriorDistanceVoxels',distance);
+
     % Object support uses all object voxels. Generate requested boundary or
     % skeleton indices once, then reuse them to sample both named fields.
     % Skeletons are geometric supports, not filament objects.
+
+    % ---- SUPPORTS: collect the voxel locations on which each field will be sampled. ----
     supports=struct('objects',objects); geometry=struct;
     for s=1:numel(c.Supports)
         name=c.Supports{s};
@@ -205,15 +248,20 @@ for k=1:numel(c.Frames)
             supports.(name)=geometry.(name);
         end
     end
+
     % Sample each field on each requested support, grouped by parent object ID.
     if ~isempty(queries)
         results=objectrelativeprofiles.fieldSampling.queryFrame(fields,supports,queries);
+
         % Attach using DatasetID/Frame/ObjectID and sampling ComponentID as needed,
         % rather than trusting table row order; retain sampling validity metadata.
         properties=objectrelativeprofiles.fieldSampling.attachResults(properties,results);
     end
+
     % Separate diagnostic counts/flags from the user-requested measurements.
     % Keep keys so later debugging/querying does not depend on table row order.
+
+    % ---- DIAGNOSTICS: separate sampling counts and validity flags from the requested statistics. ----
     suffixes={'SelectedCount','FiniteCount','NaNCount','PositiveInfCount', ...
         'NegativeInfCount','SelectionEmpty','GeometryEmpty','EmptyGeometryCount', ...
         'UsedFallback','FallbackCount'};
@@ -225,14 +273,18 @@ for k=1:numel(c.Frames)
     if ismember('ComponentID',properties.Properties.VariableNames), keys{end+1}='ComponentID'; end
     diagnostics=properties(:,[keys,diagnosticNames]);
     if ~c.IncludeDiagnostics, properties=removevars(properties,diagnosticNames); end
+
     % OUTPUT CHOICES: edit these assignments to choose what each frame saves.
     % Measurements contain statistics even when geometry indices are omitted.
     payload=struct('Measurements',properties,'Seconds',toc(timer));
     payload.Diagnostics=diagnostics; % comment out to omit per-frame diagnostics
+
     % payload.Geometry=geometry;     % uncomment to retain generated indices
     % payload.Supports=supports;     % uncomment to retain whole-object support too
     % Optional independent local-inertia analysis at skeleton indices, or at
     % rounded centroids when no skeleton was requested. Disabled in setup.
+
+    % ---- OPTIONAL ANALYSIS: calculate local shape information only when enabled in setup. ----
     if c.LocalInertia
         if isfield(geometry,'skeleton')
             indices=unique(vertcat(geometry.skeleton.Records.Indices));
@@ -245,17 +297,25 @@ for k=1:numel(c.Frames)
         localInertia=objectgeometry.objects.localInertia(logical(mask),indices,opts);
         payload.LocalInertia=localInertia; % comment out to calculate without saving
     end
+
     % Save only the fields assigned above. MAT files contain a variable result.
     % Full intensity/probability stacks are not retained in these outputs.
+
+    % ---- SAVE FRAME: write the selected payload before moving on; source files are not modified. ----
     memoworkflow.saveNew(fullfile(out,sprintf('frame%03i.mat',frame)),payload);
     tables{k}=properties;
     diagnosticTables{k}=diagnostics;
 end
+
 % Concatenate the small keyed tables across frames. Return/save manifest.mat
 % with the combined Measurements table and output Directory; inputs unchanged.
+
+% ---- COMBINED OUTPUT: return the run directory and the retained tables or per-frame file paths. ----
 manifest=struct('Directory',out,'Measurements',objectgeometry.objects.concatenateMeasurements(tables));
+
 % OUTPUT CHOICE: comment out this line too if no combined diagnostics are wanted.
 manifest.Diagnostics=objectgeometry.objects.concatenateMeasurements(diagnosticTables);
+
 % Geometry/support indices are never added to the combined manifest implicitly.
 memoworkflow.saveNew(fullfile(out,'manifest.mat'),manifest);
 fprintf('Workflow 1 outputs: %s\n',out);

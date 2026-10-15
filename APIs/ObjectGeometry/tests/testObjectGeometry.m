@@ -7,6 +7,7 @@ addpath(fullfile(root,'APIs','ObjectGeometry','src'));
 addpath(fullfile(root,'APIs','SharedUtilities','src'));
 addpath(fullfile(root,'APIs','ImageStackIO','src'));
 testCase.TestData.Root=root;
+addpath(fullfile(root,'tests'));
 end
 function testMaskIdentity(testCase)
 mask=false(12); mask(2:4,3:6)=true; mask(9:10,9:10)=true;
@@ -41,7 +42,7 @@ t=objectgeometry.objects.measureObjects(false(8,9,4),{'Volume','Centroid'});
 verifyEqual(testCase,height(t),0); verifySize(testCase,t.Centroid,[0 3]);
 [p,s]=objectgeometry.centerlines.storeFilCCs(false(8,9,4));
 verifyEqual(testCase,height(p),0); verifyEmpty(testCase,s);
-verifySize(testCase,p.Lengths,[0 1]);
+verifySize(testCase,p.ExtentInVoxels,[0 1]);
 verifySize(testCase,p.PrincipalAxisLength,[0 3]);
 verifySize(testCase,p.Directors,[0 3]);
 flat=objectgeometry.objects.measureObjects(false(8,9),{'Centroid','BoundingBox','Area'});
@@ -89,7 +90,7 @@ verifyEqual(testCase,t.BoundingBox,[2.5 3.5 2.5 10 3 5]);
 end
 function testFilamentAxisConvention(testCase)
 mask=false(15,25,11); mask(6:8,4:22,5:7)=true;
-t=objectgeometry.centerlines.measureFilaments(mask,{'Directors','Lengths','AspectRatios'});
+t=objectgeometry.centerlines.measureFilaments(mask,{'Directors','ExtentInVoxels','AspectRatios'});
 verifyEqual(testCase,abs(t.Directors),[1 0 0],'AbsTol',1e-10);
 verifyGreaterThan(testCase,t.AspectRatios,1);
 verifyFalse(testCase,ismember('EigenVectors',t.Properties.VariableNames));
@@ -109,6 +110,37 @@ verifyEqual(testCase,abs(t.ScaledDirectors),[1 0 0],'AbsTol',1e-10);
 verifyEqual(testCase,t.ProjectedExtent,18*0.2,'AbsTol',1e-10);
 verifyEqual(testCase,t.ScaledAspectRatios,3.6/1.6,'AbsTol',1e-10);
 verifyEqual(testCase,t.Properties.UserData.ProjectedExtentUnit,"um");
+end
+function testProjectedExtentSmallerZSpacing(testCase)
+expectedLengthUm=40;
+report=memotest.filamentExtentAngleSweep(.25,expectedLengthUm);
+localVerifyExtentSweep(testCase,report);
+end
+function testProjectedExtentLargerZSpacing(testCase)
+expectedLengthUm=40;
+report=memotest.filamentExtentAngleSweep(2,expectedLengthUm);
+localVerifyExtentSweep(testCase,report);
+end
+function localVerifyExtentSweep(testCase,report)
+verifyEqual(testCase,height(report),21);
+verifyEqual(testCase,report.ComponentCount,ones(height(report),1));
+verifyTrue(testCase,all(isfinite(report.ProjectedExtentUm)));
+verifyTrue(testCase,all(abs(report.ErrorUm)<=report.LengthToleranceUm), ...
+    'Physical extent differs from the configured centerline beyond the raster allowance.');
+verifyTrue(testCase,all(report.DirectorErrorDegrees<=report.DirectorToleranceDegrees));
+% Axis-aligned spans equal the distance between the rounded voxel centers,
+% even when the requested length is not a multiple of voxel spacing.
+axisAligned=report.ElevationDegrees==90 | ...
+    (report.ElevationDegrees==0 & ismember(report.AzimuthDegrees,[0 90]));
+verifyEqual(testCase,report.ProjectedExtentUm(axisAligned), ...
+    report.RoundedEndpointSpanUm(axisAligned),'AbsTol',1e-10);
+end
+function testProjectedExtentConfigurableLength(testCase)
+expectedLengthUm=24.5;
+report=memotest.filamentExtentAngleSweep(2,expectedLengthUm);
+verifyEqual(testCase,report.ExpectedLengthUm,repmat(expectedLengthUm,height(report),1));
+verifyEqual(testCase,report.ErrorUm,report.ProjectedExtentUm-expectedLengthUm);
+localVerifyExtentSweep(testCase,report);
 end
 function testGradientLinearFieldAndSpacing(testCase)
 [y,x,z]=ndgrid(1:9,1:11,1:7); field=2*x+3*y+4*z;
@@ -332,4 +364,33 @@ verifyError(t,@()objectgeometry.representation.segmentsToMatrix([0 3 1],[2 3 1],
     'objectgeometry:RepresentationBounds');
 clipped=objectgeometry.representation.segmentsToMatrix([0 3 1],[2 3 1],grid,'BoundsPolicy','omit');
 verifyTrue(t,clipped(3,1,1)); verifyTrue(t,clipped(3,2,1));
+end
+
+function testPointExtentFallback(testCase)
+for dims=[2 3]
+    if dims==3, mask=false(7,8,5); mask(3,4,2)=true;
+    else, mask=false(7,8); mask(3,4)=true; end
+    for spacing={[.3 .3 .3],[.4 .2 .8]}
+        identity=struct('Spacing',spacing{1},'SpacingUnit','um');
+        t=objectgeometry.centerlines.measureFilaments(mask, ...
+            {'ExtentInVoxels','Directors','ProjectedExtent','ScaledDirectors'}, ...
+            struct('Identity',identity));
+        xyz=spacing{1}([2 1 3]); xyz=xyz(1:dims);
+        expected=t.ExtentInVoxels*norm(t.Directors.*xyz);
+        verifyTrue(testCase,isfinite(t.ProjectedExtent));
+        verifyEqual(testCase,t.ProjectedExtent,expected,'AbsTol',1e-12);
+        verifyTrue(testCase,all(isnan(t.ScaledDirectors),'all'));
+        verifyEqual(testCase,t.Properties.UserData.PointExtentFallbackObjectIDs,t.ObjectID);
+        only=objectgeometry.centerlines.measureFilaments(mask,{'ProjectedExtent'},struct('Identity',identity));
+        verifyEqual(testCase,only.ProjectedExtent,expected,'AbsTol',1e-12);
+        verifyFalse(testCase,ismember('ExtentInVoxels',only.Properties.VariableNames));
+    end
+end
+end
+function testExtendedDegenerateExtentNotPointFallback(testCase)
+mask=false(7,8,5); mask(2:4,3:5,2:4)=true;
+t=objectgeometry.centerlines.measureFilaments(mask,{'ProjectedExtent','ScaledDirectors'});
+verifyEmpty(testCase,t.Properties.UserData.PointExtentFallbackObjectIDs);
+verifyTrue(testCase,all(isnan(t.ScaledDirectors),'all'));
+verifyEqual(testCase,t.ProjectedExtent,2,'AbsTol',1e-12);
 end

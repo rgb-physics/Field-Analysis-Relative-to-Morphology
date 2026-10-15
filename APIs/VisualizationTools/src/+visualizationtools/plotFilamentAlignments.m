@@ -3,7 +3,7 @@
 %       - rAtCens
 %       - Directors
 %       - GradsAtCens
-%       - Lengths
+%       - ExtentInVoxels (legacy Lengths also accepted)
 %       - Volumes
 %       - AspectRatios
 %       - Frame
@@ -69,7 +69,11 @@ fDg2D = dot(fils2D',grads2D')';
 order2D = min(1,max(-1,(1/1*(2*fDg2D.^2 - 1))));
 
 %% Define logic
-lenLogic = fData.("Lengths") > cutLen;
+if ismember('ExtentInVoxels',fData.Properties.VariableNames)
+    lenLogic = fData.ExtentInVoxels > cutLen;
+else
+    lenLogic = fData.Lengths > cutLen; % Historical saved tables.
+end
 volLogic = fData.("Volume") > cutVol;
 arLogic = fData.AspectRatios > cutAR;
 psfLogic = zAligns < cutZ;

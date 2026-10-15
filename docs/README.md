@@ -10,6 +10,8 @@ Start with a task and a guided script. You do not need to understand every API b
 | Follow one analysis from files to results | [Understanding workflow 1](WORKFLOW-1-WALKTHROUGH.md) |
 | Change properties, statistics, supports or saved outputs | [Changing an analysis](CHANGING-AN-ANALYSIS.md) |
 | Look up a term or a struct's field layout | [Glossary](../GLOSSARY-CAPABILITIES-MOCKUP.md) |
+| Search terminology directly from MATLAB | [MATLAB glossary lookup and getters](MATLAB-GLOSSARY.md) |
+| Review candidates for the Data Dictionary | [Package field inventory](DATA-DICTIONARY-CANDIDATES.md) |
 
 For a first visit, read Reading package structures, follow workflow 1, then use Changing an analysis as a reference while editing setup.
 

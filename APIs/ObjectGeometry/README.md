@@ -3,6 +3,15 @@
 Reusable measurements and index-based geometry for 2-D masks and 3-D volumes.
 The [representation helpers](REPRESENTATION.md) convert index geometry, points
 and line segments to masks/labels, with optional Gaussian point/segment width.
+
+For the anisotropic filament-length check, add this API's examples folder and
+run `report=validateFilamentProjectedExtent;`. It compares a known 40 um
+centerline against ProjectedExtent over elevations 0:15:90, azimuths 0/45/90,
+XY spacing 1 um and Z spacing 0.25 or 2 um. CSV/MAT/PNG reports go to a fresh
+test-data/workflow-results folder. Native ExtentInVoxels is listed separately in
+voxel units. Two angle-sweep regression tests are included in testObjectGeometry.
+Oblique lines allow voxel-rounding error; these thin synthetic fixtures do
+not establish robustness to noise, finite thickness, curvature or branching.
 Target: MATLAB R2023a with Image Processing Toolbox. Add this API's `src`,
 SharedUtilities `src`, and ImageStackIO `src` to the MATLAB path. Historical
 `getDistGrads` also requires SegmentationTools. Do not use `genpath` on the
@@ -56,7 +65,7 @@ integers through `flintmax`, preventing silent precision loss in joins.
 
 ```matlab
 filaments = objectgeometry.centerlines.measureFilaments(objects, ...
-    {'Volume','Centroid','Directors','Lengths','AspectRatios'});
+    {'Volume','Centroid','Directors','ExtentInVoxels','AspectRatios'});
 scaled = objectgeometry.centerlines.measureFilaments(objects, ...
     {'ScaledDirectors','ProjectedExtent','ScaledAspectRatios'});
 ```
@@ -68,7 +77,7 @@ row conversion confirmed by the known-X-axis audit. Eigenvector sign is
 arbitrary. Two-dimensional Orientation retains MATLAB's native degrees;
 Directors convert it into image-coordinate vectors.
 
-`Lengths` preserves the historical voxel-unit major principal-axis length.
+`ExtentInVoxels` preserves the historical voxel-unit major principal-axis length.
 `AspectRatios` is major/second principal-axis length, not skeleton-sampled width.
 Scaled properties reuse the coordinate-scaled covariance/eigenvector method
 from `COMBINED_Fils2Aligns_InOnOut_TIFS.m`, WITHOUT resampling the matrix.
@@ -211,3 +220,16 @@ solely because a newer interface exists.
 Deferred: general sheets/midplanes, field-query reductions, filtering,
 anisotropy/PSF corrections, head-tail polarity and final direct-intensity
 filament-segmentation validation in SegmentationTools.
+
+Filament property naming: `ExtentInVoxels` replaces the derived `Lengths`
+request/output in the current API. It remains the native equivalent-ellipsoid
+major-axis length, in voxel units; it is not a voxel-center projected span.
+Update requests and saved-table consumers to the new name. Historical workflow
+scripts and their stored fields retain their original names.
+`ProjectedExtent` instead measures the voxel-center span along the principal
+axis fitted after scaling coordinates by voxel spacing, in `SpacingUnit`.
+It is useful for straight-filament length estimation, but is not a contour
+length or a correction for optical blur or segmentation error.
+For a single voxel only, it uses `ExtentInVoxels` multiplied by spacing along
+the arbitrary native director. This finite fallback is recorded in table
+`Properties.UserData.PointExtentFallbackObjectIDs`; `ScaledDirectors` stays NaN.

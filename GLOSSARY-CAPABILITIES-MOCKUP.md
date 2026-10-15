@@ -1,292 +1,399 @@
-# Glossary and capabilities — discussion mock-up
+# Glossary — definitions and representations
 
-Terms are **bold**, definitions are plain text, and *capabilities are italicized*. This is a draft for review, not a terminology migration. Current public names are retained; proposed names and deferred capabilities are stated explicitly. The entries combine conceptual meaning with practical package navigation.
+Inputs layouts use braces: Inputs: { FieldName* = type; }. An asterisk marks a field required for the specific form described; builders may supply generated fields automatically. Conditional requirements are stated explicitly. Generated-result layouts describe the resulting structure, not additional settings users must enter. Text means a string scalar or character vector. Optional defaults remain independent unless explicitly stated.
+
+Bracketed text lists the data types or structures used to represent each term in this package. Some terms describe a role or physical feature and therefore have several representations. A scalar is one value, a vector is a list, and matrix here includes N-dimensional arrays. A scalar struct is one container whose fields may themselves hold large arrays.
 
 ## Containers and structure roles
 
-**Array / matrix**  
-An arrangement of values. Matrix usually means two-dimensional; this package also uses spatial volumes and arrays with channel/time dimensions.
+**Array** [numeric or logical N-dimensional array]  
+A rectangular arrangement of elements with a fixed number of positions along each dimension.
 
-*Capabilities: ImageStackIO returns normalized image arrays in YXZCT order. Most analysis functions accept one YX or YXZ field at a time. Numerical type alone does not establish whether an array contains intensity, probabilities, labels or distances.*
+**Matrix** [numeric or logical N-dimensional array]  
+In this package, an N-dimensional array of consistently typed elements, with a fixed extent along each dimension. The term is not restricted to two dimensions.
 
-**Struct**  
+**Struct** [scalar struct or struct array]  
 A collection of named fields. A struct is a container, not a guarantee that its contents are data, options or results.
 
-*Capabilities: The package uses structs for source descriptions, experiments, settings, prepared geometry and outputs. image.Data holds values; query.Options holds settings. Builders return editable structs. No package-defined MATLAB class instance is needed to explain these interfaces.*
+**Table** [MATLAB table]  
+Named columns storing quantities of consistently defined types. In a measurement table, items across one row correspond to the same identified region and frame; other tables use one row per defined record or relationship.
 
-**Table**  
-Named columns sharing the same rows. The calculation determines what a row represents.
-
-*Capabilities: ObjectGeometry returns property tables; ObjectRelativeProfiles returns field statistics; ObjectTracking returns detection/link/event tables. Identity keys allow columns to be attached without assuming equal row order.*
-
-**Cell array**  
+**Cell array** [cell array]  
 A container whose entries can hold values with different shapes or types.
 
-*Capabilities: Components.PixelIdxList holds one index vector per group. Property/statistic name lists commonly use cells of text. Histogram results may use cells containing counts and edges.*
-
-**Data**  
+**Data** [numeric or logical scalar, vector or matrix]  
 The actual values being analyzed, rather than descriptions of where to find them or instructions for processing them.
 
-*Capabilities: Examples include image.Data, intensity arrays, probabilities, distances and gradients. Source configurations contain loading information; they do not preload these arrays.*
-
-**Metadata**  
+**Metadata** [struct fields; table properties]  
 Information about interpretation, identity, calibration or provenance.
 
-*Capabilities: Image structs record axes/calibration; geometry carries IDs and Grid; tables retain provenance in Properties.UserData and units in Properties.VariableUnits where assigned. Metadata is not necessarily a visible table column.*
-
-**Options**  
+**Options** [scalar struct]  
 Settings controlling how one particular operation behaves.
 
-*Capabilities: generateGeometry accepts method/layer/smoothing settings; queryField accepts quantiles, bins, variance normalization and custom reducers. Builders validate settings. Shared spellings such as Sigma do not guarantee the same meaning across functions.*
-
-**Request / specification**  
+**Request / specification** [text list or query struct array]  
 Instructions stating what should be selected or calculated.
 
-*Capabilities: ObjectProperties lists requested native measurements. Queries describe the input Field or Operation, selected Support, requested Statistics and output Name. Query Options supplies additional settings. These choices belong in setup rather than requiring changes to function-call logic.*
+**Configuration** [scalar struct]  
+A collection of user-selected settings and requests that defines how an analysis should run.
 
-**Configuration**  
-A reusable collection of descriptions, requests and options.
-
-*Capabilities: experiment describes a dataset and its sources. Workflow c combines that description with analysis requests/settings and output choices. c is a mixed-purpose container, not an image or a measurement result.*
-
-**Result**  
+**Result** [scalar, vector, matrix, table or struct; depends on calculation]  
 A value produced by a calculation, such as geometry, a field, measurements or a selection.
 
-*Capabilities: Results can be inputs to later operations. Their role depends on their producing function: a struct returned by loadSource differs from one returned by generateGeometry.*
+**Payload** [scalar struct]  
+The explicitly selected results to save for a frame or operation.  
+Inputs: { `Measurements` = table; `Seconds` = numeric scalar; `Diagnostics` = table; `Geometry` = struct; `Supports` = struct; `LocalInertia` = struct; }
 
-**Payload**  
-The explicitly selected results to save for a frame or operation.
+Example layout is workflow 1; all saved fields are chosen explicitly, with no universal required payload field.
 
-*Capabilities: Workflow 1 assigns Measurements and Seconds, with optional Diagnostics, Geometry or Supports. Omitting geometry from saving does not prevent using it temporarily. saveNew writes a MAT variable named result.*
+**Manifest** [scalar struct]  
+A workflow-specific collection of output locations, combined tables or run summaries.  
+Inputs: { `Directory` = text; `Measurements` = table; `Diagnostics` = table; }
 
-**Manifest**  
-A workflow-specific collection of output locations, combined tables or run summaries.
-
-*Capabilities: Workflow 1 returns combined measurements/diagnostics; workflows 4–5 primarily return file lists. A manifest is not one universal schema or necessarily just a list of filenames.*
+Example layout is workflow 1; other workflows may instead contain file lists or tracking results.
 
 ## Dataset organization
 
-**Dataset / experiment**  
-A dataset is a related body of inputs. An experiment description records dataset identity, acquisition frames/timing and named sources.
+**Dataset** [collection of files or arrays; described by a struct]  
+A related collection of input data.
 
-*Capabilities: memoworkflow.config.makeExperiment accepts DatasetID, Frames and Sources, plus optional TimeStep/TimeUnit. DatasetID keeps independent datasets distinct in table joins. The experiment struct does not load all images.*
+**Experiment** [scalar struct]  
+A description of a dataset's identity, acquisition frames, timing and named data sources.  
+Inputs: { `DatasetID`\* = text; `Frames`\* = numeric vector; `Sources`\* = struct of named source structs; `TimeStep` = positive numeric scalar (default 1); `TimeUnit` = text (default 'frame'); }
 
-**Data source**  
-A description of how to load a field, with its axes and calibration.
+**Data source** [scalar struct]  
+A description of how to load a field, with its axes and calibration.  
+Inputs: { `Format` = text; `Folder`\* = text (file source); `NamePattern`\* = text (file source); `DatasetPath`\* = text (HDF5 source); `Loader`\* = function handle (custom source); `SourceAxes` = text; `Spacing` = numeric vector; `SpacingUnit` = text; `Channels` = numeric vector; `TimeIndex` = numeric scalar; }
 
-*Capabilities: imagestackio.config.makeSource describes TIFF, HDF5 and custom-loader inputs. Folder and NamePattern identify files. DatasetPath identifies the array inside HDF5, not a disk directory. loadSource loads a requested frame. Pattern remains a legacy input alias.*
+Required markers depend on Format; file fields are not required for a custom loader.
 
-**Channel**  
+**Channel** [numeric index or text name; values in a matrix]  
 A separately stored image field or signal. Its interpretation depends on the dataset.
 
-*Capabilities: ImageStackIO represents channels on dimension C. Segmentation may combine multiple probability channels into one segmented category. A vector component need not be stored as an image channel.*
+**Frame** [numeric scalar; numeric vector for multiple values]  
+An identifier for an acquisition time point.
 
-**Frame / time index / time step**  
-Frame identifies acquisition time points in results. TimeIndex selects a stored position along an image's T dimension. TimeStep specifies the original acquisition-frame interval in TimeUnit.
+**Time index** [numeric scalar; numeric vector for multiple values]  
+The position of a time point within the stored time dimension of an array.
 
-*Capabilities: Acquisition Frame and stored TimeIndex are separate. Frames [10 12] with TimeStep=30 and TimeUnit='s' are separated by 60 seconds. Timing is supplied, not inferred from selected-frame spacing. Irregular timestamps are not represented by TimeStep alone.*
+**Time step** [numeric scalar; default 1]  
+The interval between original acquisition frames, expressed in the time unit. It can be supplied independently of that unit.
 
-**Axes / coordinate order**  
-Axes describe array dimensions; coordinate order describes the sequence of values in coordinate vectors.
+**Time unit** [string scalar or character vector; default 'frame']  
+The unit used to express acquisition timing. It can be supplied independently of the time step.
 
-*Capabilities: Image arrays use YXZCT; spatial grids use YX/YXZ. Native centroids and directors commonly use XY/XYZ. SourceAxes describes reader input before normalization. Coordinate converters explicitly distinguish XYZ from YXZ.*
+**Axes** [string scalar or character vector]  
+Names identifying what each array dimension represents.
 
-**Grid / voxel spacing / units**  
-A grid describes the dimensions and calibration of the current representation. Spacing records sample separation in matrix-axis order; units describe calibrated quantities.
+**Coordinate order** [string scalar or character vector]  
+The order of axis values within a coordinate vector.
 
-*Capabilities: Geometry Grid describes current indices. SourceGrid/Transform can retain earlier representations. Resampling must update calibration. Equal dimensions or similar physical extents alone do not establish registration. Native region properties are not automatically rescaled merely because spacing is recorded.*
+**Grid** [scalar struct with Size, Axes, Spacing and SpacingUnit]  
+The dimensions and spatial calibration of a sampled representation.  
+Inputs: { `Size`\* = numeric vector; `Axes` = text; `Spacing` = numeric vector; `SpacingUnit` = text; }
+
+Layout shown for the representation converters: only Size is mandatory; other listed fields receive defaults.
+
+**Voxel spacing** [numeric vector in YX/YXZ order]  
+The separation between neighboring spatial samples along each axis.
+
+**Units** [string scalar or character vector]  
+The scale used to express a quantity, such as voxels, micrometers or seconds.
 
 ## Segmentation and identity
 
-**Intensity field**  
-An array representing measured signal values.
+**Intensity field** [numeric matrix; optionally wrapped in a Data/Grid struct]  
+An array representing measured signal values.  
+Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-*Capabilities: segmentIntensity generates a basic mask using fixed or Otsu thresholding with optional cleanup. Fixed thresholds use original units. Sampling can summarize intensities without changing source values.*
+Layout applies only to the optional wrapped-field representation.
 
-**Probability field**  
+**Probability field** [numeric matrix; channel stacks include a channel dimension]  
 An array interpreted as a category probability or score, often exported by Ilastik.
 
-*Capabilities: SegmentationTools thresholds/composes probability channels and resolves category overlaps. Thresholded intensity and Gaussian-rendered geometry are not automatically calibrated probabilities.*
-
-**Segmented category**  
+**Segmented category** [text name and numeric category ID; membership as mask or labels]  
 A meaning assigned to voxels, such as inside, wall, outside or background. One category can contain many separate regions.
 
-*Capabilities: segmentationtools.config.makeClasses defines names, channel groups, thresholds and category IDs. Existing API names still use Classes/Classify. Category IDs must not be confused with IDs of individual connected regions.*
-
-**Foreground mask**  
+**Foreground mask** [logical matrix]  
 A logical array selecting foreground voxels; it can contain zero, one or many connected components.
 
-*Capabilities: SegmentationTools returns masks; ObjectGeometry can derive components from them. A mask does not itself establish identity across time.*
+**Connected component** [numeric index vector; groups in a bwconncomp struct]  
+A foreground voxel group connected under a specified adjacency rule.  
+Inputs: { `Connectivity`\* = numeric scalar; `ImageSize`\* = numeric vector; `NumObjects`\* = numeric scalar; `PixelIdxList`\* = cell array of numeric index vectors; }
 
-**Connected component**  
-A foreground voxel group connected under a specified adjacency rule.
+Layout applies to the component struct, not an individual raw index vector.
 
-*Capabilities: prepareObjects uses bwconncomp for mask input, normally with 8-connectivity in 2-D or 26-connectivity in 3-D. Connectivity describes voxel adjacency, not biological identity.*
+**Label matrix** [numeric integer-valued matrix]  
+An integer matrix assigning IDs to locations, with zero denoting background.
 
-**Label matrix / ID group**  
-A label matrix assigns integer IDs to voxels, with zero as background. An ID group contains all voxels sharing an ID, even when disconnected.
+**ID group** [numeric ID plus index vector; or locations in a label matrix]  
+All locations assigned the same ID, whether connected or disconnected.
 
-*Capabilities: prepareObjects preserves supplied IDs and measurement functions treat each group as one row. InputType='labels' resolves binary-valued labels. Current public fields retain the name ObjectID. The vague term measurement entity is omitted.*
+**Prepared geometry collection** [scalar struct containing IDs, Components and Grid]  
+A structure holding voxel-index groups, their identities and current-grid metadata.  
+Inputs: { `ObjectGeometryVersion`\* = numeric scalar; `ObjectIDs`\* = numeric vector; `Components`\* = component struct; `Grid`\* = scalar struct; `DatasetID`\* = text; `Frame`\* = numeric scalar; `SourceGrid` = struct or empty; `Transform` = mapping metadata or empty; `InputType` = text; }
 
-**Prepared geometry collection**  
-A structure holding voxel-index groups, their identities and current-grid metadata.
-
-*Capabilities: prepareObjects returns ObjectIDs, Components.PixelIdxList and Grid. Inputs can be masks, labels, component structures or index groups. This result holds spatial membership rather than scalar measurements.*
+This is generated by object preparation; users normally supply its constructor inputs instead of assembling these fields.
 
 ## Geometry, supports and references
 
-**Linear voxel indices / coordinates**  
-Linear voxel indices locate entries within a particular array. Coordinates explicitly give positions along axes. Table-row indices select rows and are a separate use of indexing.
+**Linear voxel indices** [numeric index vector; scalar for one index]  
+Numbers locating voxels in a particular matrix using MATLAB's linear indexing order.
 
-*Capabilities: Geometry primarily retains linear indices with Grid.Size. ind2sub/sub2ind convert representations. pointsToMatrix expects one-based current voxel coordinates, not physical positions. Once context is clear, indices can abbreviate linear voxel indices.*
+**Indices** [numeric index vector; scalar for one index]  
+Numbers identifying entries in a container. Their meaning depends on what is indexed: voxels, table rows or other entries.
 
-**Geometry**  
-A spatial representation of a structure's extent or features.
+**Coordinates** [numeric N-by-D matrix; legacy functions may use D-by-N]  
+Positions expressed as values along named axes.
 
-*Capabilities: ObjectGeometry prepares voxel groups, generates boundaries/skeletons and measures properties. Geometry may be stored as indices or coordinates with metadata; it need not be a dense matrix or measurement table.*
+**Geometry** [prepared/generated struct; indices or coordinates for raw representations]  
+A spatial representation of a structure's extent or features.  
+Inputs: { `Type`\* = text; `Records`\* = struct array; `Grid`\* = scalar struct; `DatasetID` = text; `Frame` = numeric scalar; `Method` = text; `Options` = scalar struct; `SourceGrid` = struct or empty; `Transform` = mapping metadata or empty; }
 
-**Support**  
-The locations selected for evaluating a field or calculation. Support describes a selection's role; it need not be a different representation from its source geometry.
+Layout shows generated geometry; prepared membership uses the Prepared geometry collection layout. Each record contains ObjectID and Indices, with ComponentID, Status and Fallback as appropriate.
 
-*Capabilities: queryFrame accepts named supports from prepared regions, generated geometry, masks or indices. In workflow 1, supports.boundary and geometry.boundary initially contain the same geometry. The proposed wording 'selected as reference' remains a discussion point: evaluation locations differ from comparison quantities in some workflows.*
+**Support** [prepared geometry/support struct, logical mask, numeric indices/labels or cell of index groups]  
+The locations selected for evaluating a field or calculation. Support describes a selection's role; it need not be a different representation from its source geometry.  
+Inputs: { `SamplingVersion`\* = numeric scalar; `Name`\* = text; `Records`\* = struct array; `Grid`\* = scalar struct; `DatasetID`\* = text; `Frame`\* = numeric scalar; `Options` = scalar struct; }
 
-**Reference**  
+Layout shows a generated prepared support. Raw selections or prepared geometry do not need this layout supplied manually.
+
+**Reference** [numeric field/vector, mask or geometry struct, according to calculation]  
 The geometry or quantity against which another quantity is defined or compared.
 
-*Capabilities: A boundary defines a distance reference; a sampled gradient defines an alignment reference. In workflow 2, centroids provide evaluation locations, while sampled gradients provide comparison directions. These are distinct roles.*
-
-**Boundary**  
+**Boundary** [index vector or logical matrix; generated representation in a struct]  
 The interface separating a region from its surroundings.
 
-*Capabilities: Distance transforms can reference foreground/background or selected category boundaries. Current generateGeometry(...,'boundary') selects a finite-width layer in a signed-distance field; the output is not an infinitely thin mathematical boundary.*
+**Isosurface** [index/coordinate collection or mesh; neighborhood representation may be a mask]  
+A surface defined by a specified scalar-field value. Historical usage in this project also includes finite binned neighborhoods around such levels.
 
-**Isosurface / distance-defined neighborhood**  
-Strictly, an isosurface selects a scalar field level. Historical usage in this project also encompasses binned neighborhoods around levels.
+**Distance-defined neighborhood** [index vector or logical matrix; generated representation in a struct]  
+Locations selected by a distance value or interval relative to a specified reference.
 
-*Capabilities: We can use distance-defined neighborhood as an inclusive description while recording whether a request selects a level or a finite interval. Geometry layer generation selects distance intervals; conditional profiles bin distance values. These voxel selections are not necessarily mesh surfaces.*
-
-**Layer**  
+**Layer** [index vector or logical matrix; generated representation in a struct]  
 A region of finite thickness. It can be defined around a surface or between field levels and need not wrap around another region.
 
-*Capabilities: returnSmoothBoundsBW selects between LayerMean minus/plus LayerWidth in a smoothed signed-distance field. LayerMean offsets the layer; LayerWidth is its half-width. The boundary is the construction reference, while the layer is the output.*
-
-**Shell**  
+**Shell** [index vector or logical matrix; generated representation in a struct]  
 A layer surrounding a region; a useful descriptive special case rather than the general term for all layers.
 
-*Capabilities: Current boundary geometry uses Method='shell' by default, but layers can be offset or partial. Periphery is dropped from the proposed precise terminology.*
-
-**Skeleton**  
+**Skeleton** [index vector or logical matrix; generated representation in a struct]  
 A derived internal geometric feature, with its form determined by the selected method.
 
-*Capabilities: generateGeometry produces component-specific skeleton records. Empty geometry retains status and fallback metadata. Sampling may use an identified centroid fallback without claiming that a skeleton exists. Blob skeletons are not filament detections.*
+**Filament** [mask or label matrix; prepared memberships in a struct]  
+An elongated, relatively thin structure present in image data.
 
-**Filament / backbone**  
-A filament is an elongated, relatively thin structure in image data. A backbone is an idealized line through a center using a length and direction.
+**Backbone** [numeric endpoint coordinates; legacy backbone struct]  
+An idealized line representation through a filament's center, defined by a direction and length.
 
-*Capabilities: measureFilaments measures filament regions without automatically skeletonizing them. Historical filBackBones2D/ND construct backbones. segmentsToMatrix renders supplied endpoint pairs; rasterization does not establish actual filament membership or measure its length.*
+**Sheet** [mask or label matrix; prepared memberships in a struct]  
+A thin, surface-like structure present in image data.
 
-**Sheet / centered surface**  
-A sheet is a thin image structure. A centered surface is a derived surface-like representation through its thickness.
+**Centered surface** [index vector or logical matrix; generated representation in a struct]  
+A derived surface-like representation passing through the thickness of a structure.
 
-*Capabilities: Current 'sheet'/'sheet-sampled' methods reuse sheet-specific historical implementations. Centered surface is proposed terminology and an eventual generalization; arbitrary orientations/topologies are not yet claimed. Existing methods are still grouped under skeleton generation.*
-
-**Point cloud**  
+**Point cloud** [numeric coordinate matrix or voxel-index vector with grid metadata]  
 A set of spatial locations without implied faces or connectivity.
 
-*Capabilities: Generated sheet geometry can retain sampled points. pointsToMatrix renders coordinate rows; duplicate points occupy one voxel rather than adding density.*
-
-**Rendered geometry matrix**  
+**Rendered geometry matrix** [logical mask or numeric matrix]  
 A dense representation made from geometry locations.
 
-*Capabilities: geometryToMatrix converts prepared/generated indices to a mask or ID labels. pointsToMatrix/segmentsToMatrix use explicit coordinate, rounding and bounds choices; optional Gaussian Sigma broadens occupancy before optional Threshold. Sigma is in voxels. The source geometry remains unchanged; grid and conversion metadata are returned.*
-
-**Mesh**  
+**Mesh** [numeric vertex/face matrices; sometimes grouped in a struct]  
 A surface representation with vertices and connectivity, such as faces.
-
-*Capabilities: SurfaceFieldMapping contains historical construction, mapping and conversion tools. Its restructuring is deferred. Rasterizing mesh surfaces or interiors is separate from rendering voxel indices or isolated points.*
 
 ## Sampling and measurements
 
-**Property / statistic**  
-A property describes a measured region or geometry. A statistic summarizes selected values. The calculation and units make their precise meaning explicit.
+**Property** [table variable; numeric scalar/vector, array or cell depending on property]  
+A measured characteristic of a region or geometry.
 
-*Capabilities: measureObjects supports native regionprops/regionprops3 properties. queryField supports Count, Sum, Mean, Median, Variance, Std, Min, Max, Quantiles and Histogram, plus custom reducers. These capability lists accompany the definition; results retain settings actually used rather than all possible settings.*
+**Statistic** [numeric scalar/vector or table variable; histogram struct for counts/edges]  
+A quantity summarizing selected values.
 
-**Query**  
-An instruction specifying a field or operation, selected support, requested statistics and output name.
+**Query** [scalar struct; struct array for multiple queries]  
+An instruction specifying a field or operation, selected support, requested statistics and output name.  
+Inputs: { `Name`\* = text; `Support`\* = text; `Field` = text (required for a scalar query without Operation); `Operation` = function handle (alternative to Field); `Kind` = text; `Fields` = text list (required for vector queries); `Statistics` = text list; `Mode` = text; `Options` = scalar struct; }
 
-*Capabilities: makeQuery constructs requests for queryFrame. Name sets output prefixes; Field identifies data; Support identifies evaluation locations. Operation combines same-frame fields or samples. Options carries function-specific settings. User requests can change without editing helper calls.*
+The alternatives and conditional fields above are not forced pairs. The builder supplies statistic/settings defaults.
 
-**Scalar field / vector field / vector component**  
-A scalar field provides one value per location. A vector field provides ordered components per location. Vector component differs from connected component.
+**Field** [numeric matrix or ordered component collection; optional metadata struct]  
+A quantity defined at spatial locations.  
+Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-*Capabilities: queryVectorField samples named components with explicit order. Component statistics use independently finite readings. Magnitudes require complete finite vectors at each voxel; covariance uses pairwise-finite samples and separate counts. One invalid voxel does not discard the rest of a support.*
+Layout applies to one wrapped scalar field; named component collections use the Vector field layout.
 
-**Selected samples / finite samples**  
-Selected samples are readings at selected locations. Finite samples exclude NaN and positive/negative infinity.
+**Scalar field** [numeric matrix; optionally wrapped in a Data/Grid struct]  
+A field with one numerical value at each location.  
+Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-*Capabilities: Sampling retains selected/finite counts and separate NaN/+Inf/-Inf counts. Statistics use finite readings according to documented scalar/vector rules. Zero is a valid reading, not a general missing-data marker.*
+Layout applies only to the optional wrapped-field representation.
 
-**Diagnostic / empty selection / fallback**  
-Diagnostics describe validity and interpretation. Empty selections have no sampling locations. A fallback substitutes a known, explicitly flagged location when requested geometry is unavailable.
+**Vector field** [struct of named component matrices for sampling; some outputs use a component dimension]  
+A field with an ordered set of directional components at each location.  
+Inputs: { <component name>\* = numeric matrix or Data/Grid struct; }
 
-*Capabilities: Sampling records empty-geometry/fallback flags and counts. Empty sums may be zero while means remain NaN, so flags matter. Workflow 1 separates diagnostics from its visible measurement table. Geometry rendering excludes fallback by default.*
+**Vector component** [numeric matrix; optionally wrapped in a Data/Grid struct]  
+One coordinate component of a vector; distinct from a connected component of voxels.  
+Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-**Length / width / principal axes / projected extent**  
-Different definitions of spatial size or direction. Their calculation and units must remain attached to the name.
+Layout applies only to the optional wrapped-field representation.
 
-*Capabilities: Native principal-axis lengths describe equivalent-region geometry. Scaled filament directions use coordinate-scaled covariance without resampling the image. ProjectedExtent measures the range of projections of voxel centers. Historical interior width sampled from boundary distance on skeleton indices must not be conflated with axis length or ExtentWidthFloor.*
+**Selected samples** [numeric vector]  
+Values read at the selected locations.
 
-**Axial alignment**  
-Comparison of directions with 0–pi symmetry: reversing either direction leaves the alignment score unchanged.
+**Finite samples** [numeric vector]  
+Selected numerical values excluding NaN and positive or negative infinity.
 
-*Capabilities: The current function nematicAlignment returns per-pair scores 2*cos(theta)^2-1 in 2-D and (3*cos(theta)^2-1)/2 in 3-D, plus angles and validity. Projection and pre-projection normal filtering are optional. axialAlignment is a proposed function name, not yet implemented. Negative scores are valid; unsigned alignment could misdescribe them.*
+**Diagnostic** [numeric count or logical flag; table variables and metadata structs]  
+Information describing the validity or interpretation of a result.
+
+**Empty selection** [empty index vector or all-false mask; flagged in sampling results]  
+A selection containing no locations.
+
+**Fallback** [struct of substitute geometry/properties; logical flags and counts record its use]  
+An explicitly identified substitute used when the requested geometry or result is unavailable.  
+Inputs: { `Centroid` = numeric XYZ vector; `PrincipalAxisLength` = numeric vector; `EigenVectors` = numeric matrix; }
+
+Generated fallback fields depend on the geometry method; these are not required user settings.
+
+**Length** [numeric scalar per group; vector/table column across groups]  
+A measure of extension along a specified path or direction; its calculation and units must be stated.
+
+**Width** [numeric scalar per group; vector/table column across groups]  
+A measure of thickness whose geometric definition and units must be stated.
+
+**Principal axes** [numeric direction matrix; eigenvalues/lengths in numeric vectors]  
+Directions derived from the spatial distribution of a region, describing its dominant directions of spread.
+
+**Projected extent** [numeric scalar per group; vector/table column across groups]  
+The difference between the largest and smallest coordinate projections along a specified direction.
+
+**Axial alignment** [result struct containing numeric scores/angles and logical validity]  
+Comparison of directions with 0–pi symmetry: reversing either direction leaves the alignment score unchanged.  
+Inputs: { `Order` = numeric vector; `UnsignedAngle` = numeric vector; `SignedAngle` = numeric vector; `Dot` = numeric vector; `Valid` = logical vector; `Dimension` = numeric scalar; `Plane` = numeric vector; `Options` = scalar struct; }
+
+Generated result fields are shown; these are not options supplied to the calculation.
 
 ## Tracking and field analysis
 
-**Detection / trajectory**  
-A detection is an identified region at a frame. A trajectory records a selected continuation across detections.
+**Detection** [table row with IDs, Frame and associated quantities]  
+An identified region at a particular frame.
 
-*Capabilities: ObjectTracking records frame-local ObjectID plus DetectionID/TrajectoryID. Trajectory inheritance does not encode every parent-child relation. Trackpy provides position-based linking with optional gaps; overlap tracking emphasizes lineage and assumes modest displacement.*
+**Trajectory** [TrajectoryID column plus associated detection rows]  
+A selected continuation of identity across detections.
 
-**Lineage / ancestry / descendants**  
-Lineage describes relations across detections. Ancestry follows parents; descendants follow children.
+**Lineage** [detection/link/event tables in a tracking struct; optional digraph]  
+The relationships connecting detections through time.  
+Inputs: { `Detections` = table; `Links` = table; `Events` = table; `GridMetadata` = cell array; `Options` = scalar struct; `Method` = text; `DatasetID` = text; }
 
-*Capabilities: trackOverlaps records splits/merges separately from trajectory inheritance. selectLineage follows directed parent/child links without collecting unrelated siblings by switching direction at an ancestor. Seeds can be IDs or supplied coordinates/frame.*
+Layout shows an overlap-tracking result; these are generated fields, not user-entered tracking settings.
 
-**Split / merge / gap**  
-A split connects one parent to multiple children; a merge connects multiple parents to one child. A gap interrupts observed detections.
+**Ancestry** [selection struct containing detection table and IDs]  
+The history reached by following parent relationships backward from a selected detection.  
+Inputs: { `Detections` = table; `SeedDetectionIDs` = numeric vector; `BackgroundCoordinatesYXZ` = numeric coordinate matrix; `Status` = text; `Options` = scalar struct; }
 
-*Capabilities: Overlap tracking offers overlap-first/volume-first ranking and inheritance choices, comparing successive supplied frames without gap bridging. Trackpy memory supports gaps but does not currently provide the same branching model.*
+Generated selection result, not the seed input struct.
 
-**Spectrum / power / normalization / window**  
-A spectrum describes frequency content. Power here means squared FFT magnitude. Normalization scales results; a window weights input samples before transformation.
+**Descendants** [selection struct containing detection table and IDs]  
+The detections reached by following child relationships forward from a selected detection.  
+Inputs: { `Detections` = table; `SeedDetectionIDs` = numeric vector; `BackgroundCoordinatesYXZ` = numeric coordinate matrix; `Status` = text; `Options` = scalar struct; }
 
-*Capabilities: powerSpectrum2D/3D reuse the samAdapted convention with optional mean subtraction and windowing. Power is unnormalized; normalization factors are recorded. Selected-slice spectra differ from spectra of mean/max projections. Radial averaging supports hard bins or historical Gaussian weighting.*
+Generated selection result, not the seed input struct.
 
-**Correlation**  
-Comparison of field values at relative displacements.
+**Split** [relationships in link/event tables]  
+A relationship connecting one parent detection to multiple child detections.
 
-*Capabilities: autoCorrelation/crossCorrelation use the native unnormalized linear approach. Their mean-subtraction/window defaults are documented separately from spectral defaults. Workflow 4 retains radial correlation results rather than full temporary lag volumes.*
+**Merge** [relationships in link/event tables]  
+A relationship connecting multiple parent detections to one child detection.
 
-**Conditional profile / bins**  
-A conditional profile summarizes readings grouped by another quantity. Bins specify intervals of that conditioning quantity.
+**Gap** [missing-frame interval; configured memory as a numeric scalar]  
+An interruption in the observed detections belonging to a trajectory.
 
-*Capabilities: conditionalStatistics accepts matching arrays or sample vectors, explicit edges or a bin count, statistics and optional group IDs. Support selection occurs upstream. Distance binning alone does not imply grouping by region ID.*
+**Spectrum** [result struct containing numeric spectra/frequency axes and metadata]  
+A representation of a signal's content across spatial frequencies.  
+Inputs: { `Radial` = struct; `FrequencyAxes` = cell array of numeric vectors; `GridSize` = numeric vector; `Spacing` = numeric vector; `SpacingUnit` = text; `MeanSubtract` = logical scalar; `Window` = logical scalar; `Normalization` = struct; `Power` = numeric matrix (optional); }
+
+Layout shows a power-spectrum result; these fields are generated, not all required constructor inputs.
+
+**Power** [numeric matrix or radial-statistics vectors]  
+Here, the squared magnitude of a Fourier-transform value.
+
+**Normalization** [numeric factor; descriptive factors/settings in a struct]  
+Scaling a quantity according to a stated reference or convention.  
+Inputs: { `Method` = text; `AppliedFactor` = numeric scalar; `VoxelCount` = numeric scalar; `InputSum` = numeric scalar; `InputMean` = numeric scalar; `InputVariance` = numeric scalar; `WindowSum` = numeric scalar; `WindowSquaredSum` = numeric scalar; }
+
+Layout shows spectral normalization metadata; other normalization operations can return different fields.
+
+**Window** [numeric weighting matrix; logical option selects built-in windowing]  
+A weighting applied to input samples before an operation such as a Fourier transform.
+
+**Correlation** [numeric lag matrix; returned with lag axes/metadata in a struct]  
+Comparison of field values at relative displacements.  
+Inputs: { `Correlation` = numeric matrix; `LagAxes` = cell array of numeric vectors; `ZeroLagIndex` = numeric vector; `Boundary` = text; `Normalization` = text; `Spacing` = numeric vector; `SpacingUnit` = text; }
+
+Generated correlation result; additional provenance fields may be present.
+
+**Conditional profile** [result struct containing binned-statistics table and edges]  
+Statistics of a measured quantity grouped by values of another, conditioning quantity.  
+Inputs: { `Edges` = numeric vector; `Statistics` = table; `ExcludedCounts` = table; }
+
+Generated conditional-statistics result.
+
+**Bins** [numeric edge/center vectors; counts in vectors, matrices or tables]  
+Intervals used to group numerical values.
 
 ## Workflow 1: recognize the roles in code
 
-**experiment; c.ObjectProperties; c.GeometryOptions; c.Queries**  
-experiment describes sources and acquisition. The c fields state requested measurements and operation settings.
+**experiment** [scalar struct]  
+The workflow variable containing the dataset description and named sources.  
+Inputs: { `DatasetID`\* = text; `Frames`\* = numeric vector; `Sources`\* = struct of named source structs; `TimeStep` = positive numeric scalar (default 1); `TimeUnit` = text (default 'frame'); }
 
-*Capabilities: Source descriptions become actual images through loadSource. Requests/options are passed to measureObjects, generateGeometry and queryFrame. They do not themselves contain the loaded intensity array.*
+**c.ObjectProperties** [cell array of character vectors or string array]  
+The workflow setting listing the region properties requested for measurement.
 
-**objects; geometry; supports; fields**  
-objects contains prepared memberships; geometry collects generated features; supports names selections for sampling; fields contains actual arrays to sample.
+**c.GeometryOptions** [scalar struct with a per-geometry options struct]  
+The workflow settings controlling how each requested geometry is generated.  
+Inputs: { <geometry name> = scalar options struct; }
 
-*Capabilities: Geometry can be reused directly as a support. These names describe roles, not four mutually exclusive spatial data types.*
+**c.Queries** [query struct array; empty for no sampling]  
+The workflow requests defining which fields to sample, at which supports, and which statistics to calculate.  
+Inputs: { `Name`\* = text; `Support`\* = text; `Field` = text (required for a scalar query without Operation); `Operation` = function handle (alternative to Field); `Kind` = text; `Fields` = text list (required for vector queries); `Statistics` = text list; `Mode` = text; `Options` = scalar struct; }
 
-**properties; diagnostics; payload; manifest**  
-properties holds measurement rows; diagnostics holds interpretation counts/flags; payload selects frame outputs; manifest collects run outputs.
+Each array entry follows this layout; the workflow also permits an empty query array.
 
-*Capabilities: Tables retain identity keys for subsequent attachment. Geometry can be used without being saved. Regenerating omitted geometry later requires original inputs and retained settings.*
+**objects** [scalar struct containing IDs, Components and Grid]  
+The workflow variable containing prepared voxel memberships, IDs and grid metadata.  
+Inputs: { `ObjectGeometryVersion`\* = numeric scalar; `ObjectIDs`\* = numeric vector; `Components`\* = component struct; `Grid`\* = scalar struct; `DatasetID`\* = text; `Frame`\* = numeric scalar; `SourceGrid` = struct or empty; `Transform` = mapping metadata or empty; `InputType` = text; }
+
+This is the generated prepared form, not the object-preparation options struct.
+
+**geometry** [scalar struct of named generated-geometry structs]  
+The workflow collection of generated spatial features.  
+Inputs: { <geometry name> = generated geometry struct; }
+
+**supports** [scalar struct of named selections/geometry structs]  
+The workflow collection naming the locations selected for sampling.  
+Inputs: { <support name>\* = prepared geometry/support struct, mask, labels or indices; }
+
+Names must match the supports referenced by queries; there is no fixed universal support-name list.
+
+**fields** [scalar struct of named matrices or Data/Grid structs]  
+The workflow collection containing the actual arrays to be sampled.  
+Inputs: { <field name>\* = numeric/logical matrix or Data/Grid struct; }
+
+Names must match the fields referenced by queries; there is no fixed universal field-name list.
+
+**properties** [MATLAB table]  
+The workflow table containing identity keys and requested measurements.
+
+**diagnostics** [MATLAB table]  
+The workflow table containing validity counts and flags.
+
+**payload** [scalar struct]  
+The workflow variable collecting outputs selected for saving at one frame.  
+Inputs: { `Measurements` = table; `Seconds` = numeric scalar; `Diagnostics` = table; `Geometry` = struct; `Supports` = struct; `LocalInertia` = struct; }
+
+Workflow 1's selected saved fields; no universal payload fields are required.
+
+**manifest** [scalar struct]  
+The workflow variable collecting the run's combined results or output locations.  
+Inputs: { `Directory` = text; `Measurements` = table; `Diagnostics` = table; }
+
+Workflow 1 layout shown; exact fields depend on the workflow.

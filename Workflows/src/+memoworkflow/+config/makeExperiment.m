@@ -2,8 +2,8 @@ function experiment=makeExperiment(varargin)
 %MAKEEXPERIMENT Collect named sources, identity and acquisition timing.
 % DatasetID required; Sources required scalar struct of makeSource outputs;
 % Frames required nonnegative integer vector (duplicates removed stably);
-% TimeStep=[] optional positive acquisition-frame interval; TimeUnit=''
-% required when TimeStep is supplied. Both can remain unspecified.
+% TimeStep=1 and TimeUnit='frame' are independent defaults.
+% Either may be supplied without the other; no unit conversion is inferred.
 % TimeStepSeconds is a legacy alias for TimeStep with TimeUnit='s'.
 % Does not inspect/load files; output contains only canonical time fields.
 experiment=sharedutilities.config.parseOptions(struct('DatasetID','', ...
@@ -28,14 +28,11 @@ if ~isempty(experiment.TimeStepSeconds)
     experiment.TimeStep=experiment.TimeStepSeconds; experiment.TimeUnit='s';
 end
 experiment=rmfield(experiment,'TimeStepSeconds');
-if ~isempty(experiment.TimeStep)
-    validateattributes(experiment.TimeStep,{'numeric'},{'scalar','positive','finite','real'});
-    if isempty(strtrim(experiment.TimeUnit))
-        error('memoworkflow:ExperimentConfig','Specify TimeUnit when providing TimeStep.');
-    end
-elseif ~isempty(experiment.TimeUnit)
-    error('memoworkflow:ExperimentConfig','Specify TimeStep when providing TimeUnit.');
-end
+% Empty sentinels above distinguish omitted values from explicit legacy-alias
+% conflicts; resolved output always contains the independent defaults.
+if isempty(experiment.TimeStep), experiment.TimeStep=1; end
+if isempty(strtrim(experiment.TimeUnit)), experiment.TimeUnit='frame'; end
+validateattributes(experiment.TimeStep,{'numeric'},{'scalar','positive','finite','real'});
 if ~isstruct(experiment.Sources)||~isscalar(experiment.Sources)||isempty(fieldnames(experiment.Sources))
     error('memoworkflow:ExperimentConfig','Provide named Sources built with imagestackio.config.makeSource.');
 end

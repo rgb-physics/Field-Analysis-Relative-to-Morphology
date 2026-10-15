@@ -6,6 +6,9 @@ overwritten by the workflows. No output is written beside source data.
 
 ## Start here
 
+Read [Understanding workflow 1](../../docs/WORKFLOW-1-WALKTHROUGH.md) for a
+step-by-step explanation of the data, settings, requests and output structures.
+
 For standalone manual input, open the numbered setup scripts:
 
 | Combined script | Analysis |

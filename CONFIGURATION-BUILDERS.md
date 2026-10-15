@@ -20,7 +20,7 @@ Format defaults to tiff. File sources require Folder and NamePattern; HDF5 addit
 
 Pattern is a legacy input alias; source output contains only NamePattern. Both names may be supplied only when their values agree.
 
-TimeStep is the interval between original acquisition frames in TimeUnit, not the interval between selected frames. Supply both or neither; no unit conversion is inferred. TimeStepSeconds remains a legacy input alias mapping to TimeStep and TimeUnit='s'; conflicting old/new values are rejected. Experiment output contains only TimeStep/TimeUnit. For example, frames [10 12] with TimeStep=.5 and TimeUnit='min' are separated by one minute.
+TimeStep defaults to 1 and TimeUnit defaults to 'frame', independently. Either may be supplied alone. TimeStep describes the original acquisition-frame interval, not the interval between selected frames; no unit conversion is inferred. TimeStepSeconds remains a legacy alias mapping to TimeStep and TimeUnit='s'; conflicting explicit old/new values are rejected. Experiment output contains only TimeStep/TimeUnit. Frames [10 12] with no timing overrides are separated by 2 frame units; with TimeStep=.5 and TimeUnit='min', they are separated by one minute.
 
 Spacing defaults to [1 1 1] in YXZ, SpacingUnit to pixel. Enter measured calibration for physical analysis. SourceAxes defaults empty (reader metadata/default); metadata-free grayscale TIFFs fall back to YXZ, while ambiguous HDF5 needs explicit axes. Channels=[] retains all channels; TimeIndex=1 selects one stored time. These stored indices differ from acquisition Frame.
 

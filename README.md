@@ -5,6 +5,9 @@
 Run all available automated checks from this folder with `report = runAllTests;`.
 See [Testing](TESTING.md) for coverage, fixture requirements and saved reports.
 
+New to the package? Follow [Understanding workflow 1](docs/WORKFLOW-1-WALKTHROUGH.md)
+to distinguish source descriptions, loaded matrices, geometry, queries and results.
+
 This MATLAB project organizes tools and workflows for measuring image-derived fields in coordinate systems defined by segmented morphologies. It supports sampling relative to centers, skeletons, and boundaries, and includes geometry-specific analysis for elongated particles, spheroids, and sheets. Object-tracking tools preserve object lineage through merges and splits.
 
 The workflows begin with microscopy stacks and pixel-classification probability fields; the latter are commonly produced by Ilastik*. The code provides image reading, saving, reslicing, correction for images and thresholding and refinement of probability fields to define object masks. Separate workflows exist for different geometric representations such as volumetric objects, sheets, filaments, skeletons, and point clouds. Fields like intensity, orientation, or velocity can then be mapped on geometric representations to measure time-, space-, and object-dependent statistics.

@@ -39,11 +39,51 @@ verifyFalse(t,isfield(e,'TimeStepSeconds'));
 old=memoworkflow.config.makeExperiment('DatasetID','A','Frames',1, ...
     'Sources',struct('Intensity',source),'TimeStepSeconds',30);
 verifyEqual(t,old.TimeStep,30); verifyEqual(t,old.TimeUnit,'s');
-verifyError(t,@()memoworkflow.config.makeExperiment('DatasetID','A','Frames',1, ...
-    'Sources',struct('Intensity',source),'TimeStep',30),'memoworkflow:ExperimentConfig');
+timing=memoworkflow.config.makeExperiment('DatasetID','A','Frames',1, ...
+    'Sources',struct('Intensity',source),'TimeStep',30);
+verifyEqual(t,timing.TimeStep,30); verifyEqual(t,timing.TimeUnit,'frame');
+timing=memoworkflow.config.makeExperiment('DatasetID','A','Frames',1, ...
+    'Sources',struct('Intensity',source),'TimeUnit','min');
+verifyEqual(t,timing.TimeStep,1); verifyEqual(t,timing.TimeUnit,'min');
+timing=memoworkflow.config.makeExperiment('DatasetID','A','Frames',1, ...
+    'Sources',struct('Intensity',source));
+verifyEqual(t,timing.TimeStep,1); verifyEqual(t,timing.TimeUnit,'frame');
 verifyError(t,@()memoworkflow.config.makeExperiment('DatasetID','A','Frames',1, ...
     'Sources',struct('Intensity',source),'TimeStep',1,'TimeUnit','min', ...
     'TimeStepSeconds',60),'memoworkflow:ExperimentConfig');
+end
+function testIndependentMetadataAndSamplingOptions(t)
+source=imagestackio.config.makeSource('Folder','x','NamePattern','x.tif','Spacing',[2 3 4]);
+verifyEqual(t,source.SpacingUnit,'pixel');
+source=imagestackio.config.makeSource('Folder','x','NamePattern','x.tif','SpacingUnit','um');
+verifyEqual(t,source.Spacing,[1 1 1]);
+identity=objectgeometry.config.makeObjectOptions('Frame',9);
+verifyEqual(t,identity.DatasetID,'default');
+identity=objectgeometry.config.makeObjectOptions('DatasetID','A');
+verifyEqual(t,identity.Frame,1);
+identity=objectgeometry.config.makeObjectOptions('ObjectIDs',42);
+objects=objectgeometry.objects.prepareObjects(true(4,5),identity);
+labels=objectgeometry.representation.geometryToMatrix(objects,'OutputType','labels');
+verifyTrue(t,all(labels(:)==42)); % no ObjectIDs selection required for labels
+mask=objectgeometry.representation.geometryToMatrix(objects,'ObjectIDs',42);
+verifyClass(t,mask,'logical'); % no OutputType needed for selection
+[~,grid]=objectgeometry.representation.pointsToMatrix([2 2],struct('Size',[4 5]));
+verifyEqual(t,grid.Axes,'YX'); verifyEqual(t,grid.Spacing,[1 1]);
+verifyEqual(t,grid.SpacingUnit,'pixel');
+field=reshape(1:20,4,5);
+a=objectrelativeprofiles.fieldSampling.queryField(field,objects,{'Histogram'}, ...
+    struct('NumBins',3));
+b=objectrelativeprofiles.fieldSampling.queryField(field,objects,{'Histogram'}, ...
+    struct('BinEdges',[0 10 20]));
+verifyEqual(t,sum(a.Field_Histogram{1}.Counts),20);
+verifyEqual(t,b.Field_Histogram{1}.Counts,[9 11]);
+mask=objectgeometry.representation.pointsToMatrix([2 2],grid,'Threshold',.5);
+verifyEqual(t,nnz(mask),1); % Threshold alone; Sigma alone is tested in geometry suite
+tracking=objecttracking.trackOverlaps(1,@(~)true(4,5));
+selection=objecttracking.selectLineage(tracking,struct('DetectionIDs',1));
+verifyEqual(t,height(selection.Detections),1);
+selection=objecttracking.selectLineage(tracking,struct('TrajectoryIDs',1));
+verifyEqual(t,height(selection.Detections),1);
 end
 function testFileSources(t)
 folder=tempname; mkdir(folder);

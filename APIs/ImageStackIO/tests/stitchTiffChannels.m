@@ -3,6 +3,15 @@
 %   channel 1 = 560 nm
 %   channel 2 = 647 nm
 
+farmRoot = fileparts(mfilename('fullpath'));
+while ~isfile(fullfile(farmRoot, 'farmSetup.m'))
+    farmParent = fileparts(farmRoot);
+    if strcmp(farmParent, farmRoot), error('farm:Setup', 'Cannot locate farmSetup.m above this saved script.'); end
+    farmRoot = farmParent;
+end
+addpath(farmRoot);
+farmSetup('IncludeExamples', true, 'IncludeTests', true);
+
 testFolder = fileparts(mfilename('fullpath'));
 repositoryRoot = fileparts(fileparts(fileparts(testFolder)));
 testSupportFolder = fullfile(repositoryRoot, 'tests');
@@ -14,7 +23,7 @@ channel1Name = 'xyz_chan1.tif';
 channel2Name = 'xyz_chan2.tif';
 outputName = 'xyzcStack.tif';
 
-tiffFolder = fullfile(memotest.dataRoot(), 'image-stacks', 'tiff');
+tiffFolder = fullfile(farmTestDataRoot(), 'image-stacks', 'tiff');
 channel1Path = fullfile(tiffFolder, channel1Name);
 channel2Path = fullfile(tiffFolder, channel2Name);
 outputPath = fullfile(tiffFolder, outputName);
@@ -22,8 +31,8 @@ outputPath = fullfile(tiffFolder, outputName);
 % These are ordinary grayscale XYZ page stacks, so state their source axes
 % explicitly rather than relying on TIFF page metadata.
 readOptions = struct('SourceAxes', 'YXZ');
-image560 = imagestackio.readTiff(channel1Path, readOptions);
-image647 = imagestackio.readTiff(channel2Path, readOptions);
+image560 = farmReadTiff(channel1Path, readOptions);
+image647 = farmReadTiff(channel2Path, readOptions);
 
 volume560 = image560.Data(:, :, :, 1, 1);
 volume647 = image647.Data(:, :, :, 1, 1);
@@ -43,7 +52,7 @@ stitchedImage.Spacing = image560.Spacing;
 stitchedImage.SpacingUnit = image560.SpacingUnit;
 
 writeOptions = struct('Overwrite', true, 'Compression', 'LZW');
-imagestackio.writeImageJHyperstack(stitchedImage, outputPath, writeOptions);
+farmWriteImageJHyperstack(stitchedImage, outputPath, writeOptions);
 
 fprintf('Stitched size [Y X Z C]: %s\n', mat2str(size(stitchedStackYXZC)));
 fprintf('Channel 1: 560 nm; channel 2: 647 nm\n');

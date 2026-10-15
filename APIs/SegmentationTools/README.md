@@ -3,7 +3,7 @@
 ## N-channel probability smoothing
 
 ```matlab
-[masks,info] = segmentationtools.binarization.smoothNChannelProbabilities( ...
+[masks,info] = farmSmoothNChannelProbabilities( ...
     probabilities,[1 3 2],[0.2 0.5 0.5], ...
     struct('OpeningRadius',1,'ChannelPrecedence',[3 1 2]));
 ```
@@ -19,27 +19,27 @@ Thresholds and output masks remain in the supplied `channels` order.
 is inferred. Radius is in voxel units. Two-dimensional images use a disk;
 volumes use a sphere. `OpeningRadius=0` disables opening.
 
-The historical `smoothInOnOutProbabilities` and `h5toSmooth3Chans` remain
+The historical `farmSmoothInOnOutProbabilities` and `farmH5toSmooth3Chans` remain
 available with their existing overlap and complement-wall behavior for
 comparison. Use the N-channel function for disjoint, precedence-based masks.
 
 ## Direct intensity segmentation
 
-`segmentationtools.binarization.segmentIntensity` accepts one 2-D intensity
+`farmSegmentIntensity` accepts one 2-D intensity
 image or 3-D `[Y X Z]` volume, without Ilastik or probability fields. Select
 channel and time before calling. Default Otsu thresholding estimates one
 threshold over the entire input volume. Thresholds are reported and applied
 in original intensity units; input intensities are preserved.
 
 ```matlab
-image = imagestackio.readTiff('C:\path\intensity.tif');
+image = farmReadTiff('C:\path\intensity.tif');
 volume = image.Data(:,:,:,1,1);
-result = segmentationtools.binarization.segmentIntensity(volume);
+result = farmSegmentIntensity(volume);
 
 opts = struct('Method','fixed','Threshold',1200, ...
     'FillHoles',true,'MinObjectSize',100,'KeepLargest',3,'ReturnLabels',true);
-result = segmentationtools.binarization.segmentIntensity(volume,opts);
-segmentationtools.io.writeMaskTiff(result.Mask,'C:\path\foreground.tif');
+result = farmSegmentIntensity(volume,opts);
+farmWriteMaskTiff(result.Mask,'C:\path\foreground.tif');
 ```
 
 `Mask` is the cleaned morphology; `CandidateMask` retains the original

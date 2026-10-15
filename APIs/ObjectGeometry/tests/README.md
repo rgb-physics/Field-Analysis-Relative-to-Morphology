@@ -17,6 +17,6 @@ disconnected labels, selectable native properties, filament-axis conventions,
 scaled PCA, gradient smoothing and sign-invariant nematic alignment.
 
 Run `../examples/exploreObjectGeometry.m` for a real-data visual experiment.
-The external gaussdiff dependency of skel3DBlobs is documented separately;
+The external gaussdiff dependency of farmSkel3DBlobs is documented separately;
 its Hessian behavior requires the later dedicated tests/examples agreed in
 the design discussion.

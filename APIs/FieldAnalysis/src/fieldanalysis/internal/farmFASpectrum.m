@@ -1,0 +1,26 @@
+function result = farmFASpectrum(data,nD,options)
+%FARMFASPECTRUM samAdapted squared FFT magnitude; scalar normalization is external.
+data = farmFAField(data);
+if ndims(data)~=nD, error('fieldanalysis:Dimensions','Expected a %dD array.',nD); end
+o = farmFAOptions(options, struct('Spacing',ones(1,nD),'SpacingUnit','voxel', ...
+    'MeanSubtract',false,'Window',true,'Edges',[],'NumBins',50,'Sigma',0, ...
+    'ReturnPower',false));
+validateattributes(o.MeanSubtract,{'logical'},{'scalar'});
+validateattributes(o.Window,{'logical'},{'scalar'});
+validateattributes(o.ReturnPower,{'logical'},{'scalar'});
+axes = farmFrequencyCoordinates(size(data),o.Spacing);
+inputSum = sum(data(:)); inputMean = mean(data(:)); inputVariance = var(data(:));
+if o.MeanSubtract, data = data-inputMean; end
+if o.Window, window = farmGenerateNDHann(size(data));
+else, window = ones(size(data)); end
+power = abs(fftshift(fftn(data.*window))).^2;
+radial = farmRadialAverage(power,struct('Coordinates',{axes}, ...
+    'Edges',o.Edges,'NumBins',o.NumBins,'Sigma',o.Sigma));
+result = struct('Radial',radial,'FrequencyAxes',{axes},'GridSize',size(data), ...
+    'Spacing',o.Spacing,'SpacingUnit',o.SpacingUnit,'FrequencyConvention','cycles per spacing unit', ...
+    'MeanSubtract',o.MeanSubtract,'Window',o.Window, ...
+    'Normalization',struct('Method','none','AppliedFactor',1,'VoxelCount',numel(data), ...
+    'InputSum',inputSum,'InputMean',inputMean,'InputVariance',inputVariance, ...
+    'WindowSum',sum(window(:)),'WindowSquaredSum',sum(window(:).^2)));
+if o.ReturnPower, result.Power = power; end
+end

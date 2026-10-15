@@ -4,15 +4,15 @@ Builders return editable structs without loading images or running analysis. Acc
 
 | Builder | Configuration / consumer |
 |---|---|
-| imagestackio.config.makeSource | Format ('tiff', 'hdf5', 'custom'), Folder, NamePattern, DatasetPath, SourceAxes, Spacing, SpacingUnit, Channels, TimeIndex, Loader. Used by loadSource. |
-| memoworkflow.config.makeExperiment | DatasetID, named Sources, Frames, optional TimeStep and TimeUnit. Duplicates removed in supplied order. |
-| objectgeometry.config.makeObjectOptions | prepareObjects options; pass directly to prepareObjects/measureObjects or under Identity to measureFilaments/generateGeometry/trackOverlaps. |
-| objectrelativeprofiles.config.makeQuery | Name, Support, Statistics, Field OR Operation; vector Kind uses Fields. Optional Options/Mode. Used by queryFrame; outputs concatenate into one query array. |
-| segmentationtools.config.makeClasses | Positional channels and thresholds; optional Names, CombineMethods, IDs. Used by classifyProbabilities. |
-| segmentationtools.config.makeIntensityOptions | segmentIntensity options, including Method/Threshold and cleanup/retention choices. Fixed thresholds use original units. |
-| segmentationtools.config.makeProbabilityOptions | classifyProbabilities options for resolving overlap and retaining outputs. Not smoothNChannelProbabilities morphology/precedence options. |
+| farmMakeSource | Format ('tiff', 'hdf5', 'custom'), Folder, NamePattern, DatasetPath, SourceAxes, Spacing, SpacingUnit, Channels, TimeIndex, Loader. Used by loadSource. |
+| farmMakeExperiment | DatasetID, named Sources, Frames, optional TimeStep and TimeUnit. Duplicates removed in supplied order. |
+| farmMakeObjectOptions | farmPrepareObjects options; pass directly to prepareObjects/measureObjects or under Identity to measureFilaments/generateGeometry/trackOverlaps. |
+| farmMakeQuery | Name, Support, Statistics, Field OR Operation; vector Kind uses Fields. Optional Options/Mode. Used by farmQueryFrame; outputs concatenate into one query array. |
+| farmMakeClasses | Positional channels and thresholds; optional Names, CombineMethods, IDs. Used by classifyProbabilities. |
+| farmMakeIntensityOptions | farmSegmentIntensity options, including Method/Threshold and cleanup/retention choices. Fixed thresholds use original units. |
+| farmMakeProbabilityOptions | farmClassifyProbabilities options for resolving overlap and retaining outputs. Not farmSmoothNChannelProbabilities morphology/precedence options. |
 
-Function help lists every option/default. Add the APIs' src directories, including SharedUtilities, and Workflows/src to the path. experiment4Config adds these paths automatically.
+Function help lists every option/default. Run `farmSetup` from the repository root to add API dependencies and Workflows/src. Use `farmSetup('IncludeExamples', true)` for farmExperiment4Config and the guided workflows.
 
 ## Source defaults and loading
 
@@ -24,11 +24,11 @@ TimeStep defaults to 1 and TimeUnit defaults to 'frame', independently. Either m
 
 Spacing defaults to [1 1 1] in YXZ, SpacingUnit to pixel. Enter measured calibration for physical analysis. SourceAxes defaults empty (reader metadata/default); metadata-free grayscale TIFFs fall back to YXZ, while ambiguous HDF5 needs explicit axes. Channels=[] retains all channels; TimeIndex=1 selects one stored time. These stored indices differ from acquisition Frame.
 
-A custom loader returns a YXZ array or an image struct with Data and Axes='YXZCT'. Returned grid calibration takes precedence over source fallback. memoworkflow.loadSource loads a single acquisition frame and returns an image with DatasetID, Frame, SourceName and selection metadata. Nothing is loaded by builders.
+A custom loader returns a YXZ array or an image struct with Data and Axes='YXZCT'. Returned grid calibration takes precedence over source fallback. farmLoadSource loads a single acquisition frame and returns an image with DatasetID, Frame, SourceName and selection metadata. Nothing is loaded by builders.
 
 ## Workflow 1
 
-[setupWorkflow1.m](Workflows/examples/setupWorkflow1.m) separates SETUP, DATA, ANALYSIS, PREVIEW and RUN. Set the explicit repo path in SETUP and execute that section first. It validates all package folders before adding paths, so editor-section execution does not depend on mfilename or the current directory. It builds an explicit experiment struct, validates it, and supplies only workflow 1 settings. It does not call experiment4Config or require previous workspace variables. Your source folder/pattern choices remain in DATA.
+[setupWorkflow1.m](Workflows/examples/setupWorkflow1.m) separates SETUP, DATA, ANALYSIS, PREVIEW and RUN. Set the explicit repo path in SETUP and execute that section first. It validates all package folders before adding paths, so editor-section execution does not depend on mfilename or the current directory. It builds an explicit experiment struct, validates it, and supplies only workflow 1 settings. It does not call farmExperiment4Config or require previous workspace variables. Your source folder/pattern choices remain in DATA.
 
 Workflow 1 accepts optional c.Experiment, with named Intensity and Probabilities sources. Intensity must select one channel. Supplied c.ObjectLoader bypasses probabilities. c.Frames must be present in the experiment. Current intensity calibration determines object metadata/physical volume; probabilities retain their own spacing and must use matching units. Shared crop/origin must be verified: similar extents are insufficient.
 
@@ -47,10 +47,10 @@ example helpers remain in Workflows/examples.
 Scalar Statistics defaults to Mean; vector defaults to MeanVector/MeanMagnitude. Query Name sets output column prefixes. Support selects a named geometry; Field selects a named data array. These names are distinct.
 
 ```matlab
-q = objectrelativeprofiles.config.makeQuery( ...
+q = farmMakeQuery( ...
     'Name','DensityOnBoundary','Support','boundary', ...
     'Field','Density','Statistics',{'Mean','Std'});
-q2 = objectrelativeprofiles.config.makeQuery( ...
+q2 = farmMakeQuery( ...
     'Name','Difference','Support','objects','Fields',{'A','B'}, ...
     'Operation',@(fields) fields.A-fields.B);
 queries = [q q2];
@@ -60,7 +60,7 @@ Options passes consumer-specific settings such as bins, quantiles and custom red
 
 ## Compatibility and validation
 
-makeClassConfig remains a compatibility wrapper for segmentationtools.config.makeClasses. Active package callers/tests use the new name. The class construction algorithm is preserved. Object preparation/intensity/classification consumers obtain default definitions from their corresponding builders to avoid default drift.
+farmMakeClasses remains a compatibility wrapper for segmentationtools.config.makeClasses. Active package callers/tests use the new name. The class construction algorithm is preserved. Object preparation/intensity/classification consumers obtain default definitions from their corresponding builders to avoid default drift.
 
 Run from Workflows/examples:
 

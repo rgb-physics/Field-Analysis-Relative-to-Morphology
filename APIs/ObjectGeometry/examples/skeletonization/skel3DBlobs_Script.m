@@ -5,6 +5,15 @@
 % Rémi Boros - 2026-01-27
 
 % dataDir = '<redacted original absolute path>';
+farmRoot = fileparts(mfilename('fullpath'));
+while ~isfile(fullfile(farmRoot, 'farmSetup.m'))
+    farmParent = fileparts(farmRoot);
+    if strcmp(farmParent, farmRoot), error('farm:Setup', 'Cannot locate farmSetup.m above this saved script.'); end
+    farmRoot = farmParent;
+end
+addpath(farmRoot);
+farmSetup('IncludeExamples', true, 'IncludeTests', true);
+
 dataDir = 'Session 88, Exp 1';
 dataName = 'E1_T%03i_trajIDs.tif';
 
@@ -36,7 +45,7 @@ for tInd = 1:numel(selTimes)
         bndBox = padarray(ones(matSize-round(2*rsPost)),round([1 1 1]*rsPost),'both');
     end
     
-    [validCores,coreMat] = skel3DBlobs(loadLabels,gradCut,sigma,hBool);
+    [validCores,coreMat] = farmSkel3DBlobs(loadLabels,gradCut,sigma,hBool);
 
 end
 

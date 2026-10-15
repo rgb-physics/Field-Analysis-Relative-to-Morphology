@@ -4,9 +4,9 @@ New configuration builders and the named-source workflow 1 path are described
 in [Configuration builders](../../CONFIGURATION-BUILDERS.md). The fields below
 remain the reference for the existing flat Experiment 4 example configuration.
 
-An experiment configuration is currently a scalar MATLAB struct, not a class or a centrally validated schema. `experiment4Config` supplies the complete example configuration. Properties below are case-sensitive. Adding an arbitrary property does not make an API consume it: workflows explicitly translate configuration into API options.
+An experiment configuration is currently a scalar MATLAB struct, not a class or a centrally validated schema. `farmExperiment4Config` supplies the complete example configuration. Properties below are case-sensitive. Adding an arbitrary property does not make an API consume it: workflows explicitly translate configuration into API options.
 
-Start with `c = experiment4Config;` and override the relevant fields. The defaults are specific to Session 88 Experiment 4; paths, channels, thresholds and crop metadata must be reviewed for another experiment. Workflow-specific fields can remain present even when that workflow is not run.
+Start with `c = farmExperiment4Config;` and override the relevant fields. The defaults are specific to Session 88 Experiment 4; paths, channels, thresholds and crop metadata must be reviewed for another experiment. Workflow-specific fields can remain present even when that workflow is not run.
 
 ## Configuration reference
 
@@ -34,7 +34,7 @@ Start with `c = experiment4Config;` and override the relevant fields. The defaul
 | ExportIlastik, IlastikRange, IlastikSpacing | Optional 8-bit export, fixed intensity range, target spacing; defaults false, [1 5000], [1.5 1.5 1.5]. Quantitative export remains a separate stage. |
 | Supports, GeometrySigma | Requested sampling geometry names and geometry smoothing; defaults {'objects','boundary'}, 1. Skeleton support requires its dependencies. |
 | IncludeDiagnostics | Workflow 1: false by default keeps counts/flags out of Measurements; true includes them. Diagnostics are always retained in a separate keyed Diagnostics table in frame files and the returned manifest. |
-| LocalInertia, InertiaOptions | Optional local inertia calculation; default false. Options default Radius=18, Sigma=3, SampleLimit=10000; see localInertia help for additional options. |
+| LocalInertia, InertiaOptions | Optional local inertia calculation; default false. Options default Radius=18, Sigma=3, SampleLimit=10000; see farmLocalInertia help for additional options. |
 | FilamentLoader | Optional @(frame) binary filament mask; empty uses intensity segmentation. |
 | FilamentSigma, FilamentThreshold | Filament preprocessing parameters; defaults 1, 20. Threshold is in native intensity units for this example. |
 | MinFilamentLength, MinAspectRatio, MaxZComponent | Filament selection controls; defaults 0, 0, [] (no Z-component restriction). |
@@ -55,10 +55,10 @@ The configuration itself is not an API interchange object. Pass the appropriate 
 
 | Interface | Names expected and meaning |
 |---|---|
-| ImageStackIO reading | Options SourceAxes, Spacing, SpacingUnit; readH5 also takes the dataset path separately. Returned image Data uses YXZCT with Axes='YXZCT'. Metadata-free grayscale multipage TIFFs default to YXZ; use SourceAxes='YXT' for time pages. |
-| ObjectGeometry prepareObjects | Options DatasetID, Frame, Spacing, SpacingUnit, InputType; optional ImageSize, ObjectIDs, Connectivity, SourceGrid, Transform, Channel, TimeIndex. SourceGrid/Transform record previous representations; spacing describes current indices. |
-| ObjectRelativeProfiles prepareSupport | Options DatasetID, Frame, Name, Grid, Type, ObjectIDs, ComponentResults, CentroidFallback. Here Type is the input selection kind; it is not the ObjectGeometry option name InputType. |
-| ObjectRelativeProfiles queryFrame | Named fields and supports; each query uses Name, Support, Statistics and either Field or Operation. Optional Options, Fields, Mode and Kind configure custom operations/vector queries. Name supplies the output column prefix. |
+| ImageStackIO reading | Options SourceAxes, Spacing, SpacingUnit; farmReadH5 also takes the dataset path separately. Returned image Data uses YXZCT with Axes='YXZCT'. Metadata-free grayscale multipage TIFFs default to YXZ; use SourceAxes='YXT' for time pages. |
+| ObjectGeometry farmPrepareObjects | Options DatasetID, Frame, Spacing, SpacingUnit, InputType; optional ImageSize, ObjectIDs, Connectivity, SourceGrid, Transform, Channel, TimeIndex. SourceGrid/Transform record previous representations; spacing describes current indices. |
+| ObjectRelativeProfiles farmPrepareSupport | Options DatasetID, Frame, Name, Grid, Type, ObjectIDs, ComponentResults, CentroidFallback. Here Type is the input selection kind; it is not the ObjectGeometry option name InputType. |
+| ObjectRelativeProfiles farmQueryFrame | Named fields and supports; each query uses Name, Support, Statistics and either Field or Operation. Optional Options, Fields, Mode and Kind configure custom operations/vector queries. Name supplies the output column prefix. |
 | ObjectTracking | DatasetID accompanies tracking options. Frame and ObjectID identify detections; tracking attaches TrajectoryID and records links/events. A trajectory is not the complete ancestry of an object. |
 | FieldAnalysis | Pass arrays and function-specific options; it does not automatically read experiment directories or infer channels from configuration. |
 | Visualization | Supply the measured arrays/tables and plotting options. The configuration is not a universal plotting object. |

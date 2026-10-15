@@ -139,7 +139,7 @@ geometry.boundary
 
 There can be several records for one parent ID because it has disconnected pieces. Indices identify entries on Grid; they are not automatically XYZ coordinates or physical positions.
 
-Use geometryToMatrix to render these supported representations instead of manually remembering their different index-storage paths.
+Use farmGeometryToMatrix to render these supported representations instead of manually remembering their different index-storage paths.
 
 ## Geometry versus support
 
@@ -161,7 +161,7 @@ c.GeometryOptions.boundary = struct('Sigma',1,'LayerWidth',1);
 This is a setting for generating geometry. It contains no generated boundary indices.
 
 ```matlab
-q = objectrelativeprofiles.config.makeQuery( ...
+q = farmMakeQuery( ...
     'Name','BoundarySignal','Field','Intensity', ...
     'Support','boundary','Statistics',{'Mean'});
 ```
@@ -205,7 +205,7 @@ Diagnostics such as FiniteCount and UsedFallback explain how a measurement was o
 
 payload is the collection selected for one saved frame. manifest collects the run's combined outputs or file locations.
 
-saveNew writes a MAT variable called result, regardless of the caller's local variable name:
+farmWorkflowSaveNew writes a MAT variable called result, regardless of the caller's local variable name:
 
 ```matlab
 saved = load('<output folder>/frame010.mat');

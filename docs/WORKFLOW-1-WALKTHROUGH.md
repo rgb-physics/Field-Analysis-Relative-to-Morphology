@@ -35,7 +35,7 @@ Choose an existing entry from frames for previewing. The current editable script
 In DATA, the variable intensity is initially a **source-description struct**:
 
 ```matlab
-intensity = imagestackio.config.makeSource( ...
+intensity = farmMakeSource( ...
     'Folder',intDir,'NamePattern',intName, ...
     'Format','tiff','SourceAxes',intAxes, ...
     'Spacing',intVoxSize,'SpacingUnit','um');
@@ -48,8 +48,8 @@ The probabilities source description works similarly. DatasetPath='/exported_dat
 | Question | Answer |
 |---|---|
 | What is stored? | Source description and reading settings. |
-| Who creates it? | makeSource, using DATA inputs. |
-| Who uses it? | loadSource, when a frame is requested. |
+| Who creates it? | farmMakeSource, using DATA inputs. |
+| Who uses it? | farmLoadSource, when a frame is requested. |
 | What can you change? | Files, format, axes, channel/time selection and calibration. |
 
 The loaded probability values are different from this description. Channels identify segmented categories; they do not yet identify individual connected regions.
@@ -110,7 +110,7 @@ MeasurementOptions is still present as an empty pass-through in the current setu
 Within the helper:
 
 ```matlab
-image = memoworkflow.loadSource(c.Experiment,'Intensity',frame);
+image = farmLoadSource(c.Experiment,'Intensity',frame);
 intensity = image.Data(:,:,:,1,1);
 ```
 
@@ -127,7 +127,7 @@ Processing proceeds frame by frame; it does not preload all acquisition times.
 The helper calls:
 
 ```matlab
-[objects,mask] = memoworkflow.objects(current,frame,size(intensity));
+[objects,mask] = farmWorkflowObjects(current,frame,size(intensity));
 ```
 
 With probability inputs, it:
@@ -157,7 +157,7 @@ IDs here are frame-local. Workflow 1 does not establish lineage or trajectories.
 ## 7. properties: a table, not another mask
 
 ```matlab
-properties = objectgeometry.objects.measureObjects( ...
+properties = farmMeasureObjects( ...
     objects,c.ObjectProperties,c.MeasurementOptions);
 ```
 
@@ -170,7 +170,7 @@ Changing requested columns does not change the underlying membership indices in 
 ## 8. geometry and supports: often the same locations, different roles
 
 ```matlab
-geometry.boundary = objectgeometry.objects.generateGeometry( ...
+geometry.boundary = farmGenerateGeometry( ...
     objects,'boundary',c.GeometryOptions.boundary);
 supports.objects = objects;
 supports.boundary = geometry.boundary;
@@ -192,7 +192,7 @@ The role changes: geometry describes a spatial feature, while support says to ev
 To view a dense matrix:
 
 ```matlab
-boundaryMask = objectgeometry.representation.geometryToMatrix(supports.boundary);
+boundaryMask = farmGeometryToMatrix(supports.boundary);
 ```
 
 This renders actual stored indices. It does not fill the boundary's interior.
@@ -213,7 +213,7 @@ InteriorDistanceVoxels is calculated by bwdist(~mask). It measures distance to b
 A query contains instructions:
 
 ```matlab
-q = objectrelativeprofiles.config.makeQuery( ...
+q = farmMakeQuery( ...
     'Name','IntensityOnboundary', ...
     'Field','Intensity', ...
     'Support','boundary', ...
@@ -249,7 +249,7 @@ You can remove or replace queries without changing the helper. Query support nam
 ## 10. Sampling results and diagnostics
 
 ```matlab
-results = objectrelativeprofiles.fieldSampling.queryFrame(fields,supports,c.Queries);
+results = farmQueryFrame(fields,supports,c.Queries);
 ```
 
 The result is a table of keyed statistics and diagnostic counts/flags. It is attached to properties by identity, not by assuming row positions match.

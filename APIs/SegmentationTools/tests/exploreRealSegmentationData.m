@@ -4,6 +4,15 @@
 % temporary output folder; input fixtures are never modified.
 % These are behavior checks and visual experiments, not scientific ground truth.
 
+farmRoot = fileparts(mfilename('fullpath'));
+while ~isfile(fullfile(farmRoot, 'farmSetup.m'))
+    farmParent = fileparts(farmRoot);
+    if strcmp(farmParent, farmRoot), error('farm:Setup', 'Cannot locate farmSetup.m above this saved script.'); end
+    farmRoot = farmParent;
+end
+addpath(farmRoot);
+farmSetup('IncludeExamples', true, 'IncludeTests', true);
+
 semanticChannels = [1 3 2]; % ASSUMPTION: [inside wall outside]; confirm by eye!
 probabilityThresholdSets = [0.5 0.5 0.5];
 % probabilityThresholdSets = [0.2 0.5 0.5; 0.5 0.5 0.5; 0.7 0.7 0.7];
@@ -24,7 +33,7 @@ addpath(fullfile(repositoryRoot,'tests'));
 addpath(fullfile(repositoryRoot,'APIs','SegmentationTools','src'));
 addpath(fullfile(repositoryRoot,'APIs','ImageStackIO','src'));
 addpath(fullfile(repositoryRoot,'APIs','SharedUtilities','src'));
-dataDirectory = memotest.dataRoot();
+dataDirectory = farmTestDataRoot();
 outputDirectory = tempname;
 mkdir(outputDirectory);
 fprintf('Visual-test outputs: %s\n',outputDirectory);
@@ -45,7 +54,7 @@ settings = struct('SemanticChannels',semanticChannels, ...
 h5Path = fullfile(dataDirectory,'image-stacks','hdf5', ...
     'inOnOut_3Chan_Full_60x.h5');
 % CYXZ is the layout documented for this specific fixture's MATLAB h5read.
-h5Image = imagestackio.readH5(h5Path,'/exported_data',struct('SourceAxes','CYXZ'));
+h5Image = farmReadH5(h5Path,'/exported_data',struct('SourceAxes','CYXZ'));
 probabilities = h5Image.Data(:,:,:,:,1);
 assert(size(probabilities,4)==3,'Expected three probability channels.');
 assert(all(isfinite(probabilities(:))) && all(probabilities(:)>=0) && ...
@@ -61,7 +70,7 @@ probabilityReports = cell(size(probabilityThresholdSets,1),1);
 for experiment = 1:size(probabilityThresholdSets,1)
     thresholds = probabilityThresholdSets(experiment,:);
     prefix = sprintf('h5_threshold_set_%02d',experiment);
-    result = segmentationtools.binarization.segmentInOnOutProbabilities( ...
+    result = farmSegmentInOnOutProbabilities( ...
         probabilities,semanticChannels,thresholds, ...
         struct('ClassifyOptions',classifyOptions));
     assert(~any(sum(result.Masks,4)>1,'all'),'Final masks must be disjoint.');
@@ -76,11 +85,10 @@ for experiment = 1:size(probabilityThresholdSets,1)
         result.ChangedVoxelMask),[prefix '_overlap_unclassified_changed'], ...
         outputDirectory,writeOptions);
 % Reassign 
-    encoded = segmentationtools.binarization.remapClassLabels( ...
+    encoded = farmRemapClassLabels( ...
         result.LabelVolume,[1 2 3],[85 170 255]);
     localWrite(encoded,[prefix '_labels_85_170_255'],outputDirectory,writeOptions);
-    [inside,wall,outside] = segmentationtools.binarization. ...
-        smoothInOnOutProbabilities(probabilities,semanticChannels,thresholds, ...
+    [inside,wall,outside] = farmSmoothInOnOutProbabilities(probabilities,semanticChannels,thresholds, ...
         struct('OpeningRadius',openingRadius,'SpanSpace',false));
     localWrite(cat(4,inside,wall,outside),[prefix '_historical_opening'], ...
         outputDirectory,writeOptions);
@@ -100,9 +108,9 @@ for experiment = 1:size(probabilityThresholdSets,1)
 end
 % Compare "add two fields then threshold" with "either field passes".
 group = semanticChannels([1 2]);
-sumMask = segmentationtools.binarization.thresholdProbabilityGroup( ...
+sumMask = farmThresholdProbabilityGroup( ...
     probabilities,group,0.5,struct('CombineMethod','sum'));
-unionMask = segmentationtools.binarization.thresholdProbabilityGroup( ...
+unionMask = farmThresholdProbabilityGroup( ...
     probabilities,group,[0.5 0.5],struct('CombineMethod','union'));
 localWrite(cat(4,sumMask,unionMask,xor(sumMask,unionMask)), ...
     'h5_inside_plus_wall_sum_union_difference',outputDirectory,writeOptions);
@@ -116,7 +124,7 @@ tifOptions = struct('SourceAxes','YXZ');
 tifOptions.SourceAxes = 'YXZ';
 for fileIndex = 1:numel(tiffFiles)
     inputPath = fullfile(tiffFiles(fileIndex).folder,tiffFiles(fileIndex).name);
-    image = imagestackio.readTiff(inputPath,tifOptions); % honor channel/time metadata
+    image = farmReadTiff(inputPath,tifOptions); % honor channel/time metadata
     [~,stem] = fileparts(inputPath);
     for channel = 1:size(image.Data,4)
         raw = image.Data(:,:,:,channel,1); % first time point
@@ -130,7 +138,7 @@ for fileIndex = 1:numel(tiffFiles)
             'Minimum',low,'Maximum',high); %#ok<SAGROW>
         for experiment = 1:numel(intensityThresholds)
             threshold = intensityThresholds(experiment);
-            mask = segmentationtools.binarization.imbinarize3_4D(scaled,threshold);
+            mask = farmImbinarize3_4D(scaled,threshold);
             maskName = sprintf('%s_threshold_%02d',prefix,experiment);
             localWrite(mask,maskName,outputDirectory,writeOptions);
             summary(end+1) = struct('Source',tiffFiles(fileIndex).name, ...
@@ -149,8 +157,7 @@ end
 if runSheetExperiment
     sheetOptions = struct('SplitSlice',sheetSplitSlice, ...
         'GapHalfWidth',sheetGapHalfWidth,'Connectivity',26);
-    [top,bottom,~,~,removed,~,split] = segmentationtools.morphologySpecific. ...
-        sheets.returnTopBottom2DSheetsConfigurable(sheetMask,sheetOptions);
+    [top,bottom,~,~,removed,~,split] = farmReturnTopBottom2DSheetsConfigurable(sheetMask,sheetOptions);
     localWrite(cat(4,top,bottom,removed),'h5_sheets_top_bottom_cut', ...
         outputDirectory,writeOptions);
     fprintf('Sheet split Z index: %d\n',split);
@@ -167,29 +174,29 @@ fprintf('Open TIFFs in FIJI or MATLAB. Output folder:\n%s\n',outputDirectory);
 %% Additional functions
 function localWrite(data,name,folder,options)
 path = fullfile(folder,[name '.tif']);
-segmentationtools.io.writeMaskTiff(data,path,options);
-roundTrip = segmentationtools.io.readProbabilityTiff(path);
+farmWriteMaskTiff(data,path,options);
+roundTrip = farmReadProbabilityTiff(path);
 assert(isequal(double(roundTrip),double(data)),'TIFF round trip failed: %s',name);
 end
 
 function localCleanup(mask,prefix,folder,options,keep,axesToFill,doDistance,meanD,width,sigma)
-[retained,removedPixels] = segmentationtools.cleanup.removeConObjs(mask,keep,'large');
+[retained,removedPixels] = farmRemoveConObjs(mask,keep,'large');
 removed = false(size(mask)); removed(removedPixels) = true;
 localWrite(cat(4,mask,retained,removed),[prefix '_original_retained_removed'],folder,options);
 for axis = axesToFill
-    filled = segmentationtools.cleanup.flatFill3D(mask,axis);
+    filled = farmFlatFill3D(mask,axis);
     localWrite(cat(4,mask,filled,filled & ~mask), ...
         sprintf('%s_fill_axis_%d_original_filled_added',prefix,axis),folder,options);
 end
-filled = segmentationtools.cleanup.flatFill3D(mask,axesToFill);
+filled = farmFlatFill3D(mask,axesToFill);
 localWrite(filled,[prefix '_fill_all_selected_axes'],folder,options);
 if doDistance
-    smooth = segmentationtools.cleanup.returnSmoothBlobsBW(mask,meanD,width,sigma);
+    smooth = farmReturnSmoothBlobsBW(mask,meanD,width,sigma);
     localWrite(cat(4,mask,smooth,xor(mask,smooth)), ...
         [prefix '_distance_original_smoothed_changed'],folder,options);
     labels = uint16(bwlabeln(retained));
-    fast = segmentationtools.cleanup.returnSmoothBlobsIDed(labels,meanD,width,sigma,'fast');
-    slow = segmentationtools.cleanup.returnSmoothBlobsIDed(labels,meanD,width,sigma,'slow');
+    fast = farmReturnSmoothBlobsIDed(labels,meanD,width,sigma,'fast');
+    slow = farmReturnSmoothBlobsIDed(labels,meanD,width,sigma,'slow');
     localWrite(cat(4,labels,fast,slow),[prefix '_IDs_original_fast_slow'],folder,options);
 end
 end

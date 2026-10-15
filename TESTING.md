@@ -6,7 +6,7 @@ From the MeMo repository root in MATLAB:
 report = runAllTests;
 ```
 
-The runner adds source/support paths, executes each of the ten current matlab.unittest test files once, and then runs ImageStackIO fixture validation. It continues after test failures or suite setup/execution errors.
+The runner adds source/support paths, executes each of the eleven current matlab.unittest test files once, and then runs ImageStackIO fixture validation. It continues after test failures or suite setup/execution errors.
 
 Inspect report.Summary, report.UnitResults and report.ImageStackIO. report.Passed is false if a test failed, remained incomplete or a suite could not execute. Failed and Incomplete counts can overlap in MATLAB; they should not be added to infer the number of distinct unsuccessful tests.
 
@@ -26,7 +26,7 @@ runAllTests('ThrowOnFailure',true);
 
 Default ThrowOnFailure=false lets you inspect the returned report after failures.
 
-Covered: SegmentationTools, ObjectGeometry, scalar/vector field sampling, ObjectTracking, FieldAnalysis, SharedUtilities, ownership/visualization compatibility, workflow examples and configuration builders, plus ImageStackIO validation by default. The SharedUtilities regression runner is not invoked because its repeated API files are already included.
+Covered: SegmentationTools, ObjectGeometry, scalar/vector field sampling, ObjectTracking, FieldAnalysis, SharedUtilities, canonical numeric/visualization helpers, FARM naming/layout, workflow examples and configuration builders, plus ImageStackIO validation by default. The SharedUtilities regression runner is not invoked because its repeated API files are already included.
 
 Not covered: manual visual validation scripts, real-data scientific comparisons, scalability benchmarks, deferred full VisualizationTools and SurfaceFieldMapping test suites. This runner collects existing coverage; it does not make the package fully scientifically validated.
 

@@ -1,9 +1,19 @@
 function results = runSegmentationToolsTests
+
 %RUNSEGMENTATIONTOOLSTESTS Run all non-active-contour API tests.
 %   RESULTS = RUNSEGMENTATIONTOOLSTESTS adds the required source folders,
 %   runs testSegmentationTools.m with detailed output, and returns the
 %   matlab.unittest.TestResult array. A failed test raises an error after
 %   the complete suite has run so batch/CI execution receives a failure.
+
+farmRoot = fileparts(mfilename('fullpath'));
+while ~isfile(fullfile(farmRoot, 'farmSetup.m'))
+    farmParent = fileparts(farmRoot);
+    if strcmp(farmParent, farmRoot), error('farm:Setup', 'Cannot locate farmSetup.m above this file.'); end
+    farmRoot = farmParent;
+end
+addpath(farmRoot);
+farmSetup('IncludeExamples', true, 'IncludeTests', true);
 
 testsDirectory = fileparts(mfilename('fullpath'));
 repositoryRoot = fullfile(testsDirectory, '..', '..', '..');

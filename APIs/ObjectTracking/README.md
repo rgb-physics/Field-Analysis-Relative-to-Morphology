@@ -13,8 +13,8 @@ overlap tracking and the MATLAB test suite do not.
 ## Overlap core
 
 ```matlab
-loader = @(frame) imagestackio.readTiff(sprintf('C:\data\objects_%03d.tif',frame));
-tracking = objecttracking.trackOverlaps(1:50,loader, ...
+loader = @(frame) farmReadTiff(sprintf('C:\data\objects_%03d.tif',frame));
+tracking = farmTrackOverlaps(1:50,loader, ...
     struct('DatasetID','experiment1','Identity',struct('InputType','labels'), ...
     'Ranking','overlap','MergePolicy','inherit','SplitPolicy','inherit', ...
     'ExportDirectory','C:\data\tracked'));
@@ -35,7 +35,7 @@ order is allowed. Source/target links and ancestry refer to processing order;
 with reverse order, graph ancestors are not chronological ancestors.
 Skipped acquisition frames are not loaded or searched for missing detections.
 A missing file/load error stops execution. Only the current pair's spatial data is held; compact tables of
-observations and relationships accumulate. `overlapLinks` exposes the reusable
+observations and relationships accumulate. `farmOverlapLinks` exposes the reusable
 intersection -> label pairs -> counts primitive, preserving the historical
 method without constructing full label volumes from index inputs.
 
@@ -65,15 +65,15 @@ remain regardless of which trajectory ID is inherited.
 child detection IDs. Weak components of each bipartite frame transition classify
 continuations, appearances, disappearances, splits, merges and merge-splits.
 Events describe transitions; the first frame establishes observations without
-an appearance transition. Isolated detections are preserved. `lineageGraph`
+an appearance transition. Isolated detections are preserved. `farmLineageGraph`
 constructs a digraph on demand, including isolated nodes.
 
 ## Seed-based lineage access
 
 ```matlab
-history = objecttracking.selectLineage(tracking, ...
+history = farmSelectLineage(tracking, ...
     struct('ObjectIDs',61,'Frame',20),struct('Direction','ancestors'));
-future = objecttracking.selectLineage(tracking,struct('TrajectoryIDs',7), ...
+future = farmSelectLineage(tracking,struct('TrajectoryIDs',7), ...
     struct('Direction','descendants','IncludeSeed',true));
 ```
 
@@ -91,29 +91,29 @@ only one inherited its trajectory ID. No rerun backward in time is needed.
 
 ## Optional labels and field-query integration
 
-`renderTrackingFrame(objects,membership,options)` maps current object indices
+`farmRenderTrackingFrame(objects,membership,options)` maps current object indices
 to TrajectoryID. TIFF output is optional. ImageStackIO supports uint16 label
 storage; larger IDs raise an error unless CompactIDs=true. Compact exports
 store a sidecar ID map. Never discard the map or interpret compact stored IDs
-as the original trajectories. trackOverlaps' automatic export uses native IDs;
+as the original trajectories. farmTrackOverlaps' automatic export uses native IDs;
 use explicit rendering for compact exports.
 
-`attachMembership(measurements,tracking.Detections)` joins DetectionID and
+`farmAttachMembership(measurements,tracking.Detections)` joins DetectionID and
 TrajectoryID by DatasetID/Frame/ObjectID, preserving destination row order.
 Per-component query rows receive their parent's membership. Selection tables
 can produce per-frame supports for ObjectRelativeProfiles queries. Position
 is not required for subsequent field-density/geometry-relative sampling.
 
-`selectTrajectories` is post-tracking selection: MinDetections counts actual
+`farmSelectTrajectories` is post-tracking selection: MinDetections counts actual
 observations; MinFrameSpan counts last-first+1. It never renumbers IDs or rewrites
 the original lineage result. Filtering and ancestry are distinct operations.
 
 ## Trackpy core
 
 See PYTHON_INTEGRATION.md for all completed and pending Python work.
-`objecttracking.trackpy.exportDetections` carries an explicit RowID map;
-`importLinks` accepts one-based RowID/TrajectoryID pairs in any order;
-`trackPositions` invokes the adapted Python bridge or an injected Linker.
+`farmExportDetections` carries an explicit RowID map;
+`farmImportLinks` accepts one-based RowID/TrajectoryID pairs in any order;
+`farmTrackPositions` invokes the adapted Python bridge or an injected Linker.
 Input detection tables must contain DatasetID/Frame/ObjectID/Centroid. Link
 one dataset at a time. CoordinateScale can convert coordinates into physical
 units without image resampling; SearchRange uses those same units. Memory is
@@ -129,9 +129,9 @@ The original supplied Python script remains unchanged beside the old adapters.
 
 Repaired converters/reconstruction preserve old entry points: tot2ts defaults
 minimum observations to 1 and stores explicit TrajectoryID; ts2tot respects it;
-consObjMatSelTrajs writes its intended output. Original versions are in
-archive/2026-10-13. Legacy addFieldStruct2Traj remains positional and is NOT
-recommended for new code: use attachMembership and keyed measurement joins.
+farmConsObjMatSelTrajs writes its intended output. Original versions are in
+archive/2026-10-13. Legacy farmAddFieldStruct2Traj remains positional and is NOT
+recommended for new code: use farmAttachMembership and keyed measurement joins.
 
 Run `results=runObjectTrackingTests()` from tests. Twelve synthetic tests cover
 split/merge ancestry, policies, many-to-many ties, sparse IDs, empty frames,

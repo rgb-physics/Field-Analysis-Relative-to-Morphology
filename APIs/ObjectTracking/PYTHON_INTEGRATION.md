@@ -1,6 +1,6 @@
 # Python integration checklist and preserved behavior
 
-Original: `src/+objecttracking/cens2TrajsSimple.py`, supplied by the user.
+Original: `src/objecttracking/cens2TrajsSimple.py`, supplied by the user.
 It remains unchanged for historical comparison. Adapted implementation:
 `python/trackpy_bridge.py`. No Python environment/packages were installed.
 
@@ -60,7 +60,7 @@ overlap core (disabled, independent of Trackpy's supported memory option).
 ## MATLAB usage
 
 ```matlab
-membership = objecttracking.trackpy.trackPositions(detectionProperties, ...
+membership = farmTrackPositions(detectionProperties, ...
     struct('SearchRange',8,'Memory',3,'MassProperty','Volume'));
 ```
 

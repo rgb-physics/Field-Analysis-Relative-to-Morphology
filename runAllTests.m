@@ -1,5 +1,6 @@
-function report=runAllTests(varargin)
-%RUNALLTESTS Run all available automated MeMo checks, once per test file.
+function report = runAllTests(varargin)
+
+%RUNALLTESTS Run all available automated FARM checks, once per test file.
 % From repository root: report=runAllTests;
 % Options (struct or name/value): IncludeImageStackIO=true, ThrowOnFailure=false.
 % ImageStackIO validation requires local bundled TIFF/HDF5 fixtures; false
@@ -8,20 +9,29 @@ function report=runAllTests(varargin)
 % Results/summary saved in a fresh test-data/workflow-results/all-tests_* folder.
 % Report fields: Summary, UnitResults, ImageStackIO, Passed, OutputDirectory.
 % Failed/Incomplete counts may overlap under matlab.unittest conventions.
-root=fileparts(mfilename('fullpath'));
-apis={'ImageStackIO','SegmentationTools','ObjectGeometry','ObjectRelativeProfiles', ...
+farmRoot = fileparts(mfilename('fullpath'));
+while ~isfile(fullfile(farmRoot, 'farmSetup.m'))
+    farmParent = fileparts(farmRoot);
+    if strcmp(farmParent, farmRoot), error('farm:Setup', 'Cannot locate farmSetup.m above this file.'); end
+    farmRoot = farmParent;
+end
+addpath(farmRoot);
+farmSetup('IncludeExamples', true, 'IncludeTests', true);
+
+root = fileparts(mfilename('fullpath'));
+apis = {'ImageStackIO','SegmentationTools','ObjectGeometry','ObjectRelativeProfiles', ...
     'ObjectTracking','FieldAnalysis','SharedUtilities','VisualizationTools'};
-for k=1:numel(apis), addpath(fullfile(root,'APIs',apis{k},'src')); end
+for k = 1:numel(apis), addpath(fullfile(root,'APIs',apis{k},'src')); end
 addpath(fullfile(root,'Workflows','src'));
 addpath(fullfile(root,'Workflows','examples'));
 addpath(fullfile(root,'tests'));
 addpath(fullfile(root,'APIs','ImageStackIO','tests'));
-options=sharedutilities.config.parseOptions(struct('IncludeImageStackIO',true, ...
+options = farmParseOptions(struct('IncludeImageStackIO',true, ...
     'ThrowOnFailure',false),varargin{:});
 validateattributes(options.IncludeImageStackIO,{'logical'},{'scalar'});
 validateattributes(options.ThrowOnFailure,{'logical'},{'scalar'});
 
-files={
+files = {
     'SegmentationTools','APIs/SegmentationTools/tests/testSegmentationTools.m'
     'ObjectGeometry','APIs/ObjectGeometry/tests/testObjectGeometry.m'
     'FieldSampling','APIs/ObjectRelativeProfiles/tests/testFieldSampling.m'
@@ -29,64 +39,65 @@ files={
     'ObjectTracking','APIs/ObjectTracking/tests/testObjectTracking.m'
     'FieldAnalysis','APIs/FieldAnalysis/tests/testFieldAnalysis.m'
     'SharedUtilities','APIs/SharedUtilities/tests/testSharedUtilities.m'
-    'OwnershipCompatibility','APIs/SharedUtilities/tests/testOwnershipCleanup.m'
+    'CanonicalUtilities','APIs/SharedUtilities/tests/testCanonicalUtilities.m'
+    'FARMLayout','APIs/SharedUtilities/tests/testFarmLayout.m'
     'WorkflowExamples','Workflows/examples/testWorkflowExamples.m'
     'ConfigBuilders','Workflows/examples/testConfigBuilders.m'
     };
 % Invoke TestSuite directly: individual runners throw after failures and the
 % SharedUtilities runner includes regression files already listed above.
-n=size(files,1);
-names=strings(n,1); passed=zeros(n,1); failed=zeros(n,1);
-incomplete=zeros(n,1); seconds=zeros(n,1); errors=strings(n,1);
-unitCells=cell(n,1);
-runner=matlab.unittest.TestRunner.withTextOutput;
-for k=1:n
-    names(k)=files{k,1}; started=tic;
+n = size(files,1);
+names = strings(n,1); passed = zeros(n,1); failed = zeros(n,1);
+incomplete = zeros(n,1); seconds = zeros(n,1); errors = strings(n,1);
+unitCells = cell(n,1);
+runner = matlab.unittest.TestRunner.withTextOutput;
+for k = 1:n
+    names(k) = files{k,1}; started = tic;
     fprintf('\n===== %s =====\n',names(k));
     try
-        suite=matlab.unittest.TestSuite.fromFile(fullfile(root,files{k,2}));
+        suite = matlab.unittest.TestSuite.fromFile(fullfile(root,files{k,2}));
         if isempty(suite), error('memo:EmptySuite','No tests discovered in %s',files{k,2}); end
-        unitCells{k}=runner.run(suite);
-        passed(k)=nnz([unitCells{k}.Passed]);
-        failed(k)=nnz([unitCells{k}.Failed]);
-        incomplete(k)=nnz([unitCells{k}.Incomplete]);
+        unitCells{k} = runner.run(suite);
+        passed(k) = nnz([unitCells{k}.Passed]);
+        failed(k) = nnz([unitCells{k}.Failed]);
+        incomplete(k) = nnz([unitCells{k}.Incomplete]);
     catch exception
-        errors(k)=string(getReport(exception,'extended','hyperlinks','off'));
+        errors(k) = string(getReport(exception,'extended','hyperlinks','off'));
         fprintf(2,'%s\n',errors(k));
     end
-    seconds(k)=toc(started);
+    seconds(k) = toc(started);
 end
-summary=table(names,passed,failed,incomplete,seconds,errors, ...
+summary = table(names,passed,failed,incomplete,seconds,errors, ...
     'VariableNames',{'Suite','Passed','Failed','Incomplete','Seconds','Error'});
-imageResults=table();
+imageResults = table();
 if options.IncludeImageStackIO
-    fprintf('\n===== ImageStackIO validation =====\n'); started=tic;
-    errorText=""; imagePassed=0; imageFailed=0;
+    fprintf('\n===== ImageStackIO validation =====\n'); started = tic;
+    errorText = ""; imagePassed = 0; imageFailed = 0;
     try
-        imageResults=runImageStackIOValidation(false);
-        imagePassed=nnz(imageResults.Passed);
-        imageFailed=nnz(~imageResults.Passed);
+        imageResults = runImageStackIOValidation(false);
+        imagePassed = nnz(imageResults.Passed);
+        imageFailed = nnz(~imageResults.Passed);
     catch exception
-        errorText=string(getReport(exception,'extended','hyperlinks','off'));
+        errorText = string(getReport(exception,'extended','hyperlinks','off'));
         fprintf(2,'%s\n',errorText);
     end
-    imageSummary=table("ImageStackIO",imagePassed,imageFailed,0,toc(started),errorText, ...
+    imageSummary = table("ImageStackIO",imagePassed,imageFailed,0,toc(started),errorText, ...
         'VariableNames',summary.Properties.VariableNames);
-    summary=[summary;imageSummary];
+    summary = [summary;imageSummary];
 end
 % Avoid constructing TestResult from [] (MATLAB class concatenation pitfalls).
-unitResults=[];
-for k=1:n
+unitResults = [];
+for k = 1:n
     if isempty(unitCells{k}), continue; end
-    if isempty(unitResults), unitResults=unitCells{k};
-    else, unitResults=[unitResults,unitCells{k}]; end %#ok<AGROW>
+    if isempty(unitResults), unitResults = unitCells{k};
+    else, unitResults = [unitResults,unitCells{k}]; end %#ok<AGROW>
 end
-allPassed=all(summary.Failed==0 & summary.Incomplete==0 & strlength(summary.Error)==0);
-outputRoot=fullfile(root,'test-data','workflow-results');
+allPassed = all(summary.Failed==0 & summary.Incomplete==0 & strlength(summary.Error)==0);
+outputRoot = fullfile(root,'test-data','workflow-results');
 if ~isfolder(outputRoot), mkdir(outputRoot); end
-[~,suffix]=fileparts(tempname(outputRoot));
-outputDirectory=fullfile(outputRoot,['all-tests_' suffix]); mkdir(outputDirectory);
-report=struct('Summary',summary,'UnitResults',unitResults, ...
+[~,suffix] = fileparts(tempname(outputRoot));
+outputDirectory = fullfile(outputRoot,['all-tests_' suffix]); mkdir(outputDirectory);
+report = struct('Summary',summary,'UnitResults',unitResults, ...
     'ImageStackIO',imageResults,'Passed',allPassed,'OutputDirectory',outputDirectory);
 save(fullfile(outputDirectory,'report.mat'),'report');
 writetable(summary,fullfile(outputDirectory,'summary.csv'));

@@ -60,7 +60,7 @@ table(results)
 Expected scope:
 
 - 18 test procedures
-- All 20 `.m` source files outside `+activeContours` represented
+- All 20 `.m` source files outside `activeContours` represented
 - No failed or incomplete results
 - Summary: `18 passed, 0 failed, 0 incomplete`
 
@@ -69,8 +69,8 @@ The suite covers:
 - Class construction, strict thresholds, summed channels, and unioned channels
 - Arbitrary channel classification and semantic inside/wall/outside wrapping
 - Tie resolution, unclassified voxels, optional masks, and label volumes
-- Historical `h5toSmooth3Chans` compatibility
-- Class-label remapping and legacy `imbinarize3_4D`
+- Historical `farmH5toSmooth3Chans` compatibility
+- Class-label remapping and legacy `farmImbinarize3_4D`
 - Planar filling, side-hole filling, component retention, and signed-distance
   cleanup for binary and ID-labeled volumes
 - Mask TIFF and ImageJ hyperstack round trips
@@ -97,7 +97,7 @@ TIFFs for visual assessment:
 
 ```matlab
 cd(testsDirectory)
-report = validateInOnOutImplementations();
+report = farmValidateInOnOutImplementations();
 report.OutputDirectory
 ```
 
@@ -136,7 +136,7 @@ opts.InputFile = "C:\path\to\probabilities.tif";
 opts.Channels = [1 3 2];             % [inside wall outside] in this file
 opts.Thresholds = [0.2 0.5 0.5];
 opts.OutputDirectory = fullfile(tempdir,'FARM-real-in-on-out');
-report = validateInOnOutImplementations(opts);
+report = farmValidateInOnOutImplementations(opts);
 ```
 
 For HDF5:
@@ -145,7 +145,7 @@ For HDF5:
 opts.InputFile = "C:\path\to\probabilities.h5";
 opts.DatasetPath = "/exported_data";
 opts.ReadOptions = struct('SourceAxes','CYXZ'); % only if metadata is absent
-report = validateInOnOutImplementations(opts);
+report = farmValidateInOnOutImplementations(opts);
 ```
 
 Use the axis order that actually describes the file. HDF5 and TIFF data are

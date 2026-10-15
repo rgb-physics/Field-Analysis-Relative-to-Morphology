@@ -3,6 +3,15 @@
 % channels). This example uses the public ImageStackIO equivalent and keeps
 % the working array in the repository convention [Y X Z C T].
 
+farmRoot = fileparts(mfilename('fullpath'));
+while ~isfile(fullfile(farmRoot, 'farmSetup.m'))
+    farmParent = fileparts(farmRoot);
+    if strcmp(farmParent, farmRoot), error('farm:Setup', 'Cannot locate farmSetup.m above this saved script.'); end
+    farmRoot = farmParent;
+end
+addpath(farmRoot);
+farmSetup('IncludeExamples', true, 'IncludeTests', true);
+
 testFolder = fileparts(mfilename('fullpath'));
 repositoryRoot = fileparts(fileparts(fileparts(testFolder)));
 testSupportFolder = fullfile(repositoryRoot, 'tests');
@@ -15,14 +24,14 @@ outputName = 'inOnOut_3ChannelSegmentation_recropped.h5';
 datasetPath = '/exported_data';
 selectedChannels = 1:3;
 
-h5Folder = fullfile(memotest.dataRoot(), 'image-stacks', 'hdf5');
+h5Folder = fullfile(farmTestDataRoot(), 'image-stacks', 'hdf5');
 inputPath = fullfile(h5Folder, inputName);
 outputPath = fullfile(h5Folder, outputName);
 
 % Ilastik probability exports used by the workflows are returned by
 % MATLAB's h5read in C-Y-X-Z order. ImageStackIO normalizes this to Y-X-Z-C-T.
 options = struct('SourceAxes', 'CYXZ', 'Channels', selectedChannels);
-image = imagestackio.readH5(inputPath, datasetPath, options);
+image = farmReadH5(inputPath, datasetPath, options);
 dataYXZC = image.Data;
 
 % Use the central half of each spatial dimension. Replace these three

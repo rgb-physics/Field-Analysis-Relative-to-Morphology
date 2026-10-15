@@ -3,9 +3,9 @@
 From the MeMo repository root, run:
 
 ```matlab
-glossary
-glossary("Experiment")
-glossary("Support")
+farmGlossary
+farmGlossary("Experiment")
+farmGlossary("Support")
 ```
 
 The first command displays a catalog. A term displays its data type,
@@ -20,12 +20,12 @@ needs updating. Keep the document with the package when distributing it.
 ## Get individual pieces
 
 ```matlab
-entry = glossary("Experiment");
+entry = farmGlossary("Experiment");
 description = entry.Definition;
-dataType = glossary("Experiment", "DataType");
-inputs = glossary("Experiment", "Inputs");
-options = glossary("Experiment", "InputOptions");
-notes = glossary("Experiment", "Notes");
+dataType = farmGlossary("Experiment", "DataType");
+inputs = farmGlossary("Experiment", "Inputs");
+options = farmGlossary("Experiment", "InputOptions");
+notes = farmGlossary("Experiment", "Notes");
 ```
 
 `entry` is a scalar struct of strings. `options` is a table with `Name`,
@@ -41,13 +41,13 @@ For example, the axial-alignment entry lists generated result fields.
 ## Search and browse
 
 ```matlab
-matches = glossary("search", "distance");
-matches = glossary("search", "geometry", "SearchIn", ["Term", "Definition"]);
-matches = glossary("search", "Count", "SearchIn", "Term", "Section", "DataDictionary");
-matches = glossary("search", "geometry", "Section", ["Glossary", "DataDictionary"]);
-terms = glossary("list");
-catalog = glossary;
-dictionary = glossary("catalog", "Section", "DataDictionary");
+matches = farmGlossary("search", "distance");
+matches = farmGlossary("search", "geometry", "SearchIn", ["Term", "Definition"]);
+matches = farmGlossary("search", "Count", "SearchIn", "Term", "Section", "DataDictionary");
+matches = farmGlossary("search", "geometry", "Section", ["Glossary", "DataDictionary"]);
+terms = farmGlossary("list");
+catalog = farmGlossary;
+dictionary = farmGlossary("catalog", "Section", "DataDictionary");
 openvar('catalog');
 ```
 
@@ -71,9 +71,9 @@ error rather than silently falling back to searching everything.
 Direct lookups and all explicit getters also accept the optional section filter:
 
 ```matlab
-entry = glossary("SelectedCount", "Section", "DataDictionary");
-dataType = glossary("SelectedCount", "DataType", "Section", "DataDictionary");
-section = glossary("SelectedCount", "Section"); % get the entry's section name
+entry = farmGlossary("SelectedCount", "Section", "DataDictionary");
+dataType = farmGlossary("SelectedCount", "DataType", "Section", "DataDictionary");
+section = farmGlossary("SelectedCount", "Section"); % get the entry's section name
 ```
 
 Exact spelling takes precedence because the written glossary distinguishes
@@ -84,27 +84,27 @@ The section filter is applied before resolving exact or case-insensitive matches
 
 ## Explicit getter functions
 
-With SharedUtilities `src` on the MATLAB path:
+After running `farmSetup` from the repository root:
 
 ```matlab
-entry = sharedutilities.documentation.getGlossaryEntry("Experiment");
-dataType = sharedutilities.documentation.getGlossaryDataType("Experiment");
-inputs = sharedutilities.documentation.getGlossaryInputs("Experiment");
-options = sharedutilities.documentation.getGlossaryInputOptions("Experiment");
-matches = sharedutilities.documentation.searchGlossary("distance");
-catalog = sharedutilities.documentation.glossaryEntries();
-inputs = sharedutilities.documentation.getGlossaryInputs( ...
+entry = farmGetGlossaryEntry("Experiment");
+dataType = farmGetGlossaryDataType("Experiment");
+inputs = farmGetGlossaryInputs("Experiment");
+options = farmGetGlossaryInputOptions("Experiment");
+matches = farmSearchGlossary("distance");
+catalog = farmGlossaryEntries();
+inputs = farmGetGlossaryInputs( ...
     "SelectedCount", "Section", "DataDictionary");
 ```
 
-The root `glossary` command adds that source directory if needed. The
+The root `farmGlossary` command adds that source directory if needed. The
 namespaced getters also work when only the API source directory has been
 added and the repository root is not on the MATLAB path.
 
 ## Other MATLAB presentations
 
 The catalog table and Command Window lookup are the simplest starting points.
-MATLAB's `help glossary` shows usage examples. A future small app could put
+MATLAB's `help farmGlossary` shows usage examples. A future small app could put
 a search box beside the same catalog and an entry-details panel, reusing
 these getters. Such a viewer would be an optional presentation of the same
 entries, not another source of definitions.

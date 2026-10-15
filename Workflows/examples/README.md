@@ -24,7 +24,7 @@ implementation at the bottom as a local function. Set the explicit repo path
 and run sections in order. Paths/calibration/semantic channels remain editable.
 None of the manual setup sections calls experiment4Config.
 
-The old workflow1Objects through workflow5Profiles files are compatibility
+The old farmWorkflow1Objects through farmWorkflow5Profiles files are compatibility
 entry points: they forward existing configurations to the local implementation
 without running manual setup or previews. Tests and older calls remain usable.
 The workflowInput/workflowExtra variables in those wrappers are internal dispatch
@@ -40,14 +40,14 @@ are a separate user-directed sampling choice, not implied by this example.
 
 All outputs remain under package test-data. Inspect OUTPUT CHOICES and result
 assignments in each local helper to change retained results. Preparation remains
-the separate preparationExample; it is not one of the numbered analysis pairs.
+the separate farmPreparationExample; it is not one of the numbered analysis pairs.
 
 From the repository root in MATLAB R2023a:
 ```matlab
 addpath(fullfile(pwd,'Workflows','examples'));
 results = runWorkflowExampleTests; % synthetic only
-c = experiment4Config;
-preview = previewExperiment4(c);  % inspect class meanings and registration
+c = farmExperiment4Config;
+preview = farmPreviewExperiment4(c);  % inspect class meanings and registration
 ```
 
 The preview writes a PNG with density, filament intensity, and semantic
@@ -64,12 +64,12 @@ The example explicitly swaps X/Y to YXZ.
 ## Six independent examples
 
 ```matlab
-prep = preparationExample(c);
-objects = workflow1Objects(c);
-filaments = workflow2Filaments(c);
-lineage = workflow3Lineage(c);
-spectra = workflow4Spectra(c);
-profiles = workflow5Profiles(c,filaments); % second argument optional
+prep = farmPreparationExample(c);
+objects = farmWorkflow1Objects(c);
+filaments = farmWorkflow2Filaments(c);
+lineage = farmWorkflow3Lineage(c);
+spectra = farmWorkflow4Spectra(c);
+profiles = farmWorkflow5Profiles(c,filaments); % second argument optional
 ```
 
 Do not run all six blindly: inspect the preview and a short first run.
@@ -165,9 +165,9 @@ Run `runConfigBuilderTests` for builder/consumer integration tests.
 See [Experiment configuration and inter-API fields](EXPERIMENT-CONFIGURATION.md)
 for the configuration reference, identity keys, naming and grid conventions.
 
-experiment4Config is ordinary editable configuration. ObjectLoader and
+farmExperiment4Config is ordinary editable configuration. ObjectLoader and
 FilamentLoader can supply prepared masks without H5/intensity segmentation.
-Supports and named fields can be extended directly in workflow1's queryFrame
+Supports and named fields can be extended directly in workflow1's farmQueryFrame
 specification. Same-frame sample operations can call custom functions.
 These are editable examples, not a pipeline that loads all channels/times.
 Frame-wise MATs retain small measured tables; geometry indices are retained
@@ -176,10 +176,10 @@ No old workflow has been archived because these examples still need real-data
 validation and explicit policy comparison.
 
 New reusable functions:
-- fieldanalysis.preprocessing.fitIlluminationCorrection
-- fieldanalysis.preprocessing.applyIlluminationCorrection
-- fieldanalysis.preprocessing.scaleToReferenceTotal
-- objectgeometry.objects.localInertia
+- farmFitIlluminationCorrection
+- farmApplyIlluminationCorrection
+- farmScaleToReferenceTotal
+- farmLocalInertia
 
 Local inertia retains historical all-neighbor smoothed occupancy, mirrored
 padding, and inertia kernels in YXZ order. Optional physical spacing scales
@@ -192,7 +192,7 @@ MATLAB RNG; set rng for repeatable sampling.
 ## Scalability
 
 ```matlab
-timings = benchmarkWorkflowScaling(c);
+timings = farmBenchmarkWorkflowScaling(c);
 ```
 Default synthetic cases vary XYZ size, frames, channels and label-group count,
 holding foreground occupancy fixed within each size. Object and filament

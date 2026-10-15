@@ -7,7 +7,7 @@ No historical experiment script is claimed to be replaced in its entirety.
 
 ## Setup and tests
 
-Add `APIs/FieldAnalysis/src` and `APIs/SharedUtilities/src` to the MATLAB path.
+Run `farmSetup` from the repository root to add the ordinary source folders.
 For tests, add `APIs/FieldAnalysis/tests`, then run:
 
 ```matlab
@@ -24,14 +24,14 @@ See `examples/exampleFieldAnalysis.m`.
 ## Fourier analysis
 
 ```matlab
-r = fieldanalysis.fourier.powerSpectrum2D(image, struct( ...
+r = farmPowerSpectrum2D(image, struct( ...
     'Spacing',[dy dx], 'SpacingUnit','um', 'NumBins',100));
-r3 = fieldanalysis.fourier.powerSpectrum3D(volume, struct( ...
+r3 = farmPowerSpectrum3D(volume, struct( ...
     'Spacing',[dy dx dz], 'SpacingUnit','um', 'NumBins',100));
-slices = fieldanalysis.fourier.selectSlicesAnalysis(volume,[3 8 15], ...
+slices = farmSelectSlicesAnalysis(volume,[3 8 15], ...
     struct('Spacing',[dy dx]));
-projection = fieldanalysis.fourier.powerSpectrum2D(mean(volume,3));
-maximumProjection = fieldanalysis.fourier.powerSpectrum2D(max(volume,[],3));
+projection = farmPowerSpectrum2D(mean(volume,3));
+maximumProjection = farmPowerSpectrum2D(max(volume,[],3));
 ```
 
 The baseline is the squared Fourier magnitude from
@@ -43,13 +43,13 @@ power = abs(fftshift(fftn(window .* processedField))).^2;
 ```
 
 `MeanSubtract=false` by default; `Window=true` uses
-`sharedutilities.numerics.generateNDHann` (symmetric MATLAB Hann).
+`farmGenerateNDHann` (symmetric MATLAB Hann).
 `Window=false` disables the window.
 The new consistent window replaces the direct 2D window expression in the
 historical samAdapted script. A two-sample symmetric Hann is all zero:
 very small dimensions can therefore remove the entire signal.
 
-`frequencyCoordinates` calls `genScaledKVec`. Frequencies are cycles per
+`farmFrequencyCoordinates` calls `farmGenScaledKVec`. Frequencies are cycles per
 spacing unit, in Y X Z order; they are not angular wave numbers.
 Spacing changes frequency axes without resampling the image.
 A corrected frequency helper places DC at index `floor(N/2)+1` for both
@@ -106,7 +106,7 @@ sample counts. Empty hard bins remain NaN even with Gaussian weighting.
 Sigma has the same units as radial coordinates. No historical low-frequency
 replacement or automatic cropping is applied.
 
-`radialAverage(array,options)` also works on correlation maps.
+`farmRadialAverage(array,options)` also works on correlation maps.
 Its default coordinates are fftshift-centered voxel coordinates.
 Supply `Coordinates={axisY,axisX,axisZ}` to use explicit lag/frequency axes.
 For cylindrical averaging of a 3D array, supply a zero-valued Z coordinate
@@ -115,10 +115,10 @@ vector; this pools Z rather than returning separate slices.
 ## Spatial correlation
 
 ```matlab
-r = fieldanalysis.spatialCorrelation.crossCorrelation(a,b);
-s = fieldanalysis.spatialCorrelation.autoCorrelation(a, ...
+r = farmCrossCorrelation(a,b);
+s = farmAutoCorrelation(a, ...
     struct('MeanSubtract',true));
-profile = fieldanalysis.fourier.radialAverage(r.Correlation, ...
+profile = farmRadialAverage(r.Correlation, ...
     struct('Coordinates',{r.LagAxes},'NumBins',50));
 ```
 
@@ -142,16 +142,16 @@ before loading the next frame.
 ## Conditional and paired analysis
 
 ```matlab
-r = fieldanalysis.conditional.conditionalStatistics(intensity,distance, ...
+r = farmConditionalStatistics(intensity,distance, ...
     struct('Edges',0:2:40,'Statistics',{{'Mean','Variance','Median'}}));
 % Same operation on selected samples:
-r = fieldanalysis.conditional.conditionalStatistics(intensity(indices), ...
+r = farmConditionalStatistics(intensity(indices), ...
     distance(indices),struct('Edges',0:2:40));
 % Optional object/region grouping:
-r = fieldanalysis.conditional.conditionalStatistics(values,distances, ...
+r = farmConditionalStatistics(values,distances, ...
     struct('Edges',edges,'GroupIDs',objectIDs));
-h = fieldanalysis.conditional.jointHistogram(a,b,struct('NumBins',[20 30]));
-p = fieldanalysis.statistics.pairedFieldStatistics(a,b);
+h = farmJointHistogram(a,b,struct('NumBins',[20 30]));
+p = farmPairedFieldStatistics(a,b);
 ```
 
 Matching full arrays or equal-length vectors are accepted. Both inputs must
@@ -178,7 +178,7 @@ preprocessing.applyIlluminationCorrection returns double corrected values
 without thresholding, range stretching, or implicit export. BleachScale is
 explicit and defaults false. preprocessing.scaleToReferenceTotal accepts a
 reference total supplied by the workflow and returns the applied factor.
-See Workflows/examples/preparationExample.m for optional 16-bit quantitative
+See Workflows/examples/farmPreparationExample.m for optional 16-bit quantitative
 and separate fixed-range 8-bit Ilastik export, plus explicit crop conversion.
 
 ## Invalid data and batching
@@ -197,20 +197,18 @@ this API does not create another batching or identity framework.
 
 ## Historical code and exclusions
 
-loglogBin is now owned by fieldanalysis.statistics. It calculates paired
-log-domain means over occupied X bins. Its old sharedutilities.plotting path
-remains a compatibility wrapper; its repaired numerical behavior is unchanged.
+farmLoglogBin is owned by FieldAnalysis. It calculates paired
+log-domain means over occupied X bins. Its old plotting alias is archived; its repaired numerical behavior is unchanged.
 
 LiangOG, LiangADAPT, percolationAnalysis, general fitting, temporal peak
 association, and mesh workflows are outside this first pass.
-The old Fourier/plotting scripts remain as provenance until their full
-workflows are replaced. The legacy generateVanHove and
-generateStaticStructureFactor are not repaired or recommended entry points:
+The old Fourier/plotting scripts are preserved in the sibling MeMo-Archive for provenance and future workflow review. The legacy farmGenerateVanHove and
+farmGenerateStaticStructureFactor are not repaired or recommended entry points:
 genCorrScaleMat was not found, and their estimator requires separate review.
 twoFieldsCrossCorr remains a historical experiment script. Its unpadded,
 windowed FFT convention differs from the new linear correlation.
 
-generateRadialMatrix and radiallyAverageMatrix now preserve correctly sized
+farmGenerateRadialMatrix and farmRadiallyAverageMatrix now preserve correctly sized
 grids and return one value per bin. Their originals are archived.
 The legacy averaging wrapper retains Gaussian evaluation at left edges
 instead of the new function's bin centers, but corrects origins and drops the

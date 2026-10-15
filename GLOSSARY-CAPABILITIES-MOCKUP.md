@@ -1,6 +1,6 @@
 # Glossary and Data Dictionary — definitions and representations
 
-In MATLAB, use `glossary("Experiment")` for an entry, `glossary("search", "distance")`
+In MATLAB, use `farmGlossary("Experiment")` for an entry, `farmGlossary("search", "distance")`
 to search, or `catalog = glossary` for the complete table. See
 [MATLAB glossary usage and getters](docs/MATLAB-GLOSSARY.md).
 
@@ -415,7 +415,7 @@ Workflow 1 layout shown; exact fields depend on the workflow.
 ## Data Dictionary
 
 Named fields below describe generated sampling results, not additional user inputs.
-The names are suffixes: queryField writes <FieldName>_<suffix>, and queryFrame uses
+The names are suffixes: farmQueryField writes <FieldName>_<suffix>, and farmQueryFrame uses
 <QueryName>_<suffix>. Vector component queries use <FieldName>_<ComponentName>_<suffix>.
 Counts refer to one result row; field/query prefixes distinguish separate calculations.
 These entries document behavior, not a universal set of columns required in every table.
@@ -425,27 +425,27 @@ These entries document behavior, not a universal set of columns required in ever
 **SelectedCount** [double scalar per row; table column across rows]
 The number of selected voxel locations actually sampled after support preparation, including any applied centroid fallback. Indices are deduplicated within the resulting support group.
 
-Produced by queryField; retained separately for each component by queryVectorField. Includes samples that become NaN or infinite. SelectedCount equals FiniteCount+NaNCount+PositiveInfCount+NegativeInfCount. A sample operation must return one value per selected location.
+Produced by farmQueryField; retained separately for each component by queryVectorField. Includes samples that become NaN or infinite. SelectedCount equals FiniteCount+NaNCount+PositiveInfCount+NegativeInfCount. A sample operation must return one value per selected location.
 
 **FiniteCount** [double scalar per row; table column across rows]
 The number of sampled values that are neither NaN nor positive or negative infinity. Built-in scalar statistics use these finite values only.
 
-Produced by queryField; independent per component in queryVectorField. FiniteCount can be zero while SelectedCount is nonzero. The requested Count statistic equals FiniteCount, not SelectedCount.
+Produced by farmQueryField; independent per component in queryVectorField. FiniteCount can be zero while SelectedCount is nonzero. The requested Count statistic equals FiniteCount, not SelectedCount.
 
 **NaNCount** [double scalar per row; table column across rows]
 The number of sampled values that are NaN, excluded from finite-sample scalar statistics.
 
-Produced by queryField; independent per component in queryVectorField. Counts values after an optional sample operation, not invalid voxels elsewhere in the volume.
+Produced by farmQueryField; independent per component in queryVectorField. Counts values after an optional sample operation, not invalid voxels elsewhere in the volume.
 
 **PositiveInfCount** [double scalar per row; table column across rows]
 The number of sampled positive-infinity values, excluded from finite-sample scalar statistics.
 
-Produced by queryField; independent per component in queryVectorField. Reported separately from NegativeInfCount and NaNCount.
+Produced by farmQueryField; independent per component in queryVectorField. Reported separately from NegativeInfCount and NaNCount.
 
 **NegativeInfCount** [double scalar per row; table column across rows]
 The number of sampled negative-infinity values, excluded from finite-sample scalar statistics.
 
-Produced by queryField; independent per component in queryVectorField. Reported separately from PositiveInfCount and NaNCount.
+Produced by farmQueryField; independent per component in queryVectorField. Reported separately from PositiveInfCount and NaNCount.
 
 **SelectionEmpty** [logical scalar per row; table column across rows]
 True when the final selected index list is empty, after support preparation and any centroid fallback.
@@ -455,19 +455,19 @@ Produced by queryField. An empty skeleton with an applied centroid fallback can 
 **GeometryEmpty** [logical scalar per support record or result row]
 True when the source generated geometry has no computed indices. When generated components are combined by parent ID, true means every source component had empty geometry before fallback.
 
-Set by prepareSupport for generated-geometry records and copied into queryField results. Does not become false merely because fallback adds a centroid. For raw selections and prepared memberships this provenance flag defaults to false; an empty raw mask is instead indicated by SelectionEmpty. Some empty components do not make an otherwise nonempty combined geometry empty; inspect EmptyGeometryCount for that case.
+Set by farmPrepareSupport for generated-geometry records and copied into farmQueryField results. Does not become false merely because fallback adds a centroid. For raw selections and prepared memberships this provenance flag defaults to false; an empty raw mask is instead indicated by SelectionEmpty. Some empty components do not make an otherwise nonempty combined geometry empty; inspect EmptyGeometryCount for that case.
 
 **EmptyGeometryCount** [double scalar per support record or result row]
 The number of source generated-geometry records whose computed index lists were empty before fallback.
 
-Set by prepareSupport and copied into queryField results. With component results this is zero or one; with components combined by parent ID it is the sum over source records. Raw selections and prepared memberships default to zero.
+Set by farmPrepareSupport and copied into farmQueryField results. With component results this is zero or one; with components combined by parent ID it is the sum over source records. Raw selections and prepared memberships default to zero.
 
 **UsedFallback** [logical scalar per support record or result row]
 True when support preparation substitutes a rounded, nearest-voxel centroid for an empty generated skeleton record, or any constituent record uses that substitution when combined by parent ID.
 
-Set by prepareSupport and copied into queryField results. Currently controlled by CentroidFallback; it does not describe every fallback mechanism in the package, such as the single-voxel ProjectedExtent fallback. SelectionEmpty can be false even though GeometryEmpty remains true.
+Set by farmPrepareSupport and copied into farmQueryField results. Currently controlled by CentroidFallback; it does not describe every fallback mechanism in the package, such as the single-voxel ProjectedExtent fallback. SelectionEmpty can be false even though GeometryEmpty remains true.
 
 **FallbackCount** [double scalar per support record or result row]
 The number of source skeleton records for which centroid fallback was applied during support preparation.
 
-Set by prepareSupport and copied into queryField results. With component results this is zero or one; with components combined by parent ID it is summed. It counts substituted records, not unique fallback voxels: overlapping centroid locations may be deduplicated in the final selection.
+Set by farmPrepareSupport and copied into farmQueryField results. With component results this is zero or one; with components combined by parent ID it is summed. It counts substituted records, not unique fallback voxels: overlapping centroid locations may be deduplicated in the final selection.

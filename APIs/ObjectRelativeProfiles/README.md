@@ -4,7 +4,7 @@
 
 ```matlab
 fields = struct('VX',velocityX,'VY',velocityY,'VZ',velocityZ);
-t = objectrelativeprofiles.fieldSampling.queryVectorField(fields,support, ...
+t = farmQueryVectorField(fields,support, ...
     {'ComponentMean','MeanVector','MagnitudeOfMean','MeanMagnitude','Covariance'}, ...
     struct('FieldName','Velocity','ComponentNames',{{'VX','VY','VZ'}}));
 ```
@@ -31,12 +31,12 @@ Frame/batch queries use `Kind='vector'`, `Fields={'VX','VY','VZ'}` in coordinate
 order, vector Statistics names, and ordinary Name/Support entries. Existing
 scalar queries are unchanged. The test runner includes scalar and vector suites.
 
-The new `+fieldSampling` functions extract samples, calculate requested scalar
+The new `fieldSampling` functions extract samples, calculate requested scalar
 or component statistics, and stream frames. They reuse the direct indexing,
 per-ID selection, `mean`/`sum`/`median`/`std`, and `histcounts` calculations in
 the historical scripts. All 27 historical scripts remain unchanged for comparison
 and specialized workflows; they have not been silently redefined as generic
-functions. The old `consMatLnB` zero-padded mean behavior is not reused: only
+functions. The old `farmConsMatLnB` zero-padded mean behavior is not reused: only
 selected samples contribute, and genuine zero values remain valid.
 
 Requires ObjectGeometry source on the MATLAB path. File loading is supplied
@@ -45,7 +45,7 @@ by user callbacks (typically ImageStackIO). Target MATLAB R2023a.
 ## Single XYZ field and user-supplied support
 
 ```matlab
-t = objectrelativeprofiles.fieldSampling.queryField(intensity,mask, ...
+t = farmQueryField(intensity,mask, ...
     {'Mean','Variance','Max'}, ...
     struct('FieldName','Intensity_Object', ...
     'Support',struct('DatasetID','experiment1','Frame',12)));
@@ -66,9 +66,9 @@ ID groups may contain disconnected regions. Indices always refer to the current
 field grid, not an original image with different dimensions.
 
 ```matlab
-support = objectrelativeprofiles.fieldSampling.prepareSupport(indexGroups, ...
+support = farmPrepareSupport(indexGroups, ...
     size(field),struct('ObjectIDs',[7 42],'DatasetID','experiment1','Frame',12));
-t = objectrelativeprofiles.fieldSampling.queryField(field,support,'all');
+t = farmQueryField(field,support,'all');
 ```
 
 ## Requested statistics and invalid values
@@ -115,7 +115,7 @@ of named source fields is retained separately. No field is resampled implicitly.
 
 ```matlab
 fields = struct('Intensity',intensity,'Distance',abs(distanceField));
-t = objectrelativeprofiles.fieldSampling.queryField(fields,support, ...
+t = farmQueryField(fields,support, ...
     {'Mean','Max'},struct('FieldName','WeightedIntensity', ...
     'SampleOperation',@(f) f.Intensity.*f.Distance, ...
     'CustomOperations',struct('MeanAbsolute',@(v) mean(abs(v)))));
@@ -130,7 +130,7 @@ vector for empty/invalid-only selection and must define its own behavior.
 Functions can compose other functions internally. Raw-value storage is deferred;
 custom functions returning long vectors incur storage costs chosen by the user.
 
-`queryFrame(fields,supports,queries)` applies multiple named queries to the
+`farmQueryFrame(fields,supports,queries)` applies multiple named queries to the
 same loaded frame. Each query defines Name (unique output prefix), Support
 (named support), Statistics, optional Options, and either Field OR Operation.
 For Operation, Mode='samples' uses the contract above; Mode='field' receives
@@ -146,7 +146,7 @@ name when one field is queried on objects, skeletons and boundaries.
 specs(1) = struct('Name','Intensity','Loader',@(frame) loadIntensityXYZ(frame));
 specs(2) = struct('Name','Distance','Loader',@(frame) loadDistanceXYZ(frame));
 supportLoader = @(frame,fields) loadSupportsForFrame(frame,fields);
-manifest = objectrelativeprofiles.fieldSampling.runFieldBatch( ...
+manifest = farmRunFieldBatch( ...
     frames,specs,supportLoader,queries, ...
     struct('DatasetID','experiment1','OutputDirectory',outputFolder));
 ```
@@ -168,8 +168,8 @@ Operations spanning different times or motion correspondence remain deferred.
 
 ## Concatenation across time or late-added fields
 
-`concatenateResults({frame1,frame2,...})` appends matching schemas and retains
-each table's metadata. `attachResults(base,newQueries)` attaches columns by
+`farmConcatenateResults({frame1,frame2,...})` appends matching schemas and retains
+each table's metadata. `farmAttachResults(base,newQueries)` attaches columns by
 DatasetID/Frame/ObjectID/ComponentID, preserving destination order. It works
 with ObjectGeometry tables (parent ComponentID defaults to zero), rejects
 duplicate keys and missing matches by default, and allows extra incoming rows
@@ -178,9 +178,9 @@ explicit alternatives. Grid/membership compatibility remains the query's
 responsibility: keys alone cannot establish unchanged geometry.
 
 Different named supports use distinct column prefixes with associated metadata;
-support identity is not inferred from row position. queryFrame expects its
+support identity is not inferred from row position. farmQueryFrame expects its
 supports to share the destination ID set. For differing sets, query separately
-and use attachResults with the explicit desired missing policy.
+and use farmAttachResults with the explicit desired missing policy.
 
 Raw sample memory: doubles cost approximately 8 bytes per sampled value;
 double indices another 8 bytes, before cell/table overhead. Storing values
@@ -194,8 +194,7 @@ checks, not broader scientific validation. `examples/exampleFieldQueries.m`
 demonstrates queries, a custom combination, keyed attachment and incremental
 batching. MATLAB runtime verification is pending in the user's licensed session.
 
-Historical folders retained: +fieldSampling (7 scripts), +distance (5),
-+objectMetrics (12), +sheetProfiles (3). Their experiment-specific loading,
-plotting, distance binning, sheet projections and tracking-related calculations
-remain available. They are not automatically replaced by the general query API.
-No existing script was archived because its full behavior is not yet replaced.
+Historical experiment scripts from fieldSampling, distance, objectMetrics and
+sheetProfiles are preserved in the sibling MeMo-Archive at their original
+relative paths. Their additional workflow functionality remains a future review
+task; archiving does not imply that the general query API replaces every step.

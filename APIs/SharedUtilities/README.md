@@ -1,16 +1,15 @@
 # SharedUtilities
 
 General-purpose helpers and explicit keyed table operations.
-Use only this API's src directory on the MATLAB path. Do not add archives
-with genpath; dated archives preserve original package structures.
+Run `farmSetup` from the repository root to add ordinary source folders
+and API dependencies. Do not add the sibling MeMo-Archive to MATLAB's path.
 
 ## MATLAB glossary
 
-From the repository root, use `glossary("Experiment")` to display an entry,
-`glossary("search", "distance")` to search, or `catalog = glossary` to browse
-all entries as a table. Explicit getters live under
-`sharedutilities.documentation`, including `getGlossaryDataType`,
-`getGlossaryInputs` and `getGlossaryInputOptions`.
+From the repository root, use `farmGlossary("Experiment")` to display an entry,
+`farmGlossary("search", "distance")` to search, or `catalog = farmGlossary` to browse
+all entries as a table. Explicit getters include `farmGetGlossaryDataType`,
+`farmGetGlossaryInputs` and `farmGetGlossaryInputOptions`.
 See [MATLAB glossary usage](../../docs/MATLAB-GLOSSARY.md).
 The same document contains a Data Dictionary beginning with sampling diagnostics.
 Optional `Section` and `SearchIn` filters accept a name or a string array;
@@ -20,10 +19,10 @@ the default searches all sections and all columns.
 
 ```matlab
 keys = {'DatasetID','Frame','ObjectID'};
-joined = sharedutilities.structsAndTables.attachByKeys(base,additional,keys);
-joined = sharedutilities.structsAndTables.attachByKeys(base,additional,keys, ...
+joined = farmAttachByKeys(base,additional,keys);
+joined = farmAttachByKeys(base,additional,keys, ...
     struct('MissingPolicy','missing','Overwrite',false));
-combined = sharedutilities.structsAndTables.concatenateByKeys(frameTables,keys);
+combined = farmConcatenateByKeys(frameTables,keys);
 ```
 
 DatasetID identifies an independent dataset, Frame a time point, and ObjectID
@@ -49,60 +48,61 @@ column types, checks duplicate keys across all inputs, and retains frame
 metadata. It does not renumber IDs, pool statistics, or infer datasets.
 
 Existing public functions delegate to these helpers:
-- objectgeometry.objects.attachMeasurements / concatenateMeasurements
-- objectrelativeprofiles.fieldSampling.attachResults / concatenateResults
-- objecttracking.attachMembership
+- farmAttachMeasurements / farmConcatenateMeasurements
+- farmAttachResults / farmConcatenateResults
+- farmAttachMembership
 
 Geometry keys are DatasetID/Frame/ObjectID. Sampling additionally uses
 ComponentID, with absent ComponentID interpreted as parent level (zero).
 Tracking membership intentionally replicates parent identities across
 component rows and attaches only DetectionID/TrajectoryID.
 The established public error identifiers and metadata envelopes are retained.
-Other APIs' private option helpers are unchanged.
+The internal options helpers farmFAOptions, farmOGOptions and farmSUOptions
+all accept user options first and defaults second.
 
 ## Repairs and intentional behavior
 
-Originals are preserved under archive/2026-10-13-shared-repair (and in the
-corresponding archives of the affected APIs).
-- Cross-file helper calls are package-qualified.
-- addFieldsStruct forwards custom indices; addFieldStruct now honors them for
+Originals are preserved in the sibling MeMo-Archive under the original API
+archive paths, including APIs/SharedUtilities/archive/2026-10-13-shared-repair.
+- Cross-file helper calls use unique farm-prefixed names.
+- farmAddFieldsStruct forwards custom indices; farmAddFieldStruct now honors them for
   both cell and numeric inputs. Source values are indexed by absolute struct
   index: fieldVals(i) belongs to structObj(i). A compact subset is not inferred.
-- rescaleCoords maps XY/XYZ points between YX/YXZ grids using pixel centers:
+- farmRescaleCoords maps XY/XYZ points between YX/YXZ grids using pixel centers:
   round((index-.5)*newSize/oldSize+.5), clamped to valid destination centers.
   Inputs must be inside the source grid. RescaleCoords_Inds preserves row/column
   vector shape and allows empty supports. Forward downsampling can map multiple
   source indices to one destination index; this is not label-preserving
   resampling. The caller owns updated spacing and source-transform metadata.
-- fastLinIntNDScale2 now supports 2D and 3D, preserving its historical
+- farmFastLinIntNDScale2 now supports 2D and 3D, preserving its historical
   odd-index samples, halfway interpolation and final-edge extension.
   It is not equivalent to MATLAB imresize pixel-center conventions.
-- logAB(A,B) now returns log(B)/log(A), as documented. Check legacy external
+- farmLogAB(A,B) now returns log(B)/log(A), as documented. Check legacy external
   callers if they intentionally used the reversed formula.
-- loglogBin returns paired log-domain means from occupied bins. It requires
+- farmLoglogBin returns paired log-domain means from occupied bins. It requires
   positive finite values and retains pairing when dropping empty bins.
-- getUnitVecs returns NaN for zero or nonfinite rows (undefined direction).
-- noNan directly replaces NaN, preserves class, and does not replace Inf.
-- consMatLnB preserves class in numeric-index construction. It still zero-pads
+- farmGetUnitVecs returns NaN for zero or nonfinite rows (undefined direction).
+- farmNoNan directly replaces NaN, preserves class, and does not replace Inf.
+- farmConsMatLnB preserves class in numeric-index construction. It still zero-pads
   outside the selection; it is not equivalent to collecting selected samples.
-- getCCVectors accepts row/column index cells and returns local component
+- farmGetCCVectors accepts row/column index cells and returns local component
   positions, not persistent object IDs.
 - myconvn retains mirrored padding; its misleading periodic comment is fixed
   and flip replaces flipdim without changing the boundary algorithm.
   LOG/GaussD/myconvn retain their original third-party attribution.
 
-concatTablesOverT remains a legacy file-loading adapter; it does not establish
+farmConcatTablesOverT remains a legacy file-loading adapter; it does not establish
 DatasetID/ObjectID. New keyed functions do not guess those identities.
 Five helpers now have canonical owners:
-- visualizationtools.export.figSaves
-- visualizationtools.display.manVlnPlot / plotVlns
-- fieldanalysis.statistics.loglogBin
-- sharedutilities.numerics.logAB
+- farmFigSaves
+- farmManVlnPlot / farmPlotVlns
+- farmLoglogBin
+- farmLogAB
 
 Their former sharedutilities.plotting paths remain compatibility wrappers.
 Add VisualizationTools/src or FieldAnalysis/src when using the corresponding
 legacy wrapper. General SharedUtilities numerical/table helpers do not need
-those APIs. progressBar stays in SharedUtilities. Originals are preserved in
+those APIs. farmProgressBar stays in SharedUtilities. Originals are preserved in
 archive/2026-10-13-ownership. No mesh workflows were modified.
 
 ## Tests

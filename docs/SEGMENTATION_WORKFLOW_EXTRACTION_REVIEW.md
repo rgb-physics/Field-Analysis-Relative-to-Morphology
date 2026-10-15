@@ -54,13 +54,13 @@ A mask can represent a segmentation, a sampled region, or a visualization. Its l
 Suggested interfaces:
 
 ```matlab
-mask = thresholdProbabilityGroup(probabilities, channels, thresholds, options)
-[classMasks, classLabels, info] = classifyProbabilities(probabilities, options)
+mask = farmThresholdProbabilityGroup(probabilities, channels, thresholds, options)
+[classMasks, classLabels, info] = farmClassifyProbabilities(probabilities, options)
 ```
 
 Configurable inputs: `Channels`, `Thresholds`, aggregation (`sum` or independent), `ClassIDs`, `PriorityOrder`, overlap policy, unassigned/background label, optional ROI. A maximum-probability mode should explicitly define minimum confidence and tie handling. These policies are not interchangeable: summing probabilities before thresholding differs from taking the union of separately thresholded classes.
 
-**Existing API overlap:** `imbinarize3_4D` already provides channel-wise thresholding. `h5toSmooth3Chans` already combines thresholding, cleanup, and the inside/outside/on convention. Build on those responsibilities rather than introducing parallel copies.
+**Existing API overlap:** `farmImbinarize3_4D` already provides channel-wise thresholding. `farmH5toSmooth3Chans` already combines thresholding, cleanup, and the inside/outside/on convention. Build on those responsibilities rather than introducing parallel copies.
 
 **Corrections needed before reuse**
 
@@ -92,7 +92,7 @@ Do not infer biological class meaning from sorted observed intensities. Keep cat
 - `Workflows/objects/blob-pipeline/B_blobsFromH5s.m`: 62–67.
 - `Workflows/segmentationAndImport/generateBlobsFromH5Segs.m`: 37–44.
 
-The filament scripts actually compute `-LOG(...)` despite comments calling the filter a top-hat. The spheroid variants apply LoG to probability fields, then threshold and fill/refine masks.
+The filament scripts actually compute `-farmLOG(...)` despite comments calling the filter a top-hat. The spheroid variants apply LoG to probability fields, then threshold and fill/refine masks.
 
 Suggested interface:
 
@@ -102,7 +102,7 @@ Suggested interface:
 
 Options: Gaussian scale, response polarity, fixed versus automatic threshold, automatic-threshold lower bound, response scaling/normalization, erosion radius, hole-fill mode. Keep basic LoG thresholding separate from the more speculative multi-stage refinement in `generateBlobsFromH5Segs`.
 
-**Existing dependency:** `LOG.m` is present under SharedUtilities/numerics, together with `GaussD.m` and `myconvn.m`. Its source identifies it as third-party ImSAnE code; preserve its attribution when reusing it.
+**Existing dependency:** `farmLOG.m` is present under SharedUtilities/numerics, together with `farmGaussD.m` and `farmMyconvn.m`. Its source identifies it as third-party ImSAnE code; preserve its attribution when reusing it.
 
 **Readiness:** the threshold-20 raw-intensity response and the probability/Otsu paths need separate, explicit threshold conventions. Do not assume a signed LoG response is a normalized probability. `generateBlobsFromH5Segs` later passes undefined `logicMat` and `reqFields` at 47, and its union of `moreBlobs | blobMat` needs review for whether it adds meaningful material.
 
@@ -133,7 +133,7 @@ Keep detailed filament geometry in ObjectGeometry. A SegmentationTools convenien
 
 Those display scripts should consume a shared component selector; coloring, projection, region sampling, and rendering stay outside SegmentationTools. MATLAB's existing component-to-label operations may replace the manual `PixelIdxList`/index-vector reconstruction.
 
-**Existing API overlap:** repair/generalize `removeConObjs` before creating a second size/rank selector. Its current 2-D branch uses `Area` but later accesses `Volume`; its index-selection branch also needs correction.
+**Existing API overlap:** repair/generalize `farmRemoveConObjs` before creating a second size/rank selector. Its current 2-D branch uses `Area` but later accesses `Volume`; its index-selection branch also needs correction.
 
 **Readiness:** `h5Seg_FilamentPosOr` calculates a scaled length at 55 but filters `allLens` at 57, and its aspect-ratio calculation has a bespoke eigenvalue/spacing formula. Choose one documented geometric definition and unit system. An anisotropic correction should operate on coordinates/covariance consistently, not simply apply an unexplained scale to lengths. The anisotropic PCA block at 96–119 of `COMBINED_Fils2Aligns_InOnOut_TIFS` is a geometry candidate, not a segmentation implementation to move wholesale.
 
@@ -164,17 +164,17 @@ Potential interfaces: `fillMaskHoles(mask, options)`, `refineMask(mask, options)
 
 **Already extracted elsewhere**
 
-- `flatFill3D` in SharedUtilities/arrays performs planar hole filling; it is a plausible relocation/consolidation candidate.
-- `sidesHoleFill` is already in SegmentationTools and handles boundary-open cavities using padding. This is a different policy from ordinary enclosed-hole filling.
-- `returnSmoothBlobsBW` and `returnSmoothBlobsIDed` are in ObjectGeometry/objects. Their mask-refinement use should be reconciled with SegmentationTools without duplicating their implementation.
+- `farmFlatFill3D` in SharedUtilities/arrays performs planar hole filling; it is a plausible relocation/consolidation candidate.
+- `farmSidesHoleFill` is already in SegmentationTools and handles boundary-open cavities using padding. This is a different policy from ordinary enclosed-hole filling.
+- `farmReturnSmoothBlobsBW` and `farmReturnSmoothBlobsIDed` are in ObjectGeometry/objects. Their mask-refinement use should be reconciled with SegmentationTools without duplicating their implementation.
 
 **Corrections/decisions**
 
 - `C_corrBlobBndsPost` assigns each filled component the maximum overlapping original ID. If filling joins objects, that silently chooses one identity. Require an explicit collision rule (for example, error, preserve originals and assign only unambiguous additions, or an agreed overlap-based rule).
-- `returnSmoothBlobsBW` currently chooses `imgaussfilt` when the third dimension is greater than one and `imgaussfilt3` otherwise; inspect that branch before reuse. Its output uses only an upper distance threshold, despite shell terminology in its comments. Specify whether the output is a filled object or a shell.
+- `farmReturnSmoothBlobsBW` currently chooses `imgaussfilt` when the third dimension is greater than one and `imgaussfilt3` otherwise; inspect that branch before reuse. Its output uses only an upper distance threshold, despite shell terminology in its comments. Specify whether the output is a filled object or a shell.
 - `cleanSegsAndFindSheets` computes `outData` from grayscale dilation/erosion, then thresholds the original `currData`. Extraction must decide which data the cleanup is intended to affect. Its cutoff of 100 on a double array also needs an explicit intensity scale.
 - Unequal dilation/erosion radii are not an ordinary closing operation. Preserve the distinction in configuration.
-- `flatFill3D` unions fills computed from the original input across planes. A sequential fill using each intermediate result would be a different algorithm.
+- `farmFlatFill3D` unions fills computed from the original input across planes. A sequential fill using each intermediate result would be a different algorithm.
 
 ### S7. Exclusion-mask preparation — secondary utility
 
@@ -215,7 +215,7 @@ Potential interfaces: `patchSheetMask(mask, options)`, `normalizeSheetProbabilit
 
 Options: sheet axis (initially Z only is acceptable if documented), inside/outside height convention, interpolation/extrapolation method, maximum hole extent, invalid-column policy, normalization floor/zero handling, rethreshold value/method, connectivity, expected component count, and fragment-assignment policy.
 
-**Existing helpers:** `returnCorrectedBinarizedSurfaceIndices` already lives in SegmentationTools. `consPatchedSheetSurface_Flat` in SurfaceFieldMapping repeats the patched-height/probability interpolation used here; `consScalerMat` in SharedUtilities provides a column-normalization denominator; `rescalePatch` in ObjectGeometry/sheets supplies an approximate resizing-based patch. These are candidates for consolidation, not three interchangeable patch algorithms.
+**Existing helpers:** `farmReturnCorrectedBinarizedSurfaceIndices` already lives in SegmentationTools. `farmConsPatchedSheetSurface_Flat` in SurfaceFieldMapping repeats the patched-height/probability interpolation used here; `farmConsScalerMat` in SharedUtilities provides a column-normalization denominator; `farmRescalePatch` in ObjectGeometry/sheets supplies an approximate resizing-based patch. These are candidates for consolidation, not three interchangeable patch algorithms.
 
 **Limitations and observed issues**
 
@@ -223,7 +223,7 @@ Options: sheet axis (initially Z only is acceptable if documented), inside/outsi
 - `A_identifyFromH5_2DSheets` lines 76–77 uses `botDiscInds` in both reassignment expressions; the intended top/bottom exchange must be resolved.
 - Its paired smoothing expressions use morphological dual operations; establish whether they provide distinct results before preserving two configurable branches.
 - `h5ToMesh_homeoAndSplit` 68–75 removes dilated remnants of eroded components smaller than the mean. This is a specific heuristic, not a general small-object removal rule. Expose erosion radius, size statistic/cutoff, and restoration radius if retained.
-- In that script, cumulative arrays at 120–128 are calculated before `rescalePatch` may alter the masks; recompute them before region classification.
+- In that script, cumulative arrays at 120–128 are calculated before `farmRescalePatch` may alter the masks; recompute them before region classification.
 - Normalization can divide by zero in empty columns. Interpolation can produce invalid/out-of-range heights or values. Return a patch/uncertainty mask rather than silently treating interpolated voxels as directly classified evidence.
 - The later hole-patching experiment in `splitSurfaces_Threshold` 200–266 initializes both perimeter and area masks to true, then removes all perimeter support; it also uses vector subscripts as though they were paired point indices. This section is not ready to move.
 
@@ -262,10 +262,10 @@ Potential interface: `repairClassInterfaces(labels, options)` with inside/outsid
 
 ## Useful code that should be extracted elsewhere
 
-- `rough_homeotropicThinning.m` 62–90 builds skeleton-derived points and filters their neighborhoods. This fits ObjectGeometry's explicitly stated homeotropic-thinning responsibility. `skel3DPop` already implements part of this pattern. A general component-size selector can be shared, but the flattening/skeletonization and random sampling should not move into SegmentationTools.
+- `rough_homeotropicThinning.m` 62–90 builds skeleton-derived points and filters their neighborhoods. This fits ObjectGeometry's explicitly stated homeotropic-thinning responsibility. `farmSkel3DPop` already implements part of this pattern. A general component-size selector can be shared, but the flattening/skeletonization and random sampling should not move into SegmentationTools.
 - `B_generatePointClouds_SplitSheets.m` 33–37 and 50–54 selects sheet-adjacent interface voxels before point-cloud export/capping. Keep this with geometric surface construction. Similarly, `D_PlotMeshStats.m` 229–231 constructs a dilated display/perimeter shell.
 - `DisplayGradPerim.m` in both alignment folders contains a nearest-object territory construction (201–210 in alignment-pipeline/display; 210–219 in the thesis variant). That is a morphology-relative region/coordinate operation, better placed with geometry/profiles. Its separate point-based object selection can consume S8.
-- Filament centroids, principal axes, backbone coordinates, and anisotropic PCA belong in ObjectGeometry. Much of the recurring `regionprops` work is already represented by `storeFilCCs`.
+- Filament centroids, principal axes, backbone coordinates, and anisotropic PCA belong in ObjectGeometry. Much of the recurring `regionprops` work is already represented by `farmStoreFilCCs`.
 - Table filtering for orientation/length distributions and alignment statistics belongs with measurement selection. It can share an S4 predicate, but should not change the underlying segmentation by default.
 - Temporal overlap, new IDs, merges, splits, and trajectory exports in `Workflows/objects` remain ObjectTracking workflows.
 

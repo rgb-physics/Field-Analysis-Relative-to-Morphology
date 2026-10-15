@@ -1,883 +1,471 @@
-# Current Source Folder Trees
+# Current FARM source tree
 
-Filename-only snapshot of the two source folders on disk, generated 2026-10-07. It records folder and file names; it does not copy or inspect source contents. The listing includes MATLAB autosaves and supporting files present under each root.
-
-The `Active Foam` folder currently contains `batch_3SegtoPerims_pathConfigExample.m`, a configuration-template sample created during this conversation. It was not part of the earlier legacy inventory; it is marked below.
-
-## Active Foam
-
-269 files in 32 subfolders.
-
-File types: .asv (8), .m (255), .pdf (1), .py (2), .txt (3).
+Generated after the ordinary-folder migration. Historical material is in the sibling MeMo-Archive.
 
 ```text
-Active Foam/
-├── Additional Functions/
-│   ├── Active Contouring/
-│   │   ├── activeContourFrame1.m
-│   │   ├── activeContourFromH5.m
-│   │   ├── Chan-Vese/
-│   │   │   ├── checkstop.m
-│   │   │   ├── chenvese.m
-│   │   │   ├── demo_chenvese.m
-│   │   │   ├── Heaviside.m
-│   │   │   ├── HELP.pdf
-│   │   │   ├── kappa.m
-│   │   │   ├── license.txt
-│   │   │   ├── maskcircle2.m
-│   │   │   ├── READ ME.txt
-│   │   │   ├── reinitialization.m
-│   │   │   ├── showphi.m
-│   │   │   └── veryImportantDemo.m
-│   │   ├── ChenVese_Extracted.m
-│   │   ├── dilateErodeSegWeights.m
-│   │   ├── generateFirstGuess_morphsnakes.m
-│   │   ├── getCentralSlice.m
-│   │   ├── returnCorrectedBinarizedSurfaceIndices.m
-│   │   ├── returnTopBottom2DSheets.m
-│   │   └── splitSurfaces_Threshold.m
-│   ├── addFieldsStruct.m
-│   ├── addFieldStruct.m
-│   ├── arrayCumSum.m
-│   ├── arrayOrganizer2D.m
-│   ├── blockReshape2D.m
-│   ├── bndmod.m
-│   ├── cellIndSizes.m
-│   ├── concatTablesOverT.m
-│   ├── figSaves.m
-│   ├── genericLenVec.m
-│   ├── genLenVec.m
-│   ├── genLineInds2D.m
-│   ├── genReflVec.m
-│   ├── genScaledKVec.m
-│   ├── genTifTagRGB.m
-│   ├── getCCVectors.m
-│   ├── getUnitVecs.m
-│   ├── lens2Blocks.m
-│   ├── logAB.m
-│   ├── logic2Ply.m
-│   ├── loglogBin.m
-│   ├── manVlnPlot.m
-│   ├── mod1b.m
-│   ├── pipInstallMATLAB.py
-│   ├── pipInstallPython.m
-│   ├── pixIDStruct2CC.m
-│   ├── plotVlns.m
-│   ├── poissonDisc.m
-│   ├── progressBar.m
-│   ├── Retired/
-│   │   ├── generateNDHannBorder.m
-│   │   ├── Poisson Disk Elimination/
-│   │   │   └── test1.m
-│   │   └── radialAutoCorr.m
-│   ├── saveNDTifs_Test.m
-│   ├── scatInt2DSlicesOver3D.m
-│   ├── structFields2Cell.m
-│   ├── structFieldSizes.m
-│   └── structLenVec.m
-├── Analysis - Blobs/
-│   ├── A_blobsFromH5s.asv
-│   ├── A_blobsFromH5s.m
-│   ├── B_blobTracking_StoreObjectProps.m
-│   ├── Blob Mesh Analysis/
-│   │   ├── closedSurfaces_FieldsOnMesh.m
-│   │   ├── closedSurfaces_h5ToMesh_EnforceNorms.m
-│   │   ├── closedSurfaces_h5ToPointCloud.m
-│   │   ├── closedSurfaces_splitPtCloudsMeshes.m
-│   │   └── threeSeg_meanIntProfiles.m
-│   ├── C_corrBlobBndsPost.m
-│   ├── Data Plotting/
-│   │   ├── plotDeltaRBnds.m
-│   │   ├── plotDeltaRSkels.m
-│   │   ├── plotFirstInertiaMomentData.asv
-│   │   ├── plotFirstInertiaMomentData.m
-│   │   ├── plotRInertiaStruct.m
-│   │   ├── plotSortedMat_MultipleOverlap.m
-│   │   ├── plotSortedMat_MultipleSave.m
-│   │   └── plotSortedMat.m
-│   ├── Functions/
-│   │   ├── addFieldStruct2Traj.m
-│   │   ├── blobMat2CCProps.m
-│   │   ├── generateBlobsFromH5Segs.m
-│   │   ├── generateTracksFromStoreStruct.m
-│   │   ├── returnSmoothBlobsBW.m
-│   │   ├── returnSmoothBlobsIDed.m
-│   │   ├── returnSmoothBound.m
-│   │   ├── returnSmoothBoundsBW.m
-│   │   ├── returnSmoothBoundsIDed.m
-│   │   ├── skel3DBlobs.m
-│   │   ├── structCutOffThresh.m
-│   │   ├── tifsOfTraj_TOT.m
-│   │   └── tifsOfTraj_trajs.m
-│   ├── Quantification Scripts/
-│   │   ├── blobDensityDeltaR_Blobs.m
-│   │   ├── blobDensityDeltaR_Skels.m
-│   │   ├── blobInertiaTensorCalcs.m
-│   │   ├── blobPropsFromTrajs_R_Inertia.m
-│   │   ├── blobPropsFromTrajs.m
-│   │   ├── estimateFirstInertiaMoment.m
-│   │   └── meanPropsOverTime.m
-│   └── Visualization Scripts/
-│       ├── intsAndSegBoundaries_Tiffs.m
-│       ├── intsAndSegBoundaries2DImgs_Tiffs.m
-│       ├── mapFieldOnBlobSegs.m
-│       ├── metadata.m
-│       ├── plotBlobStatistics_rEff.m
-│       ├── stitchSkelsAndShells.m
-│       └── tiffs_BlobOverTime.m
-├── Analysis - Filaments/
-│   ├── A_extractFilsFromTifs.m
-│   ├── A_getFilamentStats_2Dand3D_FROMH5s.m
-│   ├── Alignment Pipeline - Thesis Timeline/
-│   │   ├── AlignmentOVERVIEW.m
-│   │   ├── AppendDensePropsToFilCCs.m
-│   │   ├── Display_AverageAlignment_InOnOutBin.m
-│   │   ├── Display_AvgAlign_FromRBins.asv
-│   │   ├── Display_AvgAlign_FromRBins.m
-│   │   ├── Display_FilamentsAndBoundaries.m
-│   │   ├── Display3Channel_InOnOutCoMs3D.m
-│   │   ├── Display3Channel_InOnOutFils3D.m
-│   │   ├── DisplayGradPerim.m
-│   │   ├── DisplayInOnOut_SparseOnDense2DSlice.m
-│   │   └── rp3DAssignRBins.m
-│   ├── batch_densityDistributionAlongDeltaR.m
-│   ├── C_fil2ObjAlignment.m
-│   ├── C_fil2ObjAlignmentQTensor2D.m
-│   ├── C_fil2ObjAlignmentQTensor3D.m
-│   ├── COMBINED_Fils2Aligns_InOnOut.m
-│   ├── COMBINED_getFilamentStats2D.m
-│   ├── COMBINED_plotFilamentStats2D.m
-│   ├── Data Plotting/
-│   │   ├── plotFilamentAlignments.m
-│   │   └── prepareTifsForFilProps.asv
-│   ├── DISPLAY_alignmentsOnField.m
-│   ├── DISPLAY_filamentsDistBin.m
-│   ├── displayAlignmentParameter.m
-│   ├── filAngVSIntGrad.m
-│   ├── Final Analysis/
-│   │   ├── alignStatsOverTime.m
-│   │   ├── COMBINED_Fils2Aligns_InOnOut_TIFS.m
-│   │   ├── ConcatTableQuantities.m
-│   │   ├── Display_Filaments2DCuts.m
-│   │   └── prepareTifsForFilProps.m
-│   ├── Functions/
-│   │   ├── coords2Mat_2DFils.m
-│   │   ├── filBackBones2D.m
-│   │   ├── filBackBonesND.m
-│   │   └── storeFilCCs.m
-│   ├── getMTLengthDist_From3DBW.m
-│   ├── getMTLengthDist_From3DCC.m
-│   ├── getMTLengthDist.m
-│   ├── h5Seg_FilamentPosOr.m
-│   ├── One Off/
-│   │   ├── getFilAligns.asv
-│   │   └── getFilAligns.m
-│   ├── overlayFilamentsOnField.m
-│   ├── PLOT_overlayAlignsAndGrads.m
-│   ├── PLOT_QTensor3D_OutInOnBin.m
-│   ├── plotFilamentStats_2Dand3D.m
-│   ├── Retired/
-│   │   ├── B_prepareFilamentStats_2D.m
-│   │   └── B_prepareFilamentStats_3D.m
-│   ├── sampleFilsInH5.m
-│   ├── structureTensorTests.m
-│   └── velocityOrientationDistance.m
-├── Analysis - Fourier/
-│   ├── batch_FFTAnalysis_samAdapt3D.m
-│   ├── batch_FFTAnalysis_samAdapted.m
-│   ├── batch_intensityFFTAnalysis.m
-│   ├── fitToFunction.m
-│   ├── get_meanimg_LiangADAPT.m
-│   ├── get_meanimg_LiangOG.m
-│   ├── get_ProfileScatterFunctions.m
-│   ├── plotSpectra_Multiple.asv
-│   ├── plotSpectra_Multiple.m
-│   ├── plotSpectra.m
-│   └── samCompare.m
-├── Analysis - Tiffs/
-│   ├── CORE Image Preparation/
-│   │   ├── corr3DTiff_DirtCorr.m
-│   │   ├── corr3DTiff_RasterDirtIllum.m
-│   │   ├── corr3DTiff.asv
-│   │   ├── corr3DTiff.m
-│   │   └── sparseChannelCorr.m
-│   └── getMeanIntensityOverTime3D.m
-├── Manipulation - H5/
-│   ├── batch_3SegPerimeters.m
-│   ├── batch_3SegSubsample.m
-│   ├── H5 Functions/
-│   │   ├── distTransFromBoundary.m
-│   │   ├── getDistGrads.m
-│   │   ├── h5toSmooth3Chans.m
-│   │   ├── h5toTif.m
-│   │   └── loadH5.m
-│   └── multiDir_batchH5toTif.m
-├── Manipulation - Matrices/
-│   ├── consMatLnB.m
-│   ├── consMinValsLayer.m
-│   ├── consPatchedSheetSurface_Flat.m
-│   ├── consScalerMat.m
-│   ├── fastLinIntNDScale2.m
-│   ├── fillin2D.m
-│   ├── fillin3D.m
-│   ├── flatFill3D.m
-│   ├── GaussD.m
-│   ├── generate1DGaussian.m
-│   ├── generate2DGaussian.m
-│   ├── generate3DGaussian.m
-│   ├── generate3DGaussians.m
-│   ├── generateFieldInterps.m
-│   ├── generateMatrixSubdivisions.m
-│   ├── generateNDHann.m
-│   ├── generateRadialMatrix.m
-│   ├── generateStaticStructureFactor.m
-│   ├── generateVanHove.m
-│   ├── imbinarize3_4D.m
-│   ├── imresize3_4mat.m
-│   ├── inds3Dto2D.m
-│   ├── LOG.m
-│   ├── myconvn.m
-│   ├── ndmeshgrid.m
-│   ├── ndndgrid.m
-│   ├── noNan.m
-│   ├── nonZeroMean.m
-│   ├── radiallyAverageMatrix.m
-│   ├── removeConObjs.m
-│   ├── rescaleCoords_Inds.m
-│   ├── rescaleCoords.m
-│   ├── sidesHoleFill.m
-│   └── signedBWDist.m
-├── Manipulation - Tiffs/
-│   ├── Batch Process/
-│   │   ├── AccentuateFeatures.m
-│   │   ├── batch_3DTo2D.m
-│   │   ├── batch_3SegtoPerims_pathConfigExample.m  [sample added during this conversation]
-│   │   ├── batch_3SegtoPerims.m
-│   │   ├── batch_tifSubSampleTif.m
-│   │   ├── batch_upscaleSmooth.m
-│   │   ├── batchCropGaussCorrTifs.m
-│   │   ├── batchCropTifs.m
-│   │   ├── batchH5SubSampleTif_complex.m
-│   │   ├── batchh5SubsampleTif.m
-│   │   ├── batchSampleTifs.m
-│   │   ├── batchScaleDown3D.m
-│   │   ├── metadata.m
-│   │   ├── nd2Sideview.m
-│   │   ├── renameFiles.m
-│   │   ├── reslice5DND2.m
-│   │   ├── rough_stitchChannels_avis.m
-│   │   └── Updated_nd2Sideview.m
-│   ├── Image Correction Functions/
-│   │   ├── Copy_of_generateGaussCorrectionMask_3DTiff.m
-│   │   ├── generate4DLayerStore_ZandT.m
-│   │   ├── generateArea_BoundingBox.m
-│   │   ├── generateGaussCorrectionPerZ.m
-│   │   ├── generatePerimeterArea_BoundingBox.m
-│   │   ├── nzFlat.m
-│   │   ├── rasterCorrectionZ_3DTiff.m
-│   │   └── Retired/
-│   │       ├── generateGaussCorrectionMask_3DTiff.m
-│   │       └── generateGaussCorrectionMaskPerZ_3DTiff.m
-│   ├── Reslice Scripts/
-│   │   ├── nonZeroFlatten.m
-│   │   ├── selectZFrom3DTiffs.m
-│   │   ├── stackTifs.m
-│   │   ├── tile2DTifs.m
-│   │   ├── timeSeries_sideStackFrom3D.m
-│   │   └── timeSeries_zProjectionFrom3Ds.m
-│   ├── Retired/
-│   │   ├── A_removeZRastering_SplitTimes.m
-│   │   ├── B_generateBleachScaledGaussians_SplitTimes.m
-│   │   ├── C_correctIlluminationProfile_SplitTimes.m
-│   │   ├── D_correctAroundDirt_SplitTimes.m
-│   │   ├── gaussCorrTif.m
-│   │   ├── generateBleachScaledGaussians.m
-│   │   └── generateDirtMask.m
-│   ├── Tests/
-│   │   ├── butterworthFilter.py
-│   │   ├── GaussSubTests_script.m
-│   │   ├── LiangTest.m
-│   │   ├── TEST_getIntDistBounds.m
-│   │   ├── test_pythonButterWorth.m
-│   │   ├── TEST_threeStepCorr.m
-│   │   └── tophatDirtandGaussCorr.m
-│   └── Tiff Manipulation Functions/
-│       ├── cropTiffSave.m
-│       ├── extend2DTiffAlongZ.m
-│       ├── fastWriteTiff.m
-│       ├── getLayersOverTimeFrom3DTif.m
-│       ├── getTotIntOver3DTiffs.m
-│       ├── replicateTiffSlicesAlongDim.m
-│       ├── save3DTiff.m
-│       ├── saveNDTiffFIJI.asv
-│       ├── saveNDTiffFIJI.m
-│       └── split3Dto2D.m
-└── README_dependencies.txt
+MeMo/
+├── APIs/
+│   ├── FieldAnalysis/
+│   │   ├── archive/
+│   │   │   └── 2026-10-13/
+│   │   ├── examples/
+│   │   │   └── exampleFieldAnalysis.m
+│   │   ├── src/
+│   │   │   ├── +fieldanalysis/
+│   │   │   │   ├── +conditional/
+│   │   │   │   ├── +internal/
+│   │   │   │   ├── +preprocessing/
+│   │   │   │   └── +spatialCorrelation/
+│   │   │   └── fieldanalysis/
+│   │   │       ├── conditional/
+│   │   │       │   ├── farmConditionalStatistics.m
+│   │   │       │   └── farmJointHistogram.m
+│   │   │       ├── fourier/
+│   │   │       │   ├── farmFrequencyCoordinates.m
+│   │   │       │   ├── farmPowerSpectrum2D.m
+│   │   │       │   ├── farmPowerSpectrum3D.m
+│   │   │       │   ├── farmRadialAverage.m
+│   │   │       │   └── farmSelectSlicesAnalysis.m
+│   │   │       ├── internal/
+│   │   │       │   ├── farmFAField.m
+│   │   │       │   ├── farmFAOptions.m
+│   │   │       │   ├── farmFAReduce.m
+│   │   │       │   └── farmFASpectrum.m
+│   │   │       ├── preprocessing/
+│   │   │       │   ├── farmApplyIlluminationCorrection.m
+│   │   │       │   ├── farmFitIlluminationCorrection.m
+│   │   │       │   └── farmScaleToReferenceTotal.m
+│   │   │       ├── spatialCorrelation/
+│   │   │       │   ├── farmAutoCorrelation.m
+│   │   │       │   └── farmCrossCorrelation.m
+│   │   │       └── statistics/
+│   │   │           ├── farmGenerateRadialMatrix.m
+│   │   │           ├── farmGenerateStaticStructureFactor.m
+│   │   │           ├── farmGenerateVanHove.m
+│   │   │           ├── farmLoglogBin.m
+│   │   │           ├── farmPairedFieldStatistics.m
+│   │   │           └── farmRadiallyAverageMatrix.m
+│   │   ├── tests/
+│   │   │   ├── runFieldAnalysisTests.m
+│   │   │   └── testFieldAnalysis.m
+│   │   └── README.md
+│   ├── ImageStackIO/
+│   │   ├── examples/
+│   │   │   └── README.md
+│   │   ├── src/
+│   │   │   ├── +imagestackio/
+│   │   │   │   ├── +config/
+│   │   │   │   └── +legacy/
+│   │   │   └── imagestackio/
+│   │   │       ├── config/
+│   │   │       │   └── farmMakeSource.m
+│   │   │       ├── private/
+│   │   │       │   ├── farmNormalizeAxes.m
+│   │   │       │   ├── farmParseImageJDescription.m
+│   │   │       │   ├── farmParseSpacingOptions.m
+│   │   │       │   ├── farmParseTiffAxisOrder.m
+│   │   │       │   ├── farmResolveTiffSpacing.m
+│   │   │       │   └── farmWriteTiffPages.m
+│   │   │       ├── transforms/
+│   │   │       │   ├── farmCropTiffSave.m
+│   │   │       │   ├── farmExtend2DTiffAlongZ.m
+│   │   │       │   ├── farmGetLayersOverTimeFrom3DTif.m
+│   │   │       │   ├── farmGetTotIntOver3DTiffs.m
+│   │   │       │   └── farmSplit3Dto2D.m
+│   │   │       ├── farmInspectImage.m
+│   │   │       ├── farmReadH5.m
+│   │   │       ├── farmReadTiff.m
+│   │   │       ├── farmWriteImageJHyperstack.m
+│   │   │       └── farmWriteTiff.m
+│   │   ├── tests/
+│   │   │   ├── cropH5WithImageStackIO.m
+│   │   │   ├── README.md
+│   │   │   ├── runImageStackIOValidation.asv
+│   │   │   ├── runImageStackIOValidation.m
+│   │   │   └── stitchTiffChannels.m
+│   │   └── README.md
+│   ├── ObjectGeometry/
+│   │   ├── archive/
+│   │   │   ├── 2026-10-12/
+│   │   │   └── 2026-10-13-shared-repair/
+│   │   │       └── +objectgeometry/
+│   │   │           ├── +internal/
+│   │   │           └── +objects/
+│   │   ├── examples/
+│   │   │   ├── skeletonization/
+│   │   │   │   └── skel3DBlobs_Script.m
+│   │   │   ├── exploreObjectGeometry.m
+│   │   │   ├── farmAuditFilamentOrientation.m
+│   │   │   └── farmValidateFilamentProjectedExtent.m
+│   │   ├── src/
+│   │   │   ├── +objectgeometry/
+│   │   │   │   ├── +config/
+│   │   │   │   ├── +internal/
+│   │   │   │   ├── +orientation/
+│   │   │   │   └── +representation/
+│   │   │   └── objectgeometry/
+│   │   │       ├── centerlines/
+│   │   │       │   ├── farmCoords2Mat_2DFils.m
+│   │   │       │   ├── farmFilBackBones2D.m
+│   │   │       │   ├── farmFilBackBonesND.m
+│   │   │       │   ├── farmMeasureFilaments.m
+│   │   │       │   └── farmStoreFilCCs.m
+│   │   │       ├── config/
+│   │   │       │   └── farmMakeObjectOptions.m
+│   │   │       ├── internal/
+│   │   │       │   ├── farmOGBroadenRaster.m
+│   │   │       │   ├── farmOGOptions.m
+│   │   │       │   ├── farmOGRasterIndices.m
+│   │   │       │   ├── farmOGRasterOptions.m
+│   │   │       │   ├── farmOGRepresentationGrid.m
+│   │   │       │   └── farmOGValidateKeys.m
+│   │   │       ├── objects/
+│   │   │       │   ├── farmAttachMeasurements.m
+│   │   │       │   ├── farmBlobMat2CCProps.m
+│   │   │       │   ├── farmConcatenateMeasurements.m
+│   │   │       │   ├── farmDistanceGradients.m
+│   │   │       │   ├── farmDistTransFromBoundary.m
+│   │   │       │   ├── farmGenerateGeometry.m
+│   │   │       │   ├── farmGetDistGrads.m
+│   │   │       │   ├── farmLocalInertia.m
+│   │   │       │   ├── farmMeasureObjects.m
+│   │   │       │   ├── farmObjectDistanceGradients.m
+│   │   │       │   ├── farmPrepareObjects.m
+│   │   │       │   ├── farmReturnSmoothBound.m
+│   │   │       │   ├── farmReturnSmoothBoundsBW.m
+│   │   │       │   ├── farmReturnSmoothBoundsIDed.m
+│   │   │       │   ├── farmSkel3DBlobs.m
+│   │   │       │   ├── farmSkel3DClean.m
+│   │   │       │   ├── farmSkel3Dfrom2D.m
+│   │   │       │   ├── farmSkel3DPop.m
+│   │   │       │   └── farmStructCutOffThresh.m
+│   │   │       ├── orientation/
+│   │   │       │   └── farmNematicAlignment.m
+│   │   │       ├── representation/
+│   │   │       │   ├── farmGeometryToMatrix.m
+│   │   │       │   ├── farmPointsToMatrix.m
+│   │   │       │   └── farmSegmentsToMatrix.m
+│   │   │       └── sheets/
+│   │   │           ├── farmRescalePatch.m
+│   │   │           └── farmStruct2Mat_sheets.m
+│   │   ├── tests/
+│   │   │   ├── README.md
+│   │   │   ├── runObjectGeometryTests.m
+│   │   │   └── testObjectGeometry.m
+│   │   ├── README.md
+│   │   └── REPRESENTATION.md
+│   ├── ObjectRelativeProfiles/
+│   │   ├── archive/
+│   │   │   └── 2026-10-13-shared-repair/
+│   │   │       └── +objectrelativeprofiles/
+│   │   │           └── +fieldSampling/
+│   │   ├── examples/
+│   │   │   └── exampleFieldQueries.m
+│   │   ├── src/
+│   │   │   ├── +objectrelativeprofiles/
+│   │   │   │   └── +config/
+│   │   │   └── objectrelativeprofiles/
+│   │   │       ├── config/
+│   │   │       │   └── farmMakeQuery.m
+│   │   │       └── fieldSampling/
+│   │   │           ├── farmAttachResults.m
+│   │   │           ├── farmConcatenateResults.m
+│   │   │           ├── farmPrepareSupport.m
+│   │   │           ├── farmQueryField.m
+│   │   │           ├── farmQueryFrame.m
+│   │   │           ├── farmQueryVectorField.m
+│   │   │           └── farmRunFieldBatch.m
+│   │   ├── tests/
+│   │   │   ├── runFieldSamplingTests.m
+│   │   │   ├── testFieldSampling.m
+│   │   │   └── testVectorFieldSampling.m
+│   │   └── README.md
+│   ├── ObjectTracking/
+│   │   ├── archive/
+│   │   │   ├── 2026-10-13/
+│   │   │   └── 2026-10-13-shared-repair/
+│   │   │       └── +objecttracking/
+│   │   ├── examples/
+│   │   │   └── exampleOverlapLineage.m
+│   │   ├── python/
+│   │   │   └── trackpy_bridge.py
+│   │   ├── src/
+│   │   │   ├── +objecttracking/
+│   │   │   │   └── +trackpy/
+│   │   │   └── objecttracking/
+│   │   │       ├── trackpy/
+│   │   │       │   ├── farmExportDetections.m
+│   │   │       │   ├── farmImportLinks.m
+│   │   │       │   └── farmTrackPositions.m
+│   │   │       ├── farmAddFieldStruct2Traj.m
+│   │   │       ├── farmAttachMembership.m
+│   │   │       ├── farmConsObjMatSelTrajs.m
+│   │   │       ├── farmGetTimeObjTrajTableFromPyTrajs.m
+│   │   │       ├── farmLineageGraph.m
+│   │   │       ├── farmMat2pyTrackMat.m
+│   │   │       ├── farmOverlapLinks.m
+│   │   │       ├── farmRenderTrackingFrame.m
+│   │   │       ├── farmSelectLineage.m
+│   │   │       ├── farmSelectTrajectories.m
+│   │   │       ├── farmSingleTimePointTrajGen.m
+│   │   │       ├── farmTot2ts.m
+│   │   │       ├── farmTrackOverlaps.m
+│   │   │       └── farmTs2tot.m
+│   │   ├── tests/
+│   │   │   ├── README.md
+│   │   │   ├── runObjectTrackingTests.m
+│   │   │   ├── test_trackpy_bridge.py
+│   │   │   └── testObjectTracking.m
+│   │   ├── PYTHON_INTEGRATION.md
+│   │   └── README.md
+│   ├── SegmentationTools/
+│   │   ├── examples/
+│   │   │   ├── objectMaskPreparation/
+│   │   │   │   └── generateErodedFrame.m
+│   │   │   └── README.md
+│   │   ├── src/
+│   │   │   ├── +segmentationtools/
+│   │   │   │   └── +config/
+│   │   │   └── segmentationtools/
+│   │   │       ├── binarization/
+│   │   │       │   ├── farmClassifyProbabilities.m
+│   │   │       │   ├── farmClassifyProbabilityChannels.m
+│   │   │       │   ├── farmH5toSmooth3Chans.m
+│   │   │       │   ├── farmImbinarize3_4D.m
+│   │   │       │   ├── farmRemapClassLabels.m
+│   │   │       │   ├── farmSegmentInOnOutProbabilities.m
+│   │   │       │   ├── farmSegmentIntensity.m
+│   │   │       │   ├── farmSmoothInOnOutProbabilities.m
+│   │   │       │   ├── farmSmoothNChannelProbabilities.m
+│   │   │       │   └── farmThresholdProbabilityGroup.m
+│   │   │       ├── cleanup/
+│   │   │       │   ├── farmFlatFill3D.m
+│   │   │       │   ├── farmRemoveConObjs.m
+│   │   │       │   ├── farmReturnSmoothBlobsBW.m
+│   │   │       │   ├── farmReturnSmoothBlobsIDed.m
+│   │   │       │   └── farmSidesHoleFill.m
+│   │   │       ├── config/
+│   │   │       │   ├── farmMakeClasses.m
+│   │   │       │   ├── farmMakeIntensityOptions.m
+│   │   │       │   └── farmMakeProbabilityOptions.m
+│   │   │       ├── io/
+│   │   │       │   ├── farmReadProbabilityTiff.m
+│   │   │       │   └── farmWriteMaskTiff.m
+│   │   │       └── morphologySpecific/
+│   │   │           └── sheets/
+│   │   │               ├── farmGetCentralSlice.m
+│   │   │               ├── farmReturnCorrectedBinarizedSurfaceIndices.m
+│   │   │               ├── farmReturnTopBottom2DSheets.m
+│   │   │               └── farmReturnTopBottom2DSheetsConfigurable.m
+│   │   ├── tests/
+│   │   │   ├── exploreRealSegmentationData.m
+│   │   │   ├── farmValidateInOnOutImplementations.m
+│   │   │   ├── README.md
+│   │   │   ├── runSegmentationToolsTests.m
+│   │   │   ├── SegmentationToolsTestDiagnostics.log
+│   │   │   └── testSegmentationTools.m
+│   │   └── README.md
+│   ├── SharedUtilities/
+│   │   ├── archive/
+│   │   │   ├── 2026-10-13/
+│   │   │   ├── 2026-10-13-ownership/
+│   │   │   └── 2026-10-13-shared-repair/
+│   │   │       └── +sharedutilities/
+│   │   │           ├── +arrays/
+│   │   │           ├── +coordinates/
+│   │   │           ├── +miscellaneous/
+│   │   │           ├── +numerics/
+│   │   │           ├── +plotting/
+│   │   │           └── +structsAndTables/
+│   │   ├── src/
+│   │   │   ├── +sharedutilities/
+│   │   │   │   ├── +config/
+│   │   │   │   ├── +documentation/
+│   │   │   │   └── +internal/
+│   │   │   └── sharedutilities/
+│   │   │       ├── arrays/
+│   │   │       │   ├── farmArrayCumSum.m
+│   │   │       │   ├── farmArrayOrganizer2D.m
+│   │   │       │   ├── farmBlockReshape2D.m
+│   │   │       │   ├── farmConsMatLnB.m
+│   │   │       │   ├── farmConsMinValsLayer.m
+│   │   │       │   ├── farmConsScalerMat.m
+│   │   │       │   ├── farmFillin2D.m
+│   │   │       │   ├── farmFillin3D.m
+│   │   │       │   ├── farmGenerateFieldInterps.m
+│   │   │       │   ├── farmGenerateMatrixSubdivisions.m
+│   │   │       │   ├── farmImresize3_4mat.m
+│   │   │       │   ├── farmInds3Dto2D.m
+│   │   │       │   ├── farmLens2Blocks.m
+│   │   │       │   └── farmRescaleCoords.m
+│   │   │       ├── config/
+│   │   │       │   └── farmParseOptions.m
+│   │   │       ├── coordinates/
+│   │   │       │   ├── farmGenLenVec.m
+│   │   │       │   ├── farmGenLineInds2D.m
+│   │   │       │   ├── farmGenReflVec.m
+│   │   │       │   ├── farmGetCCVectors.m
+│   │   │       │   ├── farmGetUnitVecs.m
+│   │   │       │   └── farmRescaleCoords_Inds.m
+│   │   │       ├── documentation/
+│   │   │       │   ├── farmGetGlossaryDataType.m
+│   │   │       │   ├── farmGetGlossaryEntry.m
+│   │   │       │   ├── farmGetGlossaryInputOptions.m
+│   │   │       │   ├── farmGetGlossaryInputs.m
+│   │   │       │   ├── farmGlossaryEntries.m
+│   │   │       │   └── farmSearchGlossary.m
+│   │   │       ├── internal/
+│   │   │       │   ├── farmSUKeyError.m
+│   │   │       │   ├── farmSUOptions.m
+│   │   │       │   └── farmSUSelectGlossaryEntries.m
+│   │   │       ├── miscellaneous/
+│   │   │       │   ├── farmBndmod.m
+│   │   │       │   ├── farmCellIndSizes.m
+│   │   │       │   ├── farmGenericLenVec.m
+│   │   │       │   ├── farmGenScaledKVec.m
+│   │   │       │   ├── farmLogic2Ply.m
+│   │   │       │   └── farmMod1b.m
+│   │   │       ├── numerics/
+│   │   │       │   ├── farmFastLinIntNDScale2.m
+│   │   │       │   ├── farmGaussD.m
+│   │   │       │   ├── farmGenerate1DGaussian.m
+│   │   │       │   ├── farmGenerate2DGaussian.m
+│   │   │       │   ├── farmGenerate3DGaussian.m
+│   │   │       │   ├── farmGenerate3DGaussians.m
+│   │   │       │   ├── farmGenerateNDHann.m
+│   │   │       │   ├── farmLOG.m
+│   │   │       │   ├── farmLogAB.m
+│   │   │       │   ├── farmMyconvn.m
+│   │   │       │   ├── farmNdmeshgrid.m
+│   │   │       │   ├── farmNdndgrid.m
+│   │   │       │   ├── farmNoNan.m
+│   │   │       │   ├── farmNonZeroMean.m
+│   │   │       │   ├── farmPoissonDisc.m
+│   │   │       │   └── farmSignedBWDist.m
+│   │   │       ├── plotting/
+│   │   │       │   └── farmProgressBar.m
+│   │   │       └── structsAndTables/
+│   │   │           ├── farmAddFieldsStruct.m
+│   │   │           ├── farmAddFieldStruct.m
+│   │   │           ├── farmAttachByKeys.m
+│   │   │           ├── farmConcatenateByKeys.m
+│   │   │           ├── farmConcatTablesOverT.m
+│   │   │           ├── farmStructFields2Cell.m
+│   │   │           ├── farmStructFieldSizes.m
+│   │   │           ├── farmStructLenVec.m
+│   │   │           └── farmValidateTableKeys.m
+│   │   ├── tests/
+│   │   │   ├── runSharedUtilitiesTests.m
+│   │   │   ├── testCanonicalUtilities.m
+│   │   │   ├── testFarmLayout.m
+│   │   │   └── testSharedUtilities.m
+│   │   └── README.md
+│   ├── SurfaceFieldMapping/
+│   │   └── src/
+│   │       └── surfacefieldmapping/
+│   │           ├── meshConstruction/
+│   │           │   └── farmConsPatchedSheetSurface_Flat.m
+│   │           ├── meshIO/
+│   │           │   ├── farmObj2ply.m
+│   │           │   ├── farmPlySurf2TIF.m
+│   │           │   ├── farmPlywrite_norms.m
+│   │           │   └── farmReadObj_remi.m
+│   │           └── meshOperations/
+│   │               ├── farmCapPtCloudFlat.m
+│   │               ├── farmConfineMeshInMat.m
+│   │               ├── farmGetMeshDims.m
+│   │               ├── farmInBetweenFill.m
+│   │               ├── farmMesh2mat.m
+│   │               ├── farmMeshSideRemove.m
+│   │               ├── farmRemove_isolated_mesh_components.m
+│   │               ├── farmRemoveFacesVerts_Mesh.m
+│   │               ├── farmSplit_mesh_into_components.m
+│   │               └── farmSplit_single_mesh_object.m
+│   └── VisualizationTools/
+│       ├── src/
+│       │   ├── +visualizationtools/
+│       │   │   └── +export/
+│       │   └── visualizationtools/
+│       │       ├── display/
+│       │       │   ├── farmGetPolyCoords.m
+│       │       │   ├── farmManVlnPlot.m
+│       │       │   ├── farmPlotMeanStdPoly.m
+│       │       │   └── farmPlotVlns.m
+│       │       └── export/
+│       │           └── farmFigSaves.m
+│       └── README.md
+├── docs/
+│   ├── API_SCOPE_REVIEW.md
+│   ├── CHANGING-AN-ANALYSIS.md
+│   ├── CURRENT_SOURCE_TREES.md
+│   ├── DATA-DICTIONARY-CANDIDATES.csv
+│   ├── DATA-DICTIONARY-CANDIDATES.md
+│   ├── FARM-FUNCTION-NAMES.json
+│   ├── FARM-MIGRATION-MANIFEST.csv
+│   ├── FARM-MIGRATION-VALIDATION.md
+│   ├── FARM-NAMING-MIGRATION.md
+│   ├── MATLAB-GLOSSARY.md
+│   ├── MIGRATION_NOTES.md
+│   ├── READING-STRUCTURES.md
+│   ├── README.md
+│   ├── SEGMENTATION_HISTORICAL_METHODS-rboros.md
+│   ├── SEGMENTATION_HISTORICAL_METHODS.md
+│   ├── SEGMENTATION_WORKFLOW_EXTRACTION_REVIEW.md
+│   └── WORKFLOW-1-WALKTHROUGH.md
+├── tests/
+│   ├── +memotest/
+│   └── memotest/
+│       ├── farmTestDataRoot.m
+│       └── farmTestFilamentExtentAngleSweep.m
+├── Workflows/
+│   ├── examples/
+│   │   ├── +memoworkflow/
+│   │   ├── memoworkflow/
+│   │   │   ├── farmWorkflowIntensity.m
+│   │   │   ├── farmWorkflowNewRun.m
+│   │   │   ├── farmWorkflowObjects.m
+│   │   │   ├── farmWorkflowReference.m
+│   │   │   ├── farmWorkflowRegions.m
+│   │   │   ├── farmWorkflowSaveNew.m
+│   │   │   └── farmWorkflowSetColumnUnit.m
+│   │   ├── EXPERIMENT-CONFIGURATION.md
+│   │   ├── farmBenchmarkWorkflowScaling.m
+│   │   ├── farmExperiment4Config.m
+│   │   ├── farmPreparationExample.m
+│   │   ├── farmPreviewExperiment4.m
+│   │   ├── farmWorkflow1Objects.m
+│   │   ├── farmWorkflow2Filaments.m
+│   │   ├── farmWorkflow3Lineage.m
+│   │   ├── farmWorkflow4Spectra.m
+│   │   ├── farmWorkflow5Profiles.m
+│   │   ├── README.md
+│   │   ├── runConfigBuilderTests.m
+│   │   ├── runWorkflowExampleTests.m
+│   │   ├── setupWorkflow1.m
+│   │   ├── setupWorkflow2.m
+│   │   ├── setupWorkflow2Staged.m
+│   │   ├── setupWorkflow3.m
+│   │   ├── setupWorkflow4.m
+│   │   ├── setupWorkflow5.m
+│   │   ├── testConfigBuilders.m
+│   │   └── testWorkflowExamples.m
+│   └── src/
+│       ├── +memoworkflow/
+│       │   └── +config/
+│       └── memoworkflow/
+│           ├── config/
+│           │   └── farmMakeExperiment.m
+│           └── farmLoadSource.m
+├── .gitignore
+├── CONFIGURATION-BUILDERS.md
+├── farmGlossary.m
+├── farmSetup.m
+├── GLOSSARY-CAPABILITIES-MOCKUP.md
+├── HANDOFF_SEGMENTATIONTOOLS_TESTING_2026-10-10-rboros.md
+├── HANDOFF_SEGMENTATIONTOOLS_TESTING_2026-10-10.md
+├── logoPlaceholder.png
+├── OPTIONS-AND-BUILDERS-AUDIT.md
+├── README.md
+├── runAllTests.m
+└── TESTING.md
 ```
-
-## Active Foam - Backup
-
-496 files in 60 subfolders.
-
-File types: .asv (41), .m (448), .pdf (1), .ps (1), .py (3), .txt (2).
-
-```text
-Active Foam - Backup/
-├── Additional Functions/
-│   ├── Active Contouring/
-│   │   ├── activeContourFrame1.m
-│   │   ├── activeContourFromH5.m
-│   │   ├── Chan-Vese/
-│   │   │   ├── checkstop.m
-│   │   │   ├── chenvese.m
-│   │   │   ├── demo_chenvese.m
-│   │   │   ├── Heaviside.m
-│   │   │   ├── HELP.pdf
-│   │   │   ├── kappa.m
-│   │   │   ├── license.txt
-│   │   │   ├── maskcircle2.m
-│   │   │   ├── READ ME.txt
-│   │   │   ├── reinitialization.m
-│   │   │   ├── showphi.m
-│   │   │   └── veryImportantDemo.m
-│   │   ├── ChenVese_Extracted.m
-│   │   ├── dilateErodeSegWeights.m
-│   │   ├── generateFirstGuess_morphsnakes.m
-│   │   ├── getCentralSlice.m
-│   │   ├── returnCorrectedBinarizedSurfaceIndices.m
-│   │   ├── returnTopBottom2DSheets.m
-│   │   └── splitSurfaces_Threshold.m
-│   ├── addFieldsStruct.m
-│   ├── addFieldStruct.m
-│   ├── arrayCumSum.m
-│   ├── arrayOrganizer2D.m
-│   ├── blockReshape2D.m
-│   ├── bndmod.m
-│   ├── cellIndSizes.m
-│   ├── concatTablesOverT.m
-│   ├── genericLenVec.m
-│   ├── genLenVec.m
-│   ├── genLineInds2D.m
-│   ├── genReflVec.m
-│   ├── genScaledKVec.m
-│   ├── genTifTagRGB.m
-│   ├── getCCVectors.m
-│   ├── getUnitVecs.m
-│   ├── lens2Blocks.m
-│   ├── logAB.m
-│   ├── logic2Ply.m
-│   ├── loglogBin.m
-│   ├── manVlnPlot.asv
-│   ├── manVlnPlot.m
-│   ├── mod1b.m
-│   ├── pipInstallMATLAB.py
-│   ├── pipInstallPython.m
-│   ├── pixIDStruct2CC.m
-│   ├── poissonDisc.m
-│   ├── progressBar.m
-│   ├── Retired/
-│   │   ├── generateNDHannBorder.m
-│   │   ├── Poisson Disk Elimination/
-│   │   │   └── test1.m
-│   │   └── radialAutoCorr.m
-│   ├── saveNDTifs_Test.m
-│   ├── scatInt2DSlicesOver3D.m
-│   ├── structFields2Cell.m
-│   ├── structFieldSizes.m
-│   └── structLenVec.m
-├── aLENS Analysis/
-│   ├── Functions/
-│   │   ├── conncompDG.m
-│   │   ├── dat2Mat_Fils.m
-│   │   ├── dg2g.m
-│   │   ├── fieldOnObjs.m
-│   │   ├── getPairsFieldVals.m
-│   │   ├── globRepl2LT.m
-│   │   ├── globRepl2Traj.m
-│   │   ├── mapWrap.m
-│   │   ├── readGlobalID.m
-│   │   ├── rmedgeAnneal.m
-│   │   ├── rmNodeStatic.m
-│   │   └── Traj2Props.m
-│   ├── Retired/
-│   │   └── globRepl2LT_OLD.m
-│   └── Scripts/
-│       ├── analyzeClusterTrajectories.m
-│       ├── getClusterData_Raw.m
-│       ├── readDAT.m
-│       └── trackClusterData_Trajectories.m
-├── Analysis - Drops/
-│   ├── batch_densityDistributionAlongDeltaR_TIFS.asv
-│   ├── batch_densityDistributionAlongDeltaR_TIFS.m
-│   ├── batch_densityDistributionAlongDeltaR.m
-│   ├── batch_RemoveEdgeObjs.m
-│   ├── binSegDists_Smooth.m
-│   ├── Blob Analysis CORE/
-│   │   ├── A_fullPipelineOutline.m
-│   │   ├── B_blobsFromH5s.asv
-│   │   ├── B_blobsFromH5s.m
-│   │   ├── BC_tifs2CC.m
-│   │   ├── C_trajsFromBlobs.m
-│   │   ├── D_consTrajStruct.m
-│   │   ├── E_mergeTrajs.m
-│   │   └── F_getIntHists.m
-│   ├── blobInertiaTensorCalcs.asv
-│   ├── blobInertiaTensorCalcs.m
-│   ├── blobInertiaTensorPlot.asv
-│   ├── blobInertiaTensorPlot.m
-│   ├── colorBlobs_SortedMat.asv
-│   ├── colorBlobs_SortedMat.m
-│   ├── digraphOverlapTracking_UniqueIDs.m
-│   ├── digraphOverlapTracking.m
-│   ├── Drop Surface Meshes/
-│   │   ├── closedSurfaces_FieldsOnMesh.asv
-│   │   ├── closedSurfaces_FieldsOnMesh.m
-│   │   ├── closedSurfaces_h5ToMesh_EnforceNorms.m
-│   │   ├── closedSurfaces_h5ToPointCloud.m
-│   │   ├── closedSurfaces_splitPtCloudsMeshes.m
-│   │   └── threeSeg_meanIntProfiles.m
-│   ├── Functions/
-│   │   ├── addFieldStruct2Traj.m
-│   │   ├── blobMat2CCProps.m
-│   │   ├── generateBlobsFromH5Segs.m
-│   │   ├── generateTracksFromStoreStruct.m
-│   │   ├── returnSmoothBound.m
-│   │   ├── skel3DBlobs.asv
-│   │   ├── skel3DBlobs.m
-│   │   ├── structCutOffThresh.m
-│   │   ├── tifsOfTraj_TOT.m
-│   │   └── tifsOfTraj_trajs.m
-│   ├── generateErodedFrame.m
-│   ├── IsolateBlobLineage.m
-│   ├── IsolateBlobs.m
-│   ├── jasper_fresh.m
-│   ├── jasper_TrackBlobConstituents.m
-│   ├── overlapBlobTrack_fromCCs.m
-│   ├── overlapBlobTracking_TrackObjectProps.m
-│   ├── overlapBlobTracking.m
-│   ├── plotGlobalQuantities.m
-│   ├── Quantification Scripts/
-│   │   ├── blobs_InOnOut_VolMassRho.asv
-│   │   ├── blobs_InOnOut_VolMassRho.m
-│   │   ├── blobVolDistsFromCCs.m
-│   │   ├── blobVolFractFromh5.m
-│   │   ├── blobVolFractFromTifs.m
-│   │   ├── dropIntensitiesDistRings.m
-│   │   ├── dropSurfacesCenters.m
-│   │   ├── percolationAnalysis.m
-│   │   ├── plot_avgH5Quants.m
-│   │   ├── plotDropStatistics_misc.m
-│   │   ├── secondSegQuant.m
-│   │   ├── volFractAndIntGlobal_Modular.m
-│   │   ├── volFractAndIntGlobalPlots.m
-│   │   └── volNumSurfPlot.m
-│   ├── Retired/
-│   │   ├── dropTrackingFromStorageStructure.m
-│   │   ├── getDropCenters.m
-│   │   └── isolatedDrop.m
-│   ├── skel3DBlobs_Script.asv
-│   ├── skel3DBlobs_Script.m
-│   ├── test_constructTifsFromObjs.m
-│   ├── test_InVOnInts_IsolatedBlob.m
-│   ├── test_labeledVolFrac.m
-│   ├── test_mergingDropAnalysis.m
-│   ├── test_NumVolsFromStruct.m
-│   ├── test_trajInfoFromOverlaps_MinAxis.asv
-│   ├── test_trajInfoFromOverlaps_MinAxis.m
-│   ├── test_trajInfoFromOverlaps.asv
-│   ├── test_trajInfoFromOverlaps.m
-│   ├── test_trajlessMinRInfo.m
-│   ├── Tracking Misc. Scripts/
-│   │   └── TEST_GraphTrajFind.m
-│   └── Visualization Scripts/
-│       ├── intsAndSegBoundaries_Tiffs.asv
-│       ├── intsAndSegBoundaries_Tiffs.m
-│       ├── mapFieldOnBlobSegs.m
-│       ├── plotBlobStatistics_rEff.m
-│       └── tiffs_BlobOverTime.m
-├── Analysis - Filaments/
-│   ├── A_extractFilsFromTifs.m
-│   ├── A_getFilamentStats_2Dand3D_FROMH5s.m
-│   ├── Alignment Pipeline/
-│   │   ├── AlignmentOVERVIEW.m
-│   │   ├── AppendDensePropsToFilCCs.m
-│   │   ├── ConcatTableQuantities.m
-│   │   ├── Display_AverageAlignment_InOnOutBin.m
-│   │   ├── Display_AvgAlign_FromRBins.m
-│   │   ├── Display_Filaments2DCuts.m
-│   │   ├── Display_FilamentsAndBoundaries.m
-│   │   ├── Display3Channel_InOnOutCoMs3D.m
-│   │   ├── Display3Channel_InOnOutFils3D.m
-│   │   ├── DisplayGradPerim.m
-│   │   ├── DisplayInOnOut_SparseOnDense2DSlice.m
-│   │   └── rp3DAssignRBins.m
-│   ├── B_prepareFilamentStats_2D.m
-│   ├── B_prepareFilamentStats_3D.m
-│   ├── batch_densityDistributionAlongDeltaR.m
-│   ├── C_fil2ObjAlignment.m
-│   ├── C_fil2ObjAlignmentQTensor2D.m
-│   ├── C_fil2ObjAlignmentQTensor3D.m
-│   ├── COMBINED_Fils2Aligns_InOnOut.m
-│   ├── COMBINED_getFilamentStats2D.m
-│   ├── COMBINED_plotFilamentStats2D.m
-│   ├── DISPLAY_alignmentsOnField.m
-│   ├── DISPLAY_filamentsDistBin.m
-│   ├── displayAlignmentParameter.m
-│   ├── filAngVSIntGrad.m
-│   ├── Functions/
-│   │   ├── coords2Mat_2DFils.m
-│   │   ├── filBackBones2D.m
-│   │   ├── filBackBonesND.m
-│   │   └── storeFilCCs.m
-│   ├── getMTLengthDist_From3DBW.m
-│   ├── getMTLengthDist_From3DCC.m
-│   ├── getMTLengthDist.m
-│   ├── h5Seg_FilamentPosOr.m
-│   ├── overlayFilamentsOnField.m
-│   ├── PLOT_overlayAlignsAndGrads.m
-│   ├── PLOT_QTensor3D_OutInOnBin.m
-│   ├── plotFilamentStats_2Dand3D.m
-│   ├── sampleFilsInH5.m
-│   ├── structureTensorTests.asv
-│   ├── structureTensorTests.m
-│   └── velocityOrientationDistance.m
-├── Analysis - Fourier/
-│   ├── batch_FFTAnalysis_samAdapt3D.m
-│   ├── batch_FFTAnalysis_samAdapted.m
-│   ├── batch_intensityFFTAnalysis.m
-│   ├── fitToFunction.m
-│   ├── get_meanimg_LiangADAPT.m
-│   ├── get_meanimg_LiangOG.m
-│   ├── get_ProfileScatterFunctions.m
-│   └── samCompare.m
-├── Analysis - Meshes General/
-│   ├── Functions/
-│   │   └── getGrowthFromMesh.m
-│   └── Quantification Scripts/
-│       └── iterateThroughMeshes.m
-├── Analysis - Sheets/
-│   ├── CORE Homeotropic Pt Cloud/
-│   │   ├── h5ToMesh_homeoAndSplit.asv
-│   │   ├── h5ToMesh_homeoAndSplit.m
-│   │   ├── rough_homeotropicThinning.m
-│   │   ├── temp_LapSmoothField.asv
-│   │   └── temp_LapSmoothField.m
-│   ├── CORE Two Sheet Og/
-│   │   ├── A_identifyFromH5_2DSheets.m
-│   │   ├── B_generatePointClouds_SplitSheets.m
-│   │   ├── C_DataOnMeshes.m
-│   │   └── D_PlotMeshStats.m
-│   ├── Functions/
-│   │   ├── rebuildMat.m
-│   │   ├── rescalePatch.m
-│   │   ├── skel3DClean.m
-│   │   ├── skel3Dfrom2D.m
-│   │   ├── skel3DPop.m
-│   │   └── struct2Mat_sheets.m
-│   ├── One Time Scripts/
-│   │   ├── constructSegmentationTifs.m
-│   │   └── temp_splitDECAndData.m
-│   ├── Quantification Scripts/
-│   │   ├── correlateHeightIntensity.m
-│   │   ├── deltaH_PIV_Sheets.asv
-│   │   ├── deltaH_PIV_Sheets.m
-│   │   ├── distanceBinning.m
-│   │   ├── getHeightProfiles_eachLayer.m
-│   │   ├── getIntensityFluxes_2DSheets.m
-│   │   ├── getMaxInt_eachLayer.m
-│   │   ├── getMeanIntPerZOverT.m
-│   │   ├── getMTProfile_afterSeg.m
-│   │   ├── intensityVSVelocity_DOTNormal.asv
-│   │   ├── intensityVSVelocity_DOTNormal.m
-│   │   ├── regionInts_Sheets.asv
-│   │   ├── regionInts_Sheets.m
-│   │   ├── rough_MeanIntProfile.m
-│   │   ├── storeMeshProps_1_IntsCurvesVF.asv
-│   │   ├── storeMeshProps_1_IntsCurvesVF.m
-│   │   ├── storeMeshProps_2_AppendPIV_DECVals.m
-│   │   ├── storeMeshProps_Combined.asv
-│   │   ├── storeMeshProps_Combined.m
-│   │   └── TEST_MeshToSegDistMatch.m
-│   ├── Tubular Prep Functions/
-│   │   ├── capPtCloudFlat.m
-│   │   └── inBetweenFill.m
-│   └── Visualization/
-│       └── view_fieldsFromStruct.m
-├── Analysis - Tiffs/
-│   ├── CORE Image Preparation/
-│   │   ├── corr3DTiff_DirtCorr.m
-│   │   ├── corr3DTiff_DirtIllum.asv
-│   │   ├── corr3DTiff_RasterDirtIllum.m
-│   │   ├── corr3DTiff_Simplify.asv
-│   │   ├── corr3DTiff_Simplify.m
-│   │   └── sparseChannelCorr_rough.m
-│   ├── FFT and Structure/
-│   │   └── batchProcessStructurePower.m
-│   ├── getMeanIntensityOverTime3D.m
-│   ├── manyDirs_CorrTifs.asv
-│   ├── manyDirs_CorrTifs.m
-│   └── twoFieldsCrossCorr.m
-├── Data Plotting/
-│   ├── getPolyCoords.m
-│   ├── MATLAB_HELP_DisplayGlitch.m
-│   ├── plotMeanStdPoly.m
-│   └── plotVanHoveCorrs.m
-├── Manipulation - h5/
-│   ├── batch_3SegPerimeters.m
-│   ├── batch_3SegSubsample.asv
-│   ├── batch_3SegSubsample.m
-│   ├── BatchConvertH5toTif_DirtSub.m
-│   ├── BatchConvertH5toTif.asv
-│   ├── BatchConvertH5toTif.m
-│   ├── H5 Functions/
-│   │   ├── distTransFromBoundary.m
-│   │   ├── getDistGrads.m
-│   │   ├── h5toSmooth3Chans.m
-│   │   ├── h5toTif.m
-│   │   └── loadH5.m
-│   └── multiDir_batchH5toTif.m
-├── Manipulation - Matrices/
-│   ├── consMatLnB.m
-│   ├── consMinValsLayer.m
-│   ├── consPatchedSheetSurface_Flat.m
-│   ├── consScalerMat.m
-│   ├── fastLinIntNDScale2.m
-│   ├── fillin2D.m
-│   ├── fillin3D.m
-│   ├── GaussD.m
-│   ├── generate1DGaussian.m
-│   ├── generate2DGaussian.m
-│   ├── generate3DGaussian.m
-│   ├── generate3DGaussians.m
-│   ├── generateFieldInterps.m
-│   ├── generateMatrixSubdivisions.m
-│   ├── generateNDHann.m
-│   ├── generateRadialMatrix.m
-│   ├── generateStaticStructureFactor.m
-│   ├── generateVanHove.m
-│   ├── imbinarize3_4D.m
-│   ├── imresize3_4mat.m
-│   ├── inds3Dto2D.m
-│   ├── LOG.m
-│   ├── myconvn.m
-│   ├── ndmeshgrid.m
-│   ├── ndndgrid.m
-│   ├── noNan.m
-│   ├── nonZeroMean.m
-│   ├── radiallyAverageMatrix.m
-│   ├── removeConObjs.m
-│   ├── rescaleCoords_Inds.m
-│   ├── rescaleCoords.m
-│   └── sidesHoleFill.m
-├── Manipulation - Meshes/
-│   ├── confineMeshInMat.m
-│   ├── getMeshDims.m
-│   ├── mesh2mat.m
-│   ├── meshSideRemove.m
-│   ├── obj2ply.m
-│   ├── plySurf2TIF.m
-│   ├── plywrite_norms.m
-│   ├── readObj_remi.m
-│   ├── remi_remove_IDed_mesh_object.m
-│   ├── remi_sort_mesh_objects.m
-│   ├── remove_isolated_mesh_components.m
-│   ├── removeFacesVerts_Mesh.m
-│   ├── saveObj2PlyFiles.m
-│   ├── shiftMeshVerts.m
-│   ├── split_mesh_into_components.m
-│   └── split_single_mesh_object.m
-├── Manipulation - Meshes Scripts/
-│   ├── allMeshInfoPerTimePoint.m
-│   ├── filmMeshObjects.m
-│   ├── Retired/
-│   │   ├── getSplitMeshGrowthComps.m
-│   │   ├── intensityInOnMesh.m
-│   │   └── storeMeshInfoTimeSeries.m
-│   ├── splitMeshObjectsOverTime.m
-│   └── trackMeshCenters.m
-├── Manipulation - Tiffs/
-│   ├── Batch Process/
-│   │   ├── AccentuateFeatures.asv
-│   │   ├── AccentuateFeatures.m
-│   │   ├── batch_3DTo2D.m
-│   │   ├── batch_3SegtoPerims.m
-│   │   ├── batch_tifSubSampleTif.asv
-│   │   ├── batch_tifSubSampleTif.m
-│   │   ├── batch_upscaleSmooth.m
-│   │   ├── batchCropGaussCorrTifs.m
-│   │   ├── batchCropTifs.m
-│   │   ├── batchH5SubSampleTif_complex.m
-│   │   ├── batchh5SubsampleTif.m
-│   │   ├── batchSampleTifs.m
-│   │   ├── batchScaleDown3D.m
-│   │   ├── nd2Sideview.m
-│   │   ├── renameFiles.m
-│   │   ├── reslice5DND2.m
-│   │   ├── rough_stitchChannels_avis.m
-│   │   ├── Updated_nd2Sideview.m
-│   │   ├── Updated_nd2XYView.asv
-│   │   └── Updated_nd2XYView.m
-│   ├── Image Correction Functions/
-│   │   ├── Copy_of_generateGaussCorrectionMask_3DTiff.m
-│   │   ├── generate4DLayerStore_ZandT.m
-│   │   ├── generateArea_BoundingBox.m
-│   │   ├── generateGaussCorrectionPerZ.m
-│   │   ├── generatePerimeterArea_BoundingBox.m
-│   │   ├── nzFlat.m
-│   │   ├── rasterCorrectionZ_3DTiff.m
-│   │   └── Retired/
-│   │       ├── generateGaussCorrectionMask_3DTiff.m
-│   │       └── generateGaussCorrectionMaskPerZ_3DTiff.m
-│   ├── Reslice Scripts/
-│   │   ├── nonZeroFlatten.m
-│   │   ├── selectZFrom3DTiffs.asv
-│   │   ├── selectZFrom3DTiffs.m
-│   │   ├── stackTifs.asv
-│   │   ├── stackTifs.m
-│   │   ├── tile2DTifs.m
-│   │   ├── timeSeries_sideStackFrom3D.m
-│   │   └── timeSeries_zProjectionFrom3Ds.m
-│   ├── Retired/
-│   │   ├── A_removeZRastering_SplitTimes.m
-│   │   ├── B_generateBleachScaledGaussians_SplitTimes.m
-│   │   ├── C_correctIlluminationProfile_SplitTimes.m
-│   │   ├── D_correctAroundDirt_SplitTimes.m
-│   │   ├── gaussCorrTif.m
-│   │   ├── generateBleachScaledGaussians.m
-│   │   └── generateDirtMask.m
-│   ├── Tests/
-│   │   ├── butterworthFilter.py
-│   │   ├── GaussSubTests_script.m
-│   │   ├── LiangTest.m
-│   │   ├── TEST_getIntDistBounds.m
-│   │   ├── test_pythonButterWorth.m
-│   │   ├── TEST_threeStepCorr.m
-│   │   └── tophatDirtandGaussCorr.m
-│   └── Tiff Manipulation Functions/
-│       ├── cropTiffSave.m
-│       ├── extend2DTiffAlongZ.m
-│       ├── fastWriteTiff.m
-│       ├── getLayersOverTimeFrom3DTif.m
-│       ├── getTotIntOver3DTiffs.m
-│       ├── replicateTiffSlicesAlongDim.m
-│       ├── save3DTiff.m
-│       ├── saveNDTiffFIJI.asv
-│       ├── saveNDTiffFIJI.m
-│       └── split3Dto2D.m
-├── One Off Scripts/
-│   ├── appendIntsSTD_Blobs.m
-│   ├── averageIntOverZ.asv
-│   ├── averageIntOverZ.m
-│   ├── BilayerCrossSections.m
-│   ├── calcCorrAndStrucFact.m
-│   ├── colorplay.m
-│   ├── convolvePSFDemo.m
-│   ├── corrMatSizes.m
-│   ├── CowbrainCrawl.m
-│   ├── cropAVI.m
-│   ├── extractFoamDetails_ROUGH.m
-│   ├── filDirDist_QI.m
-│   ├── forJakob_WriteCSV.asv
-│   ├── forJakob_WriteCSV.m
-│   ├── fromBlobs_MTK4Isolated.m
-│   ├── gelRead.m
-│   ├── generateSideView3DLogicStructs.m
-│   ├── generateSideView3DTifSeries.m
-│   ├── getIntsOverTimeMultipleDirs.m
-│   ├── intensity2D_SheetBuckleCollapse.m
-│   ├── isolatedAssembliesFromIntensities.m
-│   ├── MakeBulkBlobs.m
-│   ├── metadata.m
-│   ├── MTK4_FakeTwoChannel.m
-│   ├── MTProfile_DistFromK4.m
-│   ├── padImage.m
-│   ├── ParaviewColormap.m
-│   ├── permuteTifs.m
-│   ├── prepTifs_EarlySheetCurvatures.m
-│   ├── RadhikaData_2013_Velocities.asv
-│   ├── RadhikaData_2013_Velocities.m
-│   ├── readMP4.m
-│   ├── recolorBlobs_PercAndChilds.asv
-│   ├── recolorBlobs_PercAndChilds.m
-│   ├── reconstruct_SheetDynamics.m
-│   ├── removeSmallBlobs.m
-│   ├── renormalizeInts.m
-│   ├── rminPhi_compare.m
-│   ├── rMinStats_CORRMinAxisDims.m
-│   ├── ROUGH_isolate3DBilayerStructure.m
-│   ├── roughVolumeFrac_BILAYERS.m
-│   ├── selFrame_SkelBndTif.m
-│   ├── sheets_ViewCurvatures.asv
-│   ├── sheets_ViewCurvatures.m
-│   ├── stitchBlobStatsFromDiffFiles.asv
-│   ├── stitchBlobStatsFromDiffFiles.m
-│   ├── TotalIntensitiesOverTime.m
-│   ├── viewMeshFields_overTime_NOPIV.m
-│   ├── viewMeshFields_overTime.asv
-│   ├── viewMeshFields_overTime.m
-│   ├── visualize3DDot.m
-│   └── zeroShiftBlobIDs.m
-├── Reference Conversion/
-│   ├── nbib2bibtex.m
-│   ├── padTags.m
-│   └── prepareOutLines.m
-├── Retired/
-│   ├── batchProcessMeshGrowths.m
-│   ├── bulkIndStruct2CCs.m
-│   ├── Copy_of_Noah_CoarseningRoadMapEg.m
-│   ├── costMatrixTest.m
-│   ├── cutRemeshDownsampleMesh.m
-│   ├── Ilastikh5ToPlyIsoSurfaceConvert.m
-│   ├── Noah_CoarseningRoadMapEg.m
-│   ├── Phase Analysis/
-│   │   ├── MTK4_2D_IntensityPhaseSpace.asv
-│   │   ├── MTK4_2D_IntensityPhaseSpace.m
-│   │   └── multiColorQuiver.m
-│   ├── plotMeshProperties.m
-│   ├── removeMeshEdges.m
-│   └── take1GetScaleFromMesh.m
-├── SHG/
-│   ├── a.ps
-│   ├── annulus_Average.m
-│   ├── comAnalysis.m
-│   ├── combine_2chanSegs.m
-│   ├── manualTile.m
-│   ├── SHG_prelimAnalysis_stackStats.m
-│   └── SHG_prelimAnalysis.m
-├── Tracking/
-│   ├── cens2TrajsSimple.py
-│   ├── consObjMatSelTrajs.m
-│   ├── generateTrajObjTifsFromTifs.m
-│   ├── generateTrajsFromObjs.m
-│   ├── getTimeObjTrajTableFromPyTrajs.m
-│   ├── guassiansOnIlastikObjectCenters.m
-│   ├── mat2pyTrackMat.m
-│   ├── Retired/
-│   │   ├── generatePythonNDArray4TrackPy_storeStruct.asv
-│   │   ├── generatePythonNDArray4TrackPy_storeStruct.m
-│   │   ├── generatePythonNDArray4TrackPy.m
-│   │   ├── getTrajObjTimeTable.m
-│   │   └── simpletrackerRevamp.m
-│   ├── saveSelTrajObjsAsTiff.m
-│   ├── segDrops2TrajColoredTifs.m
-│   ├── singleTimePointTrajGen.m
-│   ├── tot2ts.m
-│   └── ts2tot.m
-└── Velocity Calculation/
-    ├── Functions/
-    │   ├── calc3DPIV_Sparse.m
-    │   ├── centeredBoxIndices.m
-    │   ├── gaussBlur3DTiff1Axis.m
-    │   ├── generateShiftedImageData.m
-    │   ├── generateVelocityInterpolants.m
-    │   ├── interp3DTiff.m
-    │   ├── makeShiftRefVecs.m
-    │   ├── orderFileNames.m
-    │   ├── shiftRefVecOperator.m
-    │   ├── xcorr3fftre.m
-    │   └── xcorr3fftSP.m
-    └── Scripts/
-        ├── batch_VelDivergence.m
-        └── PIVfromH5Tif.m
-```
-

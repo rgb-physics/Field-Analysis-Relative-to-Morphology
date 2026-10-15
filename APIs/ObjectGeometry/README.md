@@ -5,28 +5,28 @@ The [representation helpers](REPRESENTATION.md) convert index geometry, points
 and line segments to masks/labels, with optional Gaussian point/segment width.
 
 For the anisotropic filament-length check, add this API's examples folder and
-run `report=validateFilamentProjectedExtent;`. It compares a known 40 um
+run `report = farmValidateFilamentProjectedExtent;`. It compares a known 40 um
 centerline against ProjectedExtent over elevations 0:15:90, azimuths 0/45/90,
 XY spacing 1 um and Z spacing 0.25 or 2 um. CSV/MAT/PNG reports go to a fresh
 test-data/workflow-results folder. Native ExtentInVoxels is listed separately in
 voxel units. Two angle-sweep regression tests are included in testObjectGeometry.
 Oblique lines allow voxel-rounding error; these thin synthetic fixtures do
 not establish robustness to noise, finite thickness, curvature or branching.
-Target: MATLAB R2023a with Image Processing Toolbox. Add this API's `src`,
-SharedUtilities `src`, and ImageStackIO `src` to the MATLAB path. Historical
-`getDistGrads` also requires SegmentationTools. Do not use `genpath` on the
-API root: it would expose archived implementations.
+Target: MATLAB R2023a with Image Processing Toolbox. Run `farmSetup` from the
+repository root to add API source folders and dependencies. Historical
+`farmGetDistGrads` also uses SegmentationTools. Archived implementations live
+outside the release in the sibling MeMo-Archive and should stay off the path.
 
 ## Identity and selected measurements
 
 ```matlab
 opts = struct('DatasetID','experiment-1','Frame',12, ...
     'Spacing',[0.4 0.4 0.4],'SpacingUnit','um');
-[properties,objects] = objectgeometry.objects.measureObjects(mask, ...
+[properties,objects] = farmMeasureObjects(mask, ...
     {'Volume','Centroid','BoundingBox','PrincipalAxisLength'},opts);
 ```
 
-`measureObjects` passes requested property names (including `'all'`) to native
+`farmMeasureObjects` passes requested property names (including `'all'`) to native
 `regionprops` for 2-D or `regionprops3` for 3-D. Property availability follows
 the installed MATLAB release. All native properties are supported; potentially
 large lists/images are returned only when requested. Native measurements remain
@@ -45,9 +45,9 @@ before component measurement when individual entities are intended.
 Index groups avoid constructing a full label volume:
 
 ```matlab
-objects = objectgeometry.objects.prepareObjects(indexGroups, ...
+objects = farmPrepareObjects(indexGroups, ...
     struct('ImageSize',[100 120 40],'ObjectIDs',[7 42],'Frame',12));
-properties = objectgeometry.objects.measureObjects(objects,{'Volume','Centroid'});
+properties = farmMeasureObjects(objects,{'Volume','Centroid'});
 ```
 
 Prepared objects store membership indices, IDs and grid metadata. TIFF/image
@@ -64,13 +64,13 @@ integers through `flintmax`, preventing silent precision loss in joins.
 ## Filaments are image objects, not skeletons
 
 ```matlab
-filaments = objectgeometry.centerlines.measureFilaments(objects, ...
+filaments = farmMeasureFilaments(objects, ...
     {'Volume','Centroid','Directors','ExtentInVoxels','AspectRatios'});
-scaled = objectgeometry.centerlines.measureFilaments(objects, ...
+scaled = farmMeasureFilaments(objects, ...
     {'ScaledDirectors','ProjectedExtent','ScaledAspectRatios'});
 ```
 
-The historical `storeFilCCs` principal-axis calculation is reused. Directors
+The historical `farmStoreFilCCs` principal-axis calculation is reused. Directors
 use XYZ (XY in 2-D), with Y increasing along image rows. Raw native 3-D
 EigenVectors are retained unmodified; Directors apply the historical `[2 1 3]`
 row conversion confirmed by the known-X-axis audit. Eigenvector sign is
@@ -104,9 +104,9 @@ uses native eig. See Workflows/examples and runWorkflowExampleTests.
 ## Independent optional geometry
 
 ```matlab
-shells = objectgeometry.objects.generateGeometry(objects,'boundary', ...
+shells = farmGenerateGeometry(objects,'boundary', ...
     struct('LayerMean',0,'LayerWidth',1,'Sigma',1));
-cores = objectgeometry.objects.generateGeometry(objects,'skeleton', ...
+cores = farmGenerateGeometry(objects,'skeleton', ...
     struct('Method','blob','GradientCutoff',0.2,'Sigma',1,'Hessian',false));
 ```
 
@@ -125,15 +125,15 @@ if membership/grid changes, regenerate geometry. The API never silently rescales
 the input or updates source metadata by guessing a transform.
 
 Historical methods retained:
-- `blob`: `skel3DBlobs` interrogation cores; requires gaussdiff's external
+- `blob`: `farmSkel3DBlobs` interrogation cores; requires gaussdiff's external
   `gfilter`. Missing dependency raises an informative error. Sigma is an
   integer voxel radius because the historical method uses spherical erosion.
-- `sheet`: `skel3Dfrom2D` union/intersection; retains the historical flattened
+- `sheet`: `farmSkel3Dfrom2D` union/intersection; retains the historical flattened
   reslice construction and is NOT claimed to generalize arbitrary sheet shapes.
-- `sheet-sampled`: `skel3DPop` random subpopulation. Set `rng` for reproducibility.
+- `sheet-sampled`: `farmSkel3DPop` random subpopulation. Set `rng` for reproducibility.
   `randperm` replaces `randsample`, removing the Statistics Toolbox dependency.
-- `boundary`: two-sided signed-distance shell from `returnSmoothBoundsBW`.
-  `returnSmoothBoundsIDed` remains available for historical fast/slow ID assignment.
+- `boundary`: two-sided signed-distance shell from `farmReturnSmoothBoundsBW`.
+  `farmReturnSmoothBoundsIDed` remains available for historical fast/slow ID assignment.
 
 Shell/core scientific validation and general sheet-midplane design remain
 pending. BoundsBW/BoundsIDed are geometric shells; the BlobsBW/BlobsIDed
@@ -142,13 +142,13 @@ compatibility functions remain SegmentationTools mask-cleanup operations.
 ## Reusable distance gradients
 
 ```matlab
-[gradients,meta,valid] = objectgeometry.objects.distanceGradients(distanceField, ...
+[gradients,meta,valid] = farmDistanceGradients(distanceField, ...
     struct('Sigma',1,'SmoothingOrder','gradient-first','Normalize',false));
-[gradients,distanceField,meta,valid] = objectgeometry.objects.objectDistanceGradients( ...
+[gradients,distanceField,meta,valid] = farmObjectDistanceGradients( ...
     mask,struct('DistanceType','signed','Sigma',1));
 ```
 
-DistanceType is signed/interior/exterior. Signed reuses your `signedBWDist`
+DistanceType is signed/interior/exterior. Signed reuses your `farmSignedBWDist`
 convention: object boundary zero, deeper interior negative. Gradients are
 `[Y X Z D]` with XY or XYZ components; no Y flip unless `FlipY=true`.
 Sigma is a scalar or spatial vector in voxel units, all positive or all zero.
@@ -165,8 +165,8 @@ deferred. Smoothing sigma is always in current voxel units.
 ## Nematic alignment
 
 ```matlab
-alignment = objectgeometry.orientation.nematicAlignment(directors,normals);
-projected = objectgeometry.orientation.nematicAlignment(directors,normals, ...
+alignment = farmNematicAlignment(directors,normals);
+projected = farmNematicAlignment(directors,normals, ...
     struct('Plane',[1 2],'MaxNormalComponent',0.5));
 ```
 
@@ -182,8 +182,8 @@ Aggregation and arbitrary field sampling are separate future API work.
 ## Safe concatenation and late-added fields
 
 ```matlab
-combined = objectgeometry.objects.concatenateMeasurements({frame1,frame2});
-combined = objectgeometry.objects.attachMeasurements(combined,newQueries);
+combined = farmConcatenateMeasurements({frame1,frame2});
+combined = farmAttachMeasurements(combined,newQueries);
 ```
 
 Frame tables require matching schemas; metadata from EVERY frame is retained
@@ -210,8 +210,8 @@ your licensed MATLAB session; initial verification used MATLAB's code analyzer.
 
 Original implementations updated in this pass are retained under
 `archive/2026-10-12` with original names. Active entry points remain compatible:
-`blobMat2CCProps`, `storeFilCCs`, `getDistGrads`, `distTransFromBoundary`,
-`returnSmoothBoundsBW`, `returnSmoothBoundsIDed`, `skel3DBlobs`, `skel3DPop`.
+`farmBlobMat2CCProps`, `farmStoreFilCCs`, `farmGetDistGrads`, `farmDistTransFromBoundary`,
+`farmReturnSmoothBoundsBW`, `farmReturnSmoothBoundsIDed`, `farmSkel3DBlobs`, `farmSkel3DPop`.
 Their repairs address 2-D property storage, empty outputs, package-qualified
 dependencies, shell Gaussian dispatch and Hessian candidate indexing. Other
 historical functions/workflows remain active; no scientific method was retired

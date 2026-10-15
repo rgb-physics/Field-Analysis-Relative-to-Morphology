@@ -2,7 +2,14 @@
 
 **Measure image-derived fields on, within, and around segmented structures.**
 
-Run all available automated checks from this folder with `report = runAllTests;`.
+From this folder, run `farmSetup` to add the API functions to MATLAB's path.
+Use `farmSetup('IncludeExamples', true)` for the editable workflows, or
+`report = runAllTests;` for all available automated checks.
+
+Functions use descriptive names such as `farmReadTiff`, `farmMakeSource` and
+`farmMeasureObjects`. Ordinary folders group the code; calls no longer use
+MATLAB package namespaces. See the [FARM migration guide](docs/FARM-NAMING-MIGRATION.md)
+for the function-name map and archive locations.
 See [Testing](TESTING.md) for coverage, fixture requirements and saved reports.
 
 New to the package? Follow [Understanding workflow 1](docs/WORKFLOW-1-WALKTHROUGH.md)
@@ -29,4 +36,8 @@ Internal image arrays use `[Y X Z C T]`. Workflows combine the following APIs fo
 
 Segmentation behavior and preserved historical methods are recorded in `docs/SEGMENTATION_HISTORICAL_METHODS.md`. The current compatibility target is MATLAB R2023a. No native function used by the new SegmentationTools entry points is known here to be deprecated in R2023a; future compatibility issues will be recorded with the affected MATLAB function and FARM script path in that document.
 
-This repository is a first-pass organization of code from the private archive and the existing ImageStackIO package. Source code has not been refactored or validated in MATLAB as part of this organization. See `docs/PROPOSED_TREE.md` for the proposed architecture and `docs/MIGRATION_CHECKLIST.md` for the source mapping and copy record. 
+Historical workflows, legacy I/O and redundant compatibility interfaces are
+preserved outside this release in the sibling `MeMo-Archive` directory.
+Reusable original algorithms remain in the APIs. The [current source tree](docs/CURRENT_SOURCE_TREES.md)
+shows the retained release files. Mesh functionality retains its historical
+algorithms and external dependencies; this naming migration does not redesign it.

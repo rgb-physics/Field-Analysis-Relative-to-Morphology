@@ -25,7 +25,7 @@ Inputs are never overwritten; generated outputs remain outside the repository.
 
 `runSegmentationToolsTests.m` runs 18 synthetic tests covering every public
 function currently stored under `SegmentationTools/src` except the three
-functions in `+activeContours`. The coverage-manifest test fails if a new
+functions in `activeContours`. The coverage-manifest test fails if a new
 source function is added without being listed in the suite.
 
 ```matlab
@@ -40,7 +40,7 @@ Processing Toolbox and Signal Processing Toolbox is expected.
 
 ## Focused visual comparison
 
-`validateInOnOutImplementations.m` is a runnable comparison script. With no
+`farmValidateInOnOutImplementations.m` is a runnable comparison script. With no
 arguments it generates two synthetic closed-wall volumetric structures,
 compares the generalized disjoint classifier with the historical opening
 workflow, asserts basic invariants, and writes inspectable TIFFs to:
@@ -52,7 +52,7 @@ fullfile(tempdir, 'FARM-SegmentationTools-in-on-out')
 Run it from MATLAB R2023a or newer:
 
 ```matlab
-report = validateInOnOutImplementations();
+report = farmValidateInOnOutImplementations();
 ```
 
 To inspect a real TIFF probability hyperstack:
@@ -62,7 +62,7 @@ opts = struct();
 opts.InputFile = "C:\path\probabilities.tif";
 opts.Channels = [1 2 3]; % [inside wall outside]
 opts.Thresholds = [0.2 0.5 0.5];
-report = validateInOnOutImplementations(opts);
+report = farmValidateInOnOutImplementations(opts);
 ```
 
 TIFF metadata is used where available. Set

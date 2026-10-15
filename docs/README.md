@@ -1,4 +1,4 @@
-# MeMo user guide
+# FARM user guide
 
 Start with a task and a guided script. You do not need to understand every API before loading your first dataset.
 
@@ -27,7 +27,7 @@ For a first visit, read Reading package structures, follow workflow 1, then use 
 
 Workflow 5 currently pools intensity samples over the spatial volume; selecting per-ID profiles requires explicit selection/grouping. Workflow 1 assigns frame-local IDs; use workflow 3 for temporal relationships.
 
-The separate [preparation example](../Workflows/examples/preparationExample.m) illustrates quantitative illumination correction and optional reduced 8-bit export. It still uses its own configuration; it has not been converted into a numbered standalone setup.
+The separate [preparation example](../Workflows/examples/farmPreparationExample.m) illustrates quantitative illumination correction and optional reduced 8-bit export. It still uses its own configuration; it has not been converted into a numbered standalone setup.
 
 ## Before the first run
 
@@ -79,4 +79,4 @@ Run report=runAllTests from the repository root to execute available automated c
 
 For detailed construction interfaces, see [Configuration builders](../CONFIGURATION-BUILDERS.md). For geometry rendering, see [Representation helpers](../APIs/ObjectGeometry/REPRESENTATION.md).
 
-Public names such as ObjectID, makeClasses and nematicAlignment are still present even where the glossary proposes clearer terminology. The documentation is not a claim that every proposed rename/generalization has been implemented.
+Public names such as ObjectID, farmMakeClasses and farmNematicAlignment are still present even where the glossary proposes clearer terminology. The documentation is not a claim that every proposed rename/generalization has been implemented.

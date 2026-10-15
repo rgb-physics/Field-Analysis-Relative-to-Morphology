@@ -39,3 +39,7 @@ desktop.ini
 # Logs and temporary files
 *.log
 *.tmp
+
+# Python bridge test caches
+__pycache__/
+*.py[cod]

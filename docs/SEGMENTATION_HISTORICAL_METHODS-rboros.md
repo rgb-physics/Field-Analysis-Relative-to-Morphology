@@ -50,9 +50,9 @@ FARM does not use all nonzero image arrays as the same kind of mask:
 - A probability volume is floating-point `[Y X Z C]` data.
 
 Optional full-size representations are constructed only when requested.
-`remapClassLabels` maps class IDs to user-selected stored values. Historical
+`farmRemapClassLabels` maps class IDs to user-selected stored values. Historical
 85/170/255 encodings can therefore remain interchange formats rather than the
-authoritative definition of class meaning. `writeMaskTiff` performs file output
+authoritative definition of class meaning. `farmWriteMaskTiff` performs file output
 only when called and supports `[Y X Z]` masks/labels or `[Y X Z C]` ImageJ
 hyperstacks through ImageStackIO.
 
@@ -60,26 +60,26 @@ hyperstacks through ImageStackIO.
 
 | Function | Responsibility |
 |---|---|
-| `makeClassConfig` | Distribute channel/threshold arrays into semantic class definitions; grouped channels use cells. |
-| `thresholdProbabilityGroup` | Strict summed-channel or independent-threshold/union classification for one class. |
-| `classifyProbabilities` | Resolve arbitrary class candidates, using maximum aggregate probability and definition order for ties. |
-| `classifyProbabilityChannels` | Treat selected channels as distinct classes; an empty channel selection means all channels. |
-| `segmentInOnOutProbabilities` | Semantic `[inside wall outside]` convenience wrapper. |
-| `smoothInOnOutProbabilities` | Clearly named historical three-class opening workflow. |
-| `remapClassLabels` | Map default class IDs to requested integer storage values. |
-| `readProbabilityTiff` | Read one probability time point as `[Y X Z C]`; optionally reinterpret T as C. |
-| `writeMaskTiff` | Optional TIFF output for logical/categorical masks. |
-| `flatFill3D` | Historical independent planar fills along selected axes. |
-| `returnSmoothBlobsBW`, `returnSmoothBlobsIDed` | Historical signed-distance cleanup, moved into SegmentationTools. |
+| `farmMakeClasses` | Distribute channel/threshold arrays into semantic class definitions; grouped channels use cells. |
+| `farmThresholdProbabilityGroup` | Strict summed-channel or independent-threshold/union classification for one class. |
+| `farmClassifyProbabilities` | Resolve arbitrary class candidates, using maximum aggregate probability and definition order for ties. |
+| `farmClassifyProbabilityChannels` | Treat selected channels as distinct classes; an empty channel selection means all channels. |
+| `farmSegmentInOnOutProbabilities` | Semantic `[inside wall outside]` convenience wrapper. |
+| `farmSmoothInOnOutProbabilities` | Clearly named historical three-class opening workflow. |
+| `farmRemapClassLabels` | Map default class IDs to requested integer storage values. |
+| `farmReadProbabilityTiff` | Read one probability time point as `[Y X Z C]`; optionally reinterpret T as C. |
+| `farmWriteMaskTiff` | Optional TIFF output for logical/categorical masks. |
+| `farmFlatFill3D` | Historical independent planar fills along selected axes. |
+| `farmReturnSmoothBlobsBW`, `farmReturnSmoothBlobsIDed` | Historical signed-distance cleanup, moved into SegmentationTools. |
 
 Compatibility wrappers remain at:
 
-- `APIs/SegmentationTools/src/+segmentationtools/+binarization/h5toSmooth3Chans.m`
-- `APIs/SharedUtilities/src/+sharedutilities/+arrays/flatFill3D.m`
-- `APIs/ObjectGeometry/src/+objectgeometry/+objects/returnSmoothBlobsBW.m`
-- `APIs/ObjectGeometry/src/+objectgeometry/+objects/returnSmoothBlobsIDed.m`
+- `APIs/SegmentationTools/src/segmentationtools/binarization/farmH5toSmooth3Chans.m`
+- `APIs/SegmentationTools/src/segmentationtools/cleanup/farmFlatFill3D.m`
+- `APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsBW.m`
+- `APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsIDed.m`
 
-The old `h5toSmooth3Chans` signature retains channel order
+The old `farmH5toSmooth3Chans` signature retains channel order
 `[outside inside wall]` and output order `[inside outside wall]`. New functions
 use semantic order `[inside wall outside]`.
 
@@ -88,7 +88,7 @@ use semantic order `[inside wall outside]`.
 ### Independent channel thresholds
 
 Each probability channel is compared with its configured threshold. This occurs
-in `imbinarize3_4D.m`, `BatchConvertH5toTif.m`, `h5toTif.m`, filament HDF5
+in `farmImbinarize3_4D.m`, `BatchConvertH5toTif.m`, `h5toTif.m`, filament HDF5
 workflows, and several in/on/out workflows. It naturally permits overlaps and
 unclassified voxels.
 
@@ -96,7 +96,7 @@ unclassified voxels.
 
 Selected channels are thresholded separately and their logical masks are
 unioned. This expresses “any of these probability classes,” and is distinct
-from thresholding their sum. `thresholdProbabilityGroup` exposes this as
+from thresholding their sum. `farmThresholdProbabilityGroup` exposes this as
 `CombineMethod="union"`, with either one shared threshold or one threshold per
 channel.
 
@@ -120,12 +120,12 @@ independent-union class, its score is the maximum selected-channel probability.
 
 ### Historical in/on/out opening
 
-`h5toSmooth3Chans.m` thresholds inside and outside channels, performs erosion
+`farmH5toSmooth3Chans.m` thresholds inside and outside channels, performs erosion
 followed by dilation with a spherical structuring element, and removes cleaned
 inside voxels from outside. Wall is either independently thresholded/opened or,
 when `spanBool` is true, defined as the complement of inside and outside. The
 independent-wall result can overlap inside/outside. This is preserved by
-`smoothInOnOutProbabilities` for comparison.
+`farmSmoothInOnOutProbabilities` for comparison.
 
 ### Encoded categorical TIFFs
 
@@ -136,7 +136,7 @@ instead of deriving meaning from the sorted values observed in one image.
 
 ### LoG followed by a fixed threshold
 
-`A_extractFilsFromTifs.m` and `prepareTifsForFilProps.m` calculate `-LOG` on
+`A_extractFilsFromTifs.m` and `prepareTifsForFilProps.m` calculate `-farmLOG` on
 bright-on-dark microscopy intensities and apply a fixed response threshold.
 This is direct filament segmentation and does not require external pixel
 classification. It is retained as the initial direct-image filament method.
@@ -174,7 +174,7 @@ explicit rather than being silently combined.
 Native MATLAB opening, closing, erosion, and dilation remain available to
 workflows. FARM-specific planar filling, connected-component behavior, and
 label-aware operations are implemented explicitly. The first planar-fill
-implementation follows `flatFill3D`: each requested directional fill is
+implementation follows `farmFlatFill3D`: each requested directional fill is
 computed from the original mask and the results are unioned.
 
 Masks normally mark/select voxels rather than destructively changing the source
@@ -187,7 +187,7 @@ intensity field. Historical exceptions or apparent exceptions include:
 - `cleanSegsAndFindSheets.m`, `A_identifyFromH5_2DSheets.m`, and
   `splitSurfaces_Threshold.m` alter segmentation support through morphology,
   component selection, interpolation, or rethresholding.
-- `blobVolFractFromTifs.m` and many `consMatLnB` calls do not alter the source
+- `blobVolFractFromTifs.m` and many `farmConsMatLnB` calls do not alter the source
   data on disk; they construct masked samples or rendered outputs.
 
 ## Signed-distance cleanup definition and open issue
@@ -200,7 +200,7 @@ The intended quantities are:
 - `gKern`: Gaussian sigma used to smooth the signed-distance field before
   selecting the result.
 
-The historical `returnSmoothBlobsBW` implementation applies Gaussian smoothing
+The historical `farmReturnSmoothBlobsBW` implementation applies Gaussian smoothing
 but selects only `smoothedDistance < layerMean + abs(layerWidth)`. It does not
 apply the expected lower bound `layerMean - layerWidth`. Existing workflows
 also use `layerWidth=0`, which would produce an empty result under a strict
@@ -255,7 +255,7 @@ create invalid class values.
 
 ### Places where anisotropy remains ambiguous
 
-- `storeFilCCs.m`, `A_extractFilsFromTifs.m`, and several combined filament
+- `farmStoreFilCCs.m`, `A_extractFilsFromTifs.m`, and several combined filament
   scripts use `regionprops3` principal axes directly in voxel coordinates even
   when voxel spacing is stored separately.
 - Spherical structuring elements, `bwdist`, Gaussian filters, and LoG filters in
@@ -280,11 +280,11 @@ spacing and PSF information rather than bake in one universal cutoff.
 
 The project convention is that general processing works on `[Y X Z]`, while
 probability channels are `[Y X Z C]`. Historical functions that explicitly
-operate on a fourth dimension include `imbinarize3_4D.m`, `imresize3_4mat.m`,
-`h5toSmooth3Chans.m`, and HDF5-loading workflows. Their fourth dimension is a
+operate on a fourth dimension include `farmImbinarize3_4D.m`, `farmImresize3_4mat.m`,
+`farmH5toSmooth3Chans.m`, and HDF5-loading workflows. Their fourth dimension is a
 probability/vector component dimension, not TIFF time.
 
-ImageStackIO's `readTiff` and `writeImageJHyperstack` are the supported paths
+ImageStackIO's `farmReadTiff` and `farmWriteImageJHyperstack` are the supported paths
 for genuine multidimensional TIFFs. Ad-hoc `tiffreadVolume` workflows generally
 assume spatial `[Y X Z]` data. The explicit legacy TIFF exceptions found are:
 
@@ -293,14 +293,14 @@ assume spatial `[Y X Z]` data. The explicit legacy TIFF exceptions found are:
   TIFF per channel.
 - `Workflows/SHG/SHG_prelimAnalysis.m` reads probability TIFFs, selects time in
   dimension three and channel in dimension four, and passes a cropped 4-D TIFF
-  probability array to `h5toSmooth3Chans` despite that function's HDF5 name.
+  probability array to `farmH5toSmooth3Chans` despite that function's HDF5 name.
 - `Workflows/imagePreparation/illuminationCorrection/generate4DLayerStore_ZandT.m`
   creates a fourth dimension representing time, rather than channel.
 
 Other fourth-dimensional arrays found near TIFF workflows are usually newly
 constructed vector fields, RGB/display channels, or gradients; they are not
 four-dimensional TIFF inputs. The exceptions above should be migrated to
-ImageStackIO and declare C versus T explicitly. `readProbabilityTiff` records
+ImageStackIO and declare C versus T explicitly. `farmReadProbabilityTiff` records
 the explicit T-to-C exception.
 
 ## Filament data stored and used downstream
@@ -327,9 +327,9 @@ reduce I/O and peak duplicate storage.
 
 ## 2-D mask extrusion
 
-`BatchConvertH5toTif_DirtSub.m` calls `extend2DTiffAlongZ` to repeat a 2-D dirt
+`BatchConvertH5toTif_DirtSub.m` calls `farmExtend2DTiffAlongZ` to repeat a 2-D dirt
 classification through a hard-coded Z depth. The helper is located under
-`APIs/ImageStackIO/legacy-or-stack-transforms/extend2DTiffAlongZ.m`. The active
+`APIs/ImageStackIO/legacy-or-stack-transforms/farmExtend2DTiffAlongZ.m`. The active
 conversion loop does not apply the resulting dirt volume, so this path may be
 deprecated. No new public extrusion function is introduced yet.
 

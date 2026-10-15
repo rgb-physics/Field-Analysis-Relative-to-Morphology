@@ -5,6 +5,15 @@
 % Iteratively erode and dilate with a growing disk radius. Iterate through
 % objects of different sizes 
 % rawDir = '<redacted original absolute path>';
+farmRoot = fileparts(mfilename('fullpath'));
+while ~isfile(fullfile(farmRoot, 'farmSetup.m'))
+    farmParent = fileparts(farmRoot);
+    if strcmp(farmParent, farmRoot), error('farm:Setup', 'Cannot locate farmSetup.m above this saved script.'); end
+    farmRoot = farmParent;
+end
+addpath(farmRoot);
+farmSetup('IncludeExamples', true, 'IncludeTests', true);
+
 rawDir = '';
 rawName = 'img_%09i_Default_000.tif';
 % dataDir = '<redacted original absolute path>';
@@ -20,7 +29,7 @@ selectTime = 215;
 strelObj = strel('disk',erodeRad);
 currRaw = tiffreadVolume(fullfile(rawDir,sprintf(rawName,selectTime)));
 
-        logMat = -LOG(currRaw, 3);
+        logMat = -farmLOG(currRaw, 3);
 
 currTif = logical(tiffreadVolume(fullfile(dataDir,sprintf(dataName,selectTime))));
 
@@ -29,14 +38,14 @@ currTif = logical(tiffreadVolume(fullfile(dataDir,sprintf(dataName,selectTime)))
 chamberLogic = imdilate(imerode(currTif,strel('disk',5)),strel('disk',5));
 baseMat = imfill(logMat<0,'holes');
 sumMat = baseMat<0;
-for index  = 1:2:10
+for index = 1:2:10
     % erodeRad =6;
     strelObj = strel('disk',index);
     sumMat = sumMat + imdilate(imerode(baseMat,strelObj),strelObj);
     % imagesc(imdilate(imerode(logMat<0,strelObj),strelObj) + (logMat<0));
 end
 
-subSampObjs = consMatLnB(sumMat,logical(chamberLogic));
+subSampObjs = farmConsMatLnB(sumMat,logical(chamberLogic));
 
 %% Iterate through each index value, regionprops, keep objects that are circles
 uniqueInds = unique(subSampObjs(subSampObjs>0));
@@ -46,7 +55,7 @@ for currInd = 1:numel(uniqueInds)
 % Calculate connected objs and region properties
     currProps = regionprops(subSampObjs == currInd,'Centroid','Area','MajorAxisLength','MinorAxisLength');
     currObjs = bwconncomp(subSampObjs == currInd);
-    % % currProps = addFieldsStruct(currProps,'ErodeRad',mat2cell(currInd*ones(1,numel(currProps)),1,numel(currProps)));
+    % % currProps = farmAddFieldsStruct(currProps,'ErodeRad',mat2cell(currInd*ones(1,numel(currProps)),1,numel(currProps)));
 % Collate aspect ratios and areas
     currMajs = vertcat(currProps(:).MajorAxisLength);
     currMins = vertcat(currProps(:).MinorAxisLength);
@@ -81,7 +90,7 @@ end
 %% Generate tif with unique IDs per sphere
 idTif = zeros(allObjs.ImageSize);
 for idInd = 1:numel(allProps)
-    idTif = idTif + consMatLnB(ones(allObjs.ImageSize)*idInd,allObjs.PixelIdxList{idInd});
+    idTif = idTif + farmConsMatLnB(ones(allObjs.ImageSize)*idInd,allObjs.PixelIdxList{idInd});
 end
 save3DTiff(uint16(idTif),fullfile(saveDir,sprintf(saveName,selectTime)));
 save(fullfile(saveDir,'Object_IDs_Properties.mat'),'allObjs','allProps');

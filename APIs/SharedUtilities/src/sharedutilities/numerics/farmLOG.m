@@ -1,8 +1,13 @@
 function logstack = farmLOG(stack, sigma)
-    % Laplacian of Gaussian in 2 or 3 dimensions
-    %
-    % farmLOG(stack,sigma)
-    
+%FARMLOG Calculate the historical 2D/3D Laplacian of Gaussian.
+% Inputs:
+%   stack      Numeric 2D image or 3D volume.
+%   sigma      Positive Gaussian standard deviation in voxels.
+% Outputs:
+%   logstack   Sum of second derivatives, with the input array dimensions.
+%
+% See also farmGaussD, farmMyconvn
+
     %---------------------------------------------------------------------
     % license
     %---------------------------------------------------------------------
@@ -48,3 +53,16 @@ function logstack = farmLOG(stack, sigma)
     end
 
 end
+
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% Preserves the bundled ImSAnE algorithm and mirrored-padding convolution.
+% Each output derivative is smoothed along the other array dimensions.
+% For bright-on-dark extraction, callers may explicitly use -farmLOG(...).
+% No intensity stretching, physical-unit conversion or PSF correction occurs.
+%
+% EXAMPLE
+% -------------------------------------------------------------------------
+% response = -farmLOG(ones(16, 16), 1);

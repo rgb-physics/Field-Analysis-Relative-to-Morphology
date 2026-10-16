@@ -14,7 +14,7 @@ bigObjs = objs(objSizes(:,1) > (median(objSizes(:,1)) + std(objSizes(:,1))) );
 trimInds = vertcat(bigObjs{:});
 ogInds = find(inputMat(:)==1);
 allInds = intersect(trimInds, ogInds);
-trimSkel = zeros(size(binSegs));
+trimSkel = zeros(size(inputMat));
 trimSkel(allInds) = 1;
 
 end

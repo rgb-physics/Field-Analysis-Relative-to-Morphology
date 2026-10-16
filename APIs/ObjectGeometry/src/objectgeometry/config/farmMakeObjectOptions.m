@@ -1,8 +1,13 @@
 function options = farmMakeObjectOptions(varargin)
-%FARMMAKEOBJECTOPTIONS Preparation options accepted by prepareObjects/measureObjects.
-% Defaults match prepareObjects; Spacing YXZ describes CURRENT indices.
-% For generateGeometry/measureFilaments/trackOverlaps put this under Identity.
-% At execution replace DatasetID, Frame and grid metadata with actual values.
+%FARMMAKEOBJECTOPTIONS Describe object preparation without loading data.
+% Inputs:
+%   varargin   Scalar options struct or name/value pairs. InputType defaults
+%              to 'auto'; DatasetID to 'default'; Frame to 1.
+% Outputs:
+%   options    Editable options accepted by farmPrepareObjects.
+%
+% See also farmPrepareObjects, farmMeasureObjects, farmGenerateGeometry
+
 options = farmParseOptions(struct('InputType','auto', ...
     'ImageSize',[],'ObjectIDs',[],'Connectivity',[],'DatasetID','default', ...
     'Frame',1,'Spacing',[1 1 1],'SpacingUnit','pixel','SourceGrid',[], ...
@@ -14,16 +19,54 @@ validateattributes(options.Frame,{'numeric'},{'scalar','integer','finite','nonne
 for name = {'Channel','TimeIndex'}
     validateattributes(options.(name{1}),{'numeric'},{'scalar','integer','finite','positive'});
 end
-for name = {'DatasetID','SpacingUnit'}
-    v = string(options.(name{1}));
-    if ~isscalar(v)||ismissing(v)||strlength(v)==0, error('objectgeometry:Config','%s must be nonempty scalar text.',name{1}); end
-    options.(name{1}) = char(v);
+for name = {'DatasetID', 'SpacingUnit'}
+    value = string(options.(name{1}));
+
+    if ~isscalar(value) || ismissing(value) || strlength(value) == 0
+        error('objectgeometry:Config', ...
+            '%s must be nonempty scalar text. See glossary entry Prepared geometry collection.', name{1});
+    end
+
+    options.(name{1}) = char(value);
 end
-if ~isempty(options.ImageSize), validateattributes(options.ImageSize,{'numeric'},{'vector','integer','positive','finite'}); end
-if strcmp(options.InputType,'indices')&&isempty(options.ImageSize), error('objectgeometry:Config','Indices require ImageSize.'); end
+
+if ~isempty(options.ImageSize)
+    validateattributes(options.ImageSize, {'numeric'}, {'vector', 'integer', 'positive', 'finite'});
+end
+
+if strcmp(options.InputType, 'indices') && isempty(options.ImageSize)
+    error('objectgeometry:Config', ...
+        'Indices require ImageSize. See glossary entry Linear voxel indices.');
+end
+
 if ~isempty(options.ObjectIDs)
     validateattributes(options.ObjectIDs,{'numeric'},{'vector','integer','positive','finite','<=',flintmax});
-    if numel(unique(options.ObjectIDs))~=numel(options.ObjectIDs), error('objectgeometry:Config','ObjectIDs must be unique.'); end
+    if numel(unique(options.ObjectIDs)) ~= numel(options.ObjectIDs)
+        error('objectgeometry:Config', 'ObjectIDs must be unique. See glossary entry ID group.');
+    end
 end
-if ~isempty(options.Connectivity), validateattributes(options.Connectivity,{'numeric'},{'scalar','integer','positive','finite'}); end
+
+if ~isempty(options.Connectivity)
+    validateattributes(options.Connectivity, {'numeric'}, {'scalar', 'integer', 'positive', 'finite'});
 end
+end
+
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% Settings are validated without preparing objects. Data-dependent checks
+% remain the responsibility of farmPrepareObjects. Replace DatasetID, Frame
+% and grid metadata with the actual values before analysis.
+% farmMeasureObjects accepts these options directly. farmGenerateGeometry,
+% farmMeasureFilaments and farmTrackOverlaps accept them under Identity.
+%
+% EXAMPLES
+% -------------------------------------------------------------------------
+% opts = farmMakeObjectOptions('InputType', 'labels', 'DatasetID', 'example');
+% opts = farmMakeObjectOptions('InputType', 'indices', 'ImageSize', [20 30 10]);
+%
+% UNITS AND COORDINATES
+% -------------------------------------------------------------------------
+% Spacing defaults to [1 1 1] in YXZ order and SpacingUnit to 'pixel'.
+% ImageSize and linear indices refer to the current array grid.

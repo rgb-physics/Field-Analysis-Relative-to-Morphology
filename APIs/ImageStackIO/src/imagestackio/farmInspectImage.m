@@ -1,16 +1,17 @@
 function info = farmInspectImage(filePath, options)
 %FARMINSPECTIMAGE Inspect TIFF or HDF5 image metadata without loading pixels.
-%   INFO = farmInspectImage(FILEPATH, OPTIONS) supports TIFF and
-%   HDF5 files. For HDF5, OPTIONS.DatasetPath is required. OPTIONS.Spacing
-%   is [Y X Z] and defaults to [1 1 1]. OPTIONS.SpacingUnit defaults to
-%   "pixel".
+% Inputs:
+%   filePath        Full input or output file path, including filename.
+%   options         Operation settings struct.
+% Outputs:
+%   info            Image format, dimensions, axes, calibration and source metadata.
 
 if nargin < 2 || isempty(options)
     options = struct();
 end
 if ~isstruct(options) || ~isscalar(options)
     error('imagestackio:InvalidOptions', ...
-        'OPTIONS must be a scalar struct.');
+          'OPTIONS must be a scalar struct.');
 end
 [spacing, spacingUnit] = farmParseSpacingOptions(options);
 if isstring(filePath) && isscalar(filePath)
@@ -18,14 +19,14 @@ if isstring(filePath) && isscalar(filePath)
 end
 if ~ischar(filePath) || ~isrow(filePath) || isempty(filePath)
     error('imagestackio:InvalidTextInput', ...
-        'filePath must be a nonempty character row vector or string scalar.');
+          'filePath must be a nonempty character row vector or string scalar.');
 end
 
 [~, ~, extension] = fileparts(filePath);
 extension = lower(extension);
 info = struct('FilePath', filePath, 'Format', '', 'Axes', '', ...
-    'AxisMetadataSource', '', 'Metadata', [], 'Spacing', spacing, ...
-    'SpacingUnit', spacingUnit, 'SpacingSource', 'options');
+              'AxisMetadataSource', '', 'Metadata', [], 'Spacing', spacing, ...
+              'SpacingUnit', spacingUnit, 'SpacingSource', 'options');
 if ~(isfield(options, 'Spacing') && ~isempty(options.Spacing)) && ...
         ~(isfield(options, 'SpacingUnit') && ~isempty(options.SpacingUnit))
     info.SpacingSource = 'default';
@@ -36,7 +37,7 @@ switch extension
         tiffInfo = imfinfo(filePath);
         if isempty(tiffInfo)
             error('imagestackio:EmptyTiff', ...
-                'The TIFF file has no readable pages.');
+                  'The TIFF file has no readable pages.');
         end
         description = '';
         if isfield(tiffInfo(1), 'ImageDescription')
@@ -68,7 +69,7 @@ switch extension
     case {'.h5', '.hdf5'}
         if ~isfield(options, 'DatasetPath') || isempty(options.DatasetPath)
             error('imagestackio:MissingDatasetPath', ...
-                'Set OPTIONS.DatasetPath when inspecting an HDF5 file.');
+                  'Set OPTIONS.DatasetPath when inspecting an HDF5 file.');
         end
         datasetPath = options.DatasetPath;
         if isstring(datasetPath) && isscalar(datasetPath)
@@ -76,7 +77,7 @@ switch extension
         end
         if ~ischar(datasetPath) || ~isrow(datasetPath) || isempty(datasetPath)
             error('imagestackio:InvalidDatasetPath', ...
-                'OPTIONS.DatasetPath must be a nonempty text scalar.');
+                  'OPTIONS.DatasetPath must be a nonempty text scalar.');
         end
         if datasetPath(1) ~= '/'
             datasetPath = ['/' datasetPath];
@@ -91,11 +92,12 @@ switch extension
         end
     otherwise
         error('imagestackio:UnsupportedFormat', ...
-            'inspectImage currently supports TIFF and HDF5 files.');
+              'inspectImage currently supports TIFF and HDF5 files.');
 end
 end
 
 function axes = localReadH5AxisOrder(datasetInfo)
+% Internal helper.
 axes = '';
 if ~isfield(datasetInfo, 'Attributes') || isempty(datasetInfo.Attributes)
     return
@@ -114,3 +116,12 @@ for index = 1:numel(datasetInfo.Attributes)
     end
 end
 end
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% FARMINSPECTIMAGE Inspect TIFF or HDF5 image metadata without loading pixels.
+%   INFO = farmInspectImage(FILEPATH, OPTIONS) supports TIFF and
+%   HDF5 files. For HDF5, OPTIONS.DatasetPath is required. OPTIONS.Spacing
+%   is [Y X Z] and defaults to [1 1 1]. OPTIONS.SpacingUnit defaults to
+%   "pixel".

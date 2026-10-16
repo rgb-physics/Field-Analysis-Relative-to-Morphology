@@ -1,64 +1,106 @@
-function result = farmConditionalStatistics(measured,conditioning,options)
+function result = farmConditionalStatistics(measured, conditioning, options)
 %FARMCONDITIONALSTATISTICS Bin corresponding values of one field by another.
-% Matching arrays or equally sized sample vectors; selection occurs upstream.
-% Edges override NumBins. Histcounts includes the last edge in the last bin.
-if nargin<3, options = struct(); end
-o = farmFAOptions(options, struct('Edges',[],'NumBins',20,'Statistics',{{'Mean','Variance'}}, ...
-    'GroupIDs',[]));
-if ~isequal(size(measured),size(conditioning))
-    if ~(isvector(measured)&&isvector(conditioning)&&numel(measured)==numel(conditioning))
-        error('fieldanalysis:SizeMismatch','Measured and conditioning arrays must correspond.');
+% Inputs:
+%   measured        Measured values at the selected locations.
+%   conditioning    Corresponding values used to assign samples to bins.
+%   options         Operation settings struct.
+% Outputs:
+%   result          Struct containing edges, binned statistics and excluded counts.
+
+if nargin < 3
+    options = struct();
+end
+o = farmFAOptions(options, struct('Edges', [], 'NumBins', 20, 'Statistics', {{'Mean', 'Variance'}}, ...
+                                  'GroupIDs', []));
+if ~isequal(size(measured), size(conditioning))
+    if ~(isvector(measured) && isvector(conditioning) && numel(measured) == numel(conditioning))
+        error('fieldanalysis:SizeMismatch', 'Measured and conditioning arrays must correspond.');
     end
 end
-if ~(isnumeric(measured)||islogical(measured))||~isreal(measured)||ndims(measured)>3|| ...
-        ~(isnumeric(conditioning)||islogical(conditioning))||~isreal(conditioning)||ndims(conditioning)>3
-    error('fieldanalysis:Field','Values must be real numeric arrays.');
+if ~(isnumeric(measured) || islogical(measured)) || ~isreal(measured) || ndims(measured) > 3 || ...
+        ~(isnumeric(conditioning) || islogical(conditioning)) || ~isreal(conditioning) || ndims(conditioning) > 3
+    error('fieldanalysis:Field', 'Values must be real numeric arrays.');
 end
-m = double(measured(:)); c = double(conditioning(:));
-if any(~isfinite(m))||any(~isfinite(c)), error('fieldanalysis:InvalidData','Repair NaN/Inf values before analysis.'); end
+m = double(measured(:));
+c = double(conditioning(:));
+if any(~isfinite(m)) || any(~isfinite(c))
+    error('fieldanalysis:InvalidData', 'Repair NaN/Inf values before analysis.');
+end
 if isempty(o.Edges)
-    validateattributes(o.NumBins,{'numeric'},{'scalar','integer','positive','finite'});
-    if isempty(c), error('fieldanalysis:Edges','Empty input requires explicit bin edges.'); end
-    [~,edges,bin] = histcounts(c,o.NumBins);
+    validateattributes(o.NumBins, {'numeric'}, {'scalar', 'integer', 'positive', 'finite'});
+    if isempty(c)
+        error('fieldanalysis:Edges', 'Empty input requires explicit bin edges.');
+    end
+    [~, edges, bin] = histcounts(c, o.NumBins);
 else
     edges = double(o.Edges(:)');
-    validateattributes(edges,{'numeric'},{'vector','finite','increasing'});
-    if numel(edges)<2, error('fieldanalysis:Edges','At least two edges are required.'); end
-    [~,~,bin] = histcounts(c,edges);
+    validateattributes(edges, {'numeric'}, {'vector', 'finite', 'increasing'});
+    if numel(edges) < 2
+        error('fieldanalysis:Edges', 'At least two edges are required.');
+    end
+    [~, ~, bin] = histcounts(c, edges);
 end
 if isempty(o.GroupIDs)
-    ids = ones(size(m)); groups = 1;
+    ids = ones(size(m));
+    groups = 1;
 else
     ids = o.GroupIDs(:);
-    if numel(ids)~=numel(m), error('fieldanalysis:SizeMismatch','GroupIDs must correspond to samples.'); end
-    validateattributes(ids,{'numeric'},{'real','finite'});
+    if numel(ids) ~= numel(m)
+        error('fieldanalysis:SizeMismatch', 'GroupIDs must correspond to samples.');
+    end
+    validateattributes(ids, {'numeric'}, {'real', 'finite'});
     groups = unique(ids);
 end
 names = cellstr(string(o.Statistics));
-farmFAReduce([],names); % Validate requested names even for empty groups.
-nBins = numel(edges)-1; nRows = numel(groups)*nBins;
-GroupID = zeros(nRows,1); Bin = zeros(nRows,1); Count = zeros(nRows,1);
-LeftEdge = zeros(nRows,1); RightEdge = zeros(nRows,1);
+farmFAReduce([], names); % Validate requested names even for empty groups.
+nBins = numel(edges) - 1;
+nRows = numel(groups) * nBins;
+GroupID = zeros(nRows, 1);
+Bin = zeros(nRows, 1);
+Count = zeros(nRows, 1);
+LeftEdge = zeros(nRows, 1);
+RightEdge = zeros(nRows, 1);
 stats = struct();
-for k = 1:numel(names), stats.(names{k}) = NaN(nRows,1); end
-row = 0; excluded = zeros(numel(groups),1);
+for k = 1:numel(names)
+    stats.(names{k}) = NaN(nRows, 1);
+end
+row = 0;
+excluded = zeros(numel(groups), 1);
 for g = 1:numel(groups)
-    inGroup = ids==groups(g); excluded(g) = nnz(inGroup&bin==0);
+    inGroup = ids == groups(g);
+    excluded(g) = nnz(inGroup & bin == 0);
     for b = 1:nBins
-        row = row+1; sel = inGroup&bin==b;
-        GroupID(row) = groups(g); Bin(row) = b; Count(row) = nnz(sel);
-        LeftEdge(row) = edges(b); RightEdge(row) = edges(b+1);
-        v = farmFAReduce(m(sel),names);
-        for k = 1:numel(names), stats.(names{k})(row) = v.(names{k}); end
+        row = row + 1;
+        sel = inGroup & bin == b;
+        GroupID(row) = groups(g);
+        Bin(row) = b;
+        Count(row) = nnz(sel);
+        LeftEdge(row) = edges(b);
+        RightEdge(row) = edges(b + 1);
+        v = farmFAReduce(m(sel), names);
+        for k = 1:numel(names)
+            stats.(names{k})(row) = v.(names{k});
+        end
     end
 end
-t = table(GroupID,Bin,LeftEdge,RightEdge,Count);
+t = table(GroupID, Bin, LeftEdge, RightEdge, Count);
 reserved = t.Properties.VariableNames;
 for k = 1:numel(names)
-    if strcmpi(names{k},'Count'), continue; end
-    if any(strcmpi(names{k},reserved)), error('fieldanalysis:Statistic','Statistic name conflicts with a key.'); end
+    if strcmpi(names{k}, 'Count')
+        continue
+    end
+    if any(strcmpi(names{k}, reserved))
+        error('fieldanalysis:Statistic', 'Statistic name conflicts with a key.');
+    end
     t.(names{k}) = stats.(names{k});
 end
-result = struct('Edges',edges,'Statistics',t,'ExcludedCounts',table(groups(:),excluded, ...
-    'VariableNames',{'GroupID','Count'}),'InputCount',numel(m));
+result = struct('Edges', edges, 'Statistics', t, 'ExcludedCounts', table(groups(:), excluded, ...
+                                                                    'VariableNames', {'GroupID', 'Count'}), 'InputCount', numel(m));
 end
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% FARMCONDITIONALSTATISTICS Bin corresponding values of one field by another.
+% Matching arrays or equally sized sample vectors; selection occurs upstream.
+% Edges override NumBins. Histcounts includes the last edge in the last bin.

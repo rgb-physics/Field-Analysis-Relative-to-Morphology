@@ -1,18 +1,15 @@
-function [outBounds] = farmReturnSmoothBoundsBW(ogBW,layerMean,layerWidth,gKern)
-%FARMRETURNSMOOTHBOUNDSBW Generate smooth boundaries for objects in a binarized
-% matrix ogBW.
-% Smoothing is implemented via gaussian smoothing of the
-% distance transform of the input matrix to circumvent pixelated artifacts
-% in low-resolution images. 
-% The bounding shell is generated a distance layerMean from blob boundaries
-% with a half-width of layerWidth. layerMean < 0 correspond to layers
-% in blobs interiors.
-% gKern is the kernel size used to smooth the distance transform via 
-% Gaussian smoothing and outSize is the dims of the output matrix. 
-% Negative values of gKern will define a pointcloud towards blob interiors 
-% rather than their exterior
-% NOTE: for best results, the voxel dimensions of ogBW should be equal in
-% all dimensions (cubic).
+function [outBounds] = farmReturnSmoothBoundsBW(ogBW, layerMean, layerWidth, gKern)
+%FARMRETURNSMOOTHBOUNDSBW Select a layer around a smoothed signed-distance level.
+% Inputs:
+%   ogBW         Binary foreground matrix or volume.
+%   layerMean    Center of the distance interval, in voxels.
+%   layerWidth   Half-width of the interval; absolute value is used.
+%   gKern        Gaussian standard deviation in voxels; zero skips smoothing.
+% Outputs:
+%   outBounds    Logical selection on the input grid.
+%
+% See also farmSignedBWDist, farmGenerateGeometry
+
 %2025-04-18 - Rémi Boros
 % Reimplemented 2026-04-28
 
@@ -34,3 +31,23 @@ outBounds = (smDist > (layerMean - layerWidth)) & (smDist < (layerMean + layerWi
 
 end
 
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% Gaussian smoothing is applied to farmSignedBWDist, not to the input mask.
+% Selects strictly between layerMean - abs(layerWidth) and
+% layerMean + abs(layerWidth). Endpoints are excluded; zero width selects
+% no voxels. Negative layerMean selects toward the object's interior.
+% This historical selection rule is preserved, not a new profile-bin rule.
+%
+% EXAMPLE
+% -------------------------------------------------------------------------
+% mask = false(9, 9);
+% mask(3:7, 3:7) = true;
+% layer = farmReturnSmoothBoundsBW(mask, -1, 2, 0);
+%
+% UNITS AND COORDINATES
+% -------------------------------------------------------------------------
+% Distances and smoothing use voxel units. Isotropic spacing is assumed for
+% a physical-distance interpretation. No anisotropic correction is performed.

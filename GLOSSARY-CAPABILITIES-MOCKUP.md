@@ -1,8 +1,15 @@
 # Glossary and Data Dictionary — definitions and representations
 
 In MATLAB, use `farmGlossary("Experiment")` for an entry, `farmGlossary("search", "distance")`
-to search, or `catalog = glossary` for the complete table. See
+to search, or `catalog = farmGlossary` for the complete table. See
 [MATLAB glossary usage and getters](docs/MATLAB-GLOSSARY.md).
+
+For reading on GitHub, use the [scientific topic pages](docs/reference/README.md)
+or [alphabetical entry index](docs/reference/terms.md). Those pages are generated
+from this document, which remains the single editable source of definitions,
+types and input layouts. Their expandable details keep extended notes out of
+the initial view. The full public-function/test inventory is deferred until
+the remaining functionality has been evaluated.
 
 The Glossary defines concepts and workflow roles. The Data Dictionary at the
 bottom defines named output fields. MATLAB searches both by default; optional

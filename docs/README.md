@@ -9,11 +9,15 @@ Start with a task and a guided script. You do not need to understand every API b
 | Understand what the variables contain | [Reading package structures](READING-STRUCTURES.md) |
 | Follow one analysis from files to results | [Understanding workflow 1](WORKFLOW-1-WALKTHROUGH.md) |
 | Change properties, statistics, supports or saved outputs | [Changing an analysis](CHANGING-AN-ANALYSIS.md) |
-| Look up a term or a struct's field layout | [Glossary](../GLOSSARY-CAPABILITIES-MOCKUP.md) |
+| Look up a term or a struct's field layout | [Glossary and Data Dictionary topics](reference/README.md) |
 | Search terminology directly from MATLAB | [MATLAB glossary lookup and getters](MATLAB-GLOSSARY.md) |
-| Review candidates for the Data Dictionary | [Package field inventory](DATA-DICTIONARY-CANDIDATES.md) |
+| Read earlier reviews and handoffs | [Historical documentation](history/README.md) |
 
 For a first visit, read Reading package structures, follow workflow 1, then use Changing an analysis as a reference while editing setup.
+
+The full public-function/test inventory is deferred until the remaining
+functionality has been evaluated. Old field scans in the history folder are
+snapshots, not current coverage records.
 
 ## Choose an analysis
 

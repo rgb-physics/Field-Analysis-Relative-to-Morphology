@@ -126,3 +126,34 @@ verifyError(testCase,@() farmQueryField(ones(3,4),true(4,4),{'Mean'}),'objectrel
 verifyError(testCase,@() farmQueryField(ones(3,4,2,3),1,{'Mean'}),'objectrelativeprofiles:InvalidDimensions');
 verifyError(testCase,@() farmQueryField(ones(3,4),13,{'Mean'}),'objectrelativeprofiles:IndexOutOfBounds');
 end
+
+function testVerboseBatchPreservesSavedResults(testCase)
+folder = tempname;
+mkdir(folder);
+cleanup = onCleanup(@() rmdir(folder, 's'));
+
+specs = struct('Name', 'Intensity', 'Loader', @(frame) frame * ones(3, 4, 2));
+loader = @(frame, fields) struct('objects', true(size(fields.Intensity)));
+query = farmMakeQuery('Name', 'Intensity', 'Support', 'objects', ...
+    'Field', 'Intensity', 'Statistics', {'Mean', 'Sum'});
+options = struct('OutputDirectory', folder, 'DatasetID', 'example', ...
+    'Verbose', true);
+
+text = evalc('manifest = farmRunFieldBatch([7 2], specs, loader, query, options);');
+verifyTrue(testCase, contains(text, 'Processing frame 7 (1 of 2)'));
+verifyTrue(testCase, contains(text, 'Completed frame 2 (2 of 2)'));
+verifyEmpty(testCase, manifest.Tables);
+verifyEqual(testCase, manifest.Frames, [7; 2]);
+
+saved = load(manifest.Files(1));
+verifyEqual(testCase, saved.results.Intensity_Mean, 7);
+verifyEqual(testCase, saved.results.Intensity_Sum, 168);
+verifyEqual(testCase, saved.results.Frame, 7);
+verifyEqual(testCase, saved.results.DatasetID, "example");
+
+verifyError(testCase, ...
+    @() farmRunFieldBatch([7 2], specs, loader, query, options), ...
+    'objectrelativeprofiles:ExistingOutput');
+savedAgain = load(manifest.Files(1));
+verifyEqual(testCase, savedAgain.results, saved.results);
+end

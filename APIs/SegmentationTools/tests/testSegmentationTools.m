@@ -266,6 +266,24 @@ mask(2:6,[2 6],2) = true;
 filled = farmFlatFill3D(mask,0);
 verifyTrue(testCase,filled(4,4,2));
 verifyFalse(testCase,filled(4,4,1));
+
+% With YXZ indexing, selector 1 fills XZ planes at fixed Y.
+xzMask = false(7, 7, 7);
+xzMask(4, 2:6, 2:6) = true;
+xzMask(4, 3:5, 3:5) = false;
+xzFill = farmFlatFill3D(xzMask, 1);
+xzOther = farmFlatFill3D(xzMask, 2);
+verifyTrue(testCase, xzFill(4, 4, 4));
+verifyFalse(testCase, xzOther(4, 4, 4));
+
+% Selector 2 fills YZ planes at fixed X.
+yzMask = false(7, 7, 7);
+yzMask(2:6, 4, 2:6) = true;
+yzMask(3:5, 4, 3:5) = false;
+yzFill = farmFlatFill3D(yzMask, 2);
+yzOther = farmFlatFill3D(yzMask, 1);
+verifyTrue(testCase, yzFill(4, 4, 4));
+verifyFalse(testCase, yzOther(4, 4, 4));
 end
 
 function testRemoveConObjs(testCase)

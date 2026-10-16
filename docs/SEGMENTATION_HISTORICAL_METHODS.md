@@ -176,6 +176,9 @@ workflows. FARM-specific planar filling, connected-component behavior, and
 label-aware operations are implemented explicitly. The first planar-fill
 implementation follows `farmFlatFill3D`: each requested directional fill is
 computed from the original mask and the results are unioned.
+For YXZ arrays, the existing kernel permutations select 0=XY, 1=XZ and
+2=YZ. Earlier help reversed the plane names for 1 and 2; the calculation is
+unchanged. Known planar-hole tests now cover all three selections.
 
 Masks normally mark/select voxels rather than destructively changing the source
 intensity field. Historical exceptions or apparent exceptions include:

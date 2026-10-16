@@ -4,7 +4,7 @@ Builders return editable structs without loading images or running analysis. Acc
 
 | Builder | Configuration / consumer |
 |---|---|
-| farmMakeSource | Format ('tiff', 'hdf5', 'custom'), Folder, NamePattern, DatasetPath, SourceAxes, Spacing, SpacingUnit, Channels, TimeIndex, Loader. Used by loadSource. |
+| farmMakeSource | Format ('tiff', 'hdf5', 'custom'), Folder, NamePattern, DatasetPath, SourceAxes, Spacing, SpacingUnit, Channels, TimeIndex, Loader. Used by farmLoadSource. |
 | farmMakeExperiment | DatasetID, named Sources, Frames, optional TimeStep and TimeUnit. Duplicates removed in supplied order. |
 | farmMakeObjectOptions | farmPrepareObjects options; pass directly to prepareObjects/measureObjects or under Identity to measureFilaments/generateGeometry/trackOverlaps. |
 | farmMakeQuery | Name, Support, Statistics, Field OR Operation; vector Kind uses Fields. Optional Options/Mode. Used by farmQueryFrame; outputs concatenate into one query array. |
@@ -60,7 +60,11 @@ Options passes consumer-specific settings such as bins, quantiles and custom red
 
 ## Compatibility and validation
 
-farmMakeClasses remains a compatibility wrapper for segmentationtools.config.makeClasses. Active package callers/tests use the new name. The class construction algorithm is preserved. Object preparation/intensity/classification consumers obtain default definitions from their corresponding builders to avoid default drift.
+farmMakeClasses constructs segmented-category definitions from channels and
+thresholds. It is the ordinary-folder public entry point; it does not wrap a
+remaining package-namespace function. The category construction algorithm is
+preserved. Object preparation/intensity/classification consumers obtain default
+definitions from their corresponding builders to avoid default drift.
 
 Run from Workflows/examples:
 

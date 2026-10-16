@@ -1,6 +1,8 @@
+> Historical snapshot, retained October 15, 2026. Read the [current user guide](../README.md) and [history index](README.md) before following these older notes.
+
 # Package fields/options and builder audit
 
-Subsequent implementation: see [Configuration builders](CONFIGURATION-BUILDERS.md)
+Subsequent implementation: see [Configuration builders](../../CONFIGURATION-BUILDERS.md)
 for the first implemented builders. The audit below records the pre-builder
 interfaces and proposals; it is retained for comparison.
 
@@ -10,7 +12,7 @@ Audited 2026-10-14. This document records current interfaces; no builders or API
 
 The inventory covers current public MATLAB functions under APIs/*/src with options, configuration, query specifications, or varargin in their signatures. Archived scripts, tests and workflow-local variables are not API contracts. SurfaceFieldMapping and VisualizationTools remain largely positional/legacy interfaces; their redesign is deferred. Internal parsers are included only to explain inherited defaults. Function help excerpts and literal defaults below preserve actual variable names instead of inventing a universal schema. Source links provide the complete validation and conditional behavior.
 
-Experiment configuration is currently a plain struct. Its complete field reference is [Experiment configuration](Workflows/examples/EXPERIMENT-CONFIGURATION.md); that includes acquisition identity/timing, source paths, task settings and export choices. Those example fields are not automatically accepted by every API.
+Experiment configuration is currently a plain struct. Its complete field reference is [Experiment configuration](../../Workflows/examples/EXPERIMENT-CONFIGURATION.md); that includes acquisition identity/timing, source paths, task settings and export choices. Those example fields are not automatically accepted by every API.
 
 ## Proposed hierarchy (not implemented)
 
@@ -64,7 +66,7 @@ The option-name lists are a static index of literal accesses/default blocks, not
 
 ### farmConditionalStatistics
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/conditional/farmConditionalStatistics.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/conditional/farmConditionalStatistics.m)
 ```matlab
 function result=farmConditionalStatistics(measured,conditioning,options)
 ```
@@ -88,7 +90,7 @@ o=farmFAOptions(struct('Edges',[],'NumBins',20,'Statistics',{{'Mean','Variance'}
 
 ### farmJointHistogram
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/conditional/farmJointHistogram.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/conditional/farmJointHistogram.m)
 ```matlab
 function result=farmJointHistogram(a,b,options)
 ```
@@ -109,7 +111,7 @@ o=farmFAOptions(struct('EdgesA',[],'EdgesB',[],'NumBins',20),options);
 
 ### farmPowerSpectrum2D
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/fourier/farmPowerSpectrum2D.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/farmPowerSpectrum2D.m)
 ```matlab
 function result=farmPowerSpectrum2D(data,options)
 ```
@@ -124,7 +126,7 @@ Implemented function help:
 
 ### farmPowerSpectrum3D
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/fourier/farmPowerSpectrum3D.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/farmPowerSpectrum3D.m)
 ```matlab
 function result=farmPowerSpectrum3D(data,options)
 ```
@@ -139,7 +141,7 @@ Implemented function help:
 
 ### farmRadialAverage
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/fourier/farmRadialAverage.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/farmRadialAverage.m)
 ```matlab
 function result=farmRadialAverage(values,options)
 ```
@@ -163,7 +165,7 @@ o=farmFAOptions(struct('Coordinates',{{}},'Spacing',[], ...
 
 ### farmSelectSlicesAnalysis
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/fourier/farmSelectSlicesAnalysis.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/farmSelectSlicesAnalysis.m)
 ```matlab
 function results=farmSelectSlicesAnalysis(volume,slices,options)
 ```
@@ -179,7 +181,7 @@ Implemented function help:
 
 ### farmApplyIlluminationCorrection
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/preprocessing/farmApplyIlluminationCorrection.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/preprocessing/farmApplyIlluminationCorrection.m)
 ```matlab
 function [corrected,info]=farmApplyIlluminationCorrection(field,model,options)
 ```
@@ -201,7 +203,7 @@ o=farmFAOptions(struct('BleachScale',false),options);
 
 ### farmFitIlluminationCorrection
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/preprocessing/farmFitIlluminationCorrection.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/preprocessing/farmFitIlluminationCorrection.m)
 ```matlab
 function model=farmFitIlluminationCorrection(frames,loader,options)
 ```
@@ -227,7 +229,7 @@ o=farmFAOptions(struct('Spacing',[1 1 1],'FirstSigma',24, ...
 
 ### farmAutoCorrelation
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/spatialCorrelation/farmAutoCorrelation.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/spatialCorrelation/farmAutoCorrelation.m)
 ```matlab
 function result=farmAutoCorrelation(data,options)
 ```
@@ -242,7 +244,7 @@ Implemented function help:
 
 ### farmCrossCorrelation
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/spatialCorrelation/farmCrossCorrelation.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/spatialCorrelation/farmCrossCorrelation.m)
 ```matlab
 function result=farmCrossCorrelation(a,b,options)
 ```
@@ -269,7 +271,7 @@ o=farmFAOptions(struct('MeanSubtract',false,'Window',false, ...
 
 ### imagestackioinspectImage
 
-[Source](APIs/ImageStackIO/src/imagestackio/farmInspectImage.m)
+[Source](../../APIs/ImageStackIO/src/imagestackio/farmInspectImage.m)
 ```matlab
 function info = farmInspectImage(filePath, options)
 ```
@@ -288,7 +290,7 @@ Implemented function help:
 
 ### imagestackioreadH5
 
-[Source](APIs/ImageStackIO/src/imagestackio/farmReadH5.m)
+[Source](../../APIs/ImageStackIO/src/imagestackio/farmReadH5.m)
 ```matlab
 function image = farmReadH5(filePath, datasetPath, options)
 ```
@@ -321,7 +323,7 @@ Implemented function help:
 
 ### imagestackioreadTiff
 
-[Source](APIs/ImageStackIO/src/imagestackio/farmReadTiff.m)
+[Source](../../APIs/ImageStackIO/src/imagestackio/farmReadTiff.m)
 ```matlab
 function image = farmReadTiff(filePath, options)
 ```
@@ -348,7 +350,7 @@ Implemented function help:
 
 ### imagestackiowriteImageJHyperstack
 
-[Source](APIs/ImageStackIO/src/imagestackio/farmWriteImageJHyperstack.m)
+[Source](../../APIs/ImageStackIO/src/imagestackio/farmWriteImageJHyperstack.m)
 ```matlab
 function farmWriteImageJHyperstack(imageInput, filePath, options)
 ```
@@ -371,7 +373,7 @@ Implemented function help:
 
 ### imagestackiowriteTiff
 
-[Source](APIs/ImageStackIO/src/imagestackio/farmWriteTiff.m)
+[Source](../../APIs/ImageStackIO/src/imagestackio/farmWriteTiff.m)
 ```matlab
 function farmWriteTiff(imageInput, filePath, options)
 ```
@@ -399,7 +401,7 @@ Implemented function help:
 
 ### farmMeasureFilaments
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/centerlines/farmMeasureFilaments.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/centerlines/farmMeasureFilaments.m)
 ```matlab
 function [properties, objects] = farmMeasureFilaments(input, requested, options)
 ```
@@ -430,7 +432,7 @@ options=farmOGOptions(options,struct('Identity',struct(),'ExtentWidthFloor',eps)
 
 ### farmAttachMeasurements
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/objects/farmAttachMeasurements.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmAttachMeasurements.m)
 ```matlab
 function combined=farmAttachMeasurements(base,additional,options)
 ```
@@ -452,7 +454,7 @@ options=farmOGOptions(options,struct('MissingPolicy','error','Overwrite',false))
 
 ### farmDistanceGradients
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/objects/farmDistanceGradients.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmDistanceGradients.m)
 ```matlab
 function [gradients, metadata, valid] = farmDistanceGradients(distanceField, options)
 ```
@@ -484,7 +486,7 @@ options=farmOGOptions(options,struct('Sigma',0,'SmoothingOrder','gradient-first'
 
 ### farmGenerateGeometry
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/objects/farmGenerateGeometry.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmGenerateGeometry.m)
 ```matlab
 function geometry = farmGenerateGeometry(input, type, options)
 ```
@@ -521,7 +523,7 @@ options=farmOGOptions(options,struct('Identity',struct(),'Method','', ...
 
 ### farmLocalInertia
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/objects/farmLocalInertia.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmLocalInertia.m)
 ```matlab
 function result=farmLocalInertia(occupancy,indices,options)
 ```
@@ -548,7 +550,7 @@ o=farmOGOptions(options,struct('Radius',18,'Sigma',3, ...
 
 ### farmMeasureObjects
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/objects/farmMeasureObjects.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmMeasureObjects.m)
 ```matlab
 function [properties, objects] = farmMeasureObjects(input, requested, options)
 ```
@@ -572,7 +574,7 @@ Implemented function help:
 
 ### farmObjectDistanceGradients
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/objects/farmObjectDistanceGradients.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmObjectDistanceGradients.m)
 ```matlab
 function [gradients, distanceField, metadata, valid] = farmObjectDistanceGradients(mask, options)
 ```
@@ -593,7 +595,7 @@ Implemented function help:
 
 ### farmPrepareObjects
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/objects/farmPrepareObjects.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmPrepareObjects.m)
 ```matlab
 function objects = farmPrepareObjects(input, options)
 ```
@@ -629,7 +631,7 @@ options=farmOGOptions(options,struct('InputType','auto', ...
 
 ### farmNematicAlignment
 
-[Source](APIs/ObjectGeometry/src/objectgeometry/orientation/farmNematicAlignment.m)
+[Source](../../APIs/ObjectGeometry/src/objectgeometry/orientation/farmNematicAlignment.m)
 ```matlab
 function result = farmNematicAlignment(directors, reference, options)
 ```
@@ -660,7 +662,7 @@ options=farmOGOptions(options,struct('Plane',[],'MaxNormalComponent',[]));
 
 ### farmAttachResults
 
-[Source](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmAttachResults.m)
+[Source](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmAttachResults.m)
 ```matlab
 function combined=farmAttachResults(base,additional,options)
 ```
@@ -682,7 +684,7 @@ options=farmOGOptions(options,struct('MissingPolicy','error','Overwrite',false))
 
 ### farmPrepareSupport
 
-[Source](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmPrepareSupport.m)
+[Source](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmPrepareSupport.m)
 ```matlab
 function support = farmPrepareSupport(input, imageSize, options)
 ```
@@ -714,7 +716,7 @@ options=farmOGOptions(options,struct('Type','auto','ObjectIDs',[], ...
 
 ### farmQueryField
 
-[Source](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmQueryField.m)
+[Source](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmQueryField.m)
 ```matlab
 function results = farmQueryField(field, inputSupport, requested, options)
 ```
@@ -748,7 +750,7 @@ options=farmOGOptions(options,struct('FieldName','Field','Support',struct(), ...
 
 ### farmQueryFrame
 
-[Source](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmQueryFrame.m)
+[Source](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmQueryFrame.m)
 ```matlab
 function results = farmQueryFrame(fields, supports, queries)
 ```
@@ -775,7 +777,7 @@ Implemented function help:
 
 ### farmQueryVectorField
 
-[Source](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmQueryVectorField.m)
+[Source](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmQueryVectorField.m)
 ```matlab
 function results = farmQueryVectorField(fields, inputSupport, requested, options)
 ```
@@ -813,7 +815,7 @@ options=farmOGOptions(options,struct('ComponentNames',[], ...
 
 ### farmRunFieldBatch
 
-[Source](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmRunFieldBatch.m)
+[Source](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmRunFieldBatch.m)
 ```matlab
 function manifest = farmRunFieldBatch(frames, fieldSpecs, supportLoader, queries, options)
 ```
@@ -845,7 +847,7 @@ options=farmOGOptions(options,struct('OutputDirectory','', ...
 
 ### objecttrackingrenderTrackingFrame
 
-[Source](APIs/ObjectTracking/src/objecttracking/farmRenderTrackingFrame.m)
+[Source](../../APIs/ObjectTracking/src/objecttracking/farmRenderTrackingFrame.m)
 ```matlab
 function [labels, map] = farmRenderTrackingFrame(objects, membership, options)
 ```
@@ -870,7 +872,7 @@ options=farmOGOptions(options,struct('FilePath','','Overwrite',false,'CompactIDs
 
 ### objecttrackingselectLineage
 
-[Source](APIs/ObjectTracking/src/objecttracking/farmSelectLineage.m)
+[Source](../../APIs/ObjectTracking/src/objecttracking/farmSelectLineage.m)
 ```matlab
 function selection = farmSelectLineage(tracking, seed, options)
 ```
@@ -896,7 +898,7 @@ options=farmOGOptions(options,struct('Direction','ancestors','IncludeSeed',true,
 
 ### objecttrackingselectTrajectories
 
-[Source](APIs/ObjectTracking/src/objecttracking/farmSelectTrajectories.m)
+[Source](../../APIs/ObjectTracking/src/objecttracking/farmSelectTrajectories.m)
 ```matlab
 function [selected, summary] = farmSelectTrajectories(membership, options)
 ```
@@ -919,7 +921,7 @@ options=farmOGOptions(options,struct('MinDetections',1,'MinFrameSpan',1));
 
 ### objecttrackingtrackOverlaps
 
-[Source](APIs/ObjectTracking/src/objecttracking/farmTrackOverlaps.m)
+[Source](../../APIs/ObjectTracking/src/objecttracking/farmTrackOverlaps.m)
 ```matlab
 function tracking = farmTrackOverlaps(frames, loader, options)
 ```
@@ -956,7 +958,7 @@ options=farmOGOptions(options,struct('DatasetID','default','Identity',struct(), 
 
 ### farmExportDetections
 
-[Source](APIs/ObjectTracking/src/objecttracking/trackpy/farmExportDetections.m)
+[Source](../../APIs/ObjectTracking/src/objecttracking/trackpy/farmExportDetections.m)
 ```matlab
 function [matrix, map] = farmExportDetections(detections, options)
 ```
@@ -982,7 +984,7 @@ options=farmOGOptions(options,struct('MassProperty','','CoordinateScale',[]));
 
 ### farmTrackPositions
 
-[Source](APIs/ObjectTracking/src/objecttracking/trackpy/farmTrackPositions.m)
+[Source](../../APIs/ObjectTracking/src/objecttracking/trackpy/farmTrackPositions.m)
 ```matlab
 function membership = farmTrackPositions(detections, options)
 ```
@@ -1011,7 +1013,7 @@ options=farmOGOptions(options,struct('SearchRange',8,'Memory',3, ...
 
 ### farmClassifyProbabilities
 
-[Source](APIs/SegmentationTools/src/segmentationtools/binarization/farmClassifyProbabilities.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmClassifyProbabilities.m)
 ```matlab
 function result = farmClassifyProbabilities(probabilities, classes, options)
 ```
@@ -1061,7 +1063,7 @@ defaults = struct('EnsureDisjoint', true, 'AssignUnclassified', false, ...
 
 ### farmClassifyProbabilityChannels
 
-[Source](APIs/SegmentationTools/src/segmentationtools/binarization/farmClassifyProbabilityChannels.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmClassifyProbabilityChannels.m)
 ```matlab
 function result = farmClassifyProbabilityChannels(probabilities, channels, thresholds, options)
 ```
@@ -1082,7 +1084,7 @@ Implemented function help:
 
 ### farmMakeClasses
 
-[Source](APIs/SegmentationTools/src/segmentationtools/config/farmMakeClasses.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/config/farmMakeClasses.m)
 ```matlab
 function classes = farmMakeClasses(channels, thresholds, options)
 ```
@@ -1110,7 +1112,7 @@ Implemented function help:
 
 ### farmRemapClassLabels
 
-[Source](APIs/SegmentationTools/src/segmentationtools/binarization/farmRemapClassLabels.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmRemapClassLabels.m)
 ```matlab
 function mapped = farmRemapClassLabels(labels, sourceIDs, outputValues, options)
 ```
@@ -1132,7 +1134,7 @@ Implemented function help:
 
 ### farmSegmentInOnOutProbabilities
 
-[Source](APIs/SegmentationTools/src/segmentationtools/binarization/farmSegmentInOnOutProbabilities.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmSegmentInOnOutProbabilities.m)
 ```matlab
 function result = farmSegmentInOnOutProbabilities(probabilities, channels, thresholds, options)
 ```
@@ -1156,7 +1158,7 @@ Implemented function help:
 
 ### farmSegmentIntensity
 
-[Source](APIs/SegmentationTools/src/segmentationtools/binarization/farmSegmentIntensity.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmSegmentIntensity.m)
 ```matlab
 function result = farmSegmentIntensity(intensity, options)
 ```
@@ -1206,7 +1208,7 @@ defaults = struct('Method','otsu','Threshold',[],'Foreground','bright', ...
 
 ### farmSmoothInOnOutProbabilities
 
-[Source](APIs/SegmentationTools/src/segmentationtools/binarization/farmSmoothInOnOutProbabilities.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmSmoothInOnOutProbabilities.m)
 ```matlab
 function [inside, wall, outside, info] = farmSmoothInOnOutProbabilities(probabilities, channels, thresholds, options)
 ```
@@ -1229,7 +1231,7 @@ Implemented function help:
 
 ### farmSmoothNChannelProbabilities
 
-[Source](APIs/SegmentationTools/src/segmentationtools/binarization/farmSmoothNChannelProbabilities.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmSmoothNChannelProbabilities.m)
 ```matlab
 function [masks, info] = farmSmoothNChannelProbabilities(probabilities, channels, thresholds, options)
 ```
@@ -1274,7 +1276,7 @@ defaults=struct('OpeningRadius',2,'ChannelPrecedence',[], 'ReturnOpenedMasks',fa
 
 ### farmThresholdProbabilityGroup
 
-[Source](APIs/SegmentationTools/src/segmentationtools/binarization/farmThresholdProbabilityGroup.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmThresholdProbabilityGroup.m)
 ```matlab
 function [mask, info] = farmThresholdProbabilityGroup(probabilities, channels, thresholds, options)
 ```
@@ -1302,7 +1304,7 @@ Implemented function help:
 
 ### farmReadProbabilityTiff
 
-[Source](APIs/SegmentationTools/src/segmentationtools/io/farmReadProbabilityTiff.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/io/farmReadProbabilityTiff.m)
 ```matlab
 function [probabilities, image] = farmReadProbabilityTiff(filePath, options)
 ```
@@ -1325,7 +1327,7 @@ Implemented function help:
 
 ### farmWriteMaskTiff
 
-[Source](APIs/SegmentationTools/src/segmentationtools/io/farmWriteMaskTiff.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/io/farmWriteMaskTiff.m)
 ```matlab
 function farmWriteMaskTiff(mask, filePath, options)
 ```
@@ -1347,7 +1349,7 @@ Implemented function help:
 
 ### farmReturnTopBottom2DSheetsConfigurable
 
-[Source](APIs/SegmentationTools/src/segmentationtools/morphologySpecific/sheets/farmReturnTopBottom2DSheetsConfigurable.m)
+[Source](../../APIs/SegmentationTools/src/segmentationtools/morphologySpecific/sheets/farmReturnTopBottom2DSheetsConfigurable.m)
 ```matlab
 function [topLayer,botLayer,topLayerZs,botLayerZs,centerSlice,centerSliceZs,splitSlice] = farmReturnTopBottom2DSheetsConfigurable(inputData,options)
 ```
@@ -1410,7 +1412,7 @@ defaults = struct('SplitSlice', [], 'SplitSearchRange', [], ...
 
 ### farmGaussD
 
-[Source](APIs/SharedUtilities/src/sharedutilities/numerics/farmGaussD.m)
+[Source](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmGaussD.m)
 ```matlab
 function dG = farmGaussD(sigma, n, varargin)
 ```
@@ -1419,7 +1421,7 @@ Literal option/specification names: .
 
 ### farmAttachByKeys
 
-[Source](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmAttachByKeys.m)
+[Source](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmAttachByKeys.m)
 ```matlab
 function combined=farmAttachByKeys(base,additional,keys,options)
 ```
@@ -1444,7 +1446,7 @@ o=farmSUOptions(options,struct('MissingPolicy','error','Overwrite',false, ...
 
 ### farmConcatenateByKeys
 
-[Source](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmConcatenateByKeys.m)
+[Source](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmConcatenateByKeys.m)
 ```matlab
 function combined=farmConcatenateByKeys(tables,keys,options)
 ```
@@ -1465,7 +1467,7 @@ o=farmSUOptions(options,struct('ErrorPrefix','sharedutilities','ErrorNames',stru
 
 ### farmValidateTableKeys
 
-[Source](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmValidateTableKeys.m)
+[Source](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmValidateTableKeys.m)
 ```matlab
 function farmValidateTableKeys(t,keys,options)
 ```
@@ -1492,7 +1494,7 @@ o=farmSUOptions(options,struct('AllowRepeated',false, ...
 
 ### farmFASpectrum
 
-[Source](APIs/FieldAnalysis/src/fieldanalysis/internal/farmFASpectrum.m)
+[Source](../../APIs/FieldAnalysis/src/fieldanalysis/internal/farmFASpectrum.m)
 ```matlab
 function result=spectrum(data,nD,options)
 ```
@@ -1518,7 +1520,7 @@ o=farmFAOptions(struct('Spacing',ones(1,nD),'SpacingUnit','voxel', ...
 
 ### imagestackioparseSpacingOptions
 
-[Source](APIs/ImageStackIO/src/imagestackio/private/farmParseSpacingOptions.m)
+[Source](../../APIs/ImageStackIO/src/imagestackio/private/farmParseSpacingOptions.m)
 ```matlab
 function [spacing, spacingUnit] = farmParseSpacingOptions(options)
 ```
@@ -1534,7 +1536,7 @@ Implemented function help:
 
 ### imagestackioparseTiffAxisOrder
 
-[Source](APIs/ImageStackIO/src/imagestackio/private/farmParseTiffAxisOrder.m)
+[Source](../../APIs/ImageStackIO/src/imagestackio/private/farmParseTiffAxisOrder.m)
 ```matlab
 function axes = farmParseTiffAxisOrder(description)
 ```
@@ -1550,200 +1552,200 @@ Implemented function help:
 ## Positional/legacy interfaces
 
 These public functions have no options/configuration/query parameter in their signature. This does not mean they need builders: many accept simple positional arguments. This index makes the audit boundary explicit, including deferred mesh and visualization functions.
-- [fitToFunction](APIs/FieldAnalysis/src/fieldanalysis/fourier/fitToFunction.m): `%% Fit power spectra to structure factor`
-- [farmFrequencyCoordinates](APIs/FieldAnalysis/src/fieldanalysis/fourier/farmFrequencyCoordinates.m): `function axes=farmFrequencyCoordinates(gridSize,spacing)`
-- [get_meanimg_LiangADAPT](APIs/FieldAnalysis/src/fieldanalysis/fourier/get_meanimg_LiangADAPT.m): ``
-- [get_meanimg_LiangOG](APIs/FieldAnalysis/src/fieldanalysis/fourier/get_meanimg_LiangOG.m): `clear all`
-- [get_ProfileScatterFunctions](APIs/FieldAnalysis/src/fieldanalysis/fourier/get_ProfileScatterFunctions.m): `% Scattering function/power spectra of I(q) are calculated in `
-- [plotSpectra_Multiple](APIs/FieldAnalysis/src/fieldanalysis/fourier/plotSpectra_Multiple.m): `% Data loaded from Fourier Analysis and make plots`
-- [plotSpectra](APIs/FieldAnalysis/src/fieldanalysis/fourier/plotSpectra.m): `% Data loaded from Fourier Analysis and make plots`
-- [samCompare](APIs/FieldAnalysis/src/fieldanalysis/fourier/samCompare.m): `%% Load`
-- [farmScaleToReferenceTotal](APIs/FieldAnalysis/src/fieldanalysis/preprocessing/farmScaleToReferenceTotal.m): `function [scaled,factor]=farmScaleToReferenceTotal(field,referenceTotal)`
-- [farmGenerateRadialMatrix](APIs/FieldAnalysis/src/fieldanalysis/statistics/farmGenerateRadialMatrix.m): `function ringIndMat=farmGenerateRadialMatrix(matSize,ringNum)`
-- [farmGenerateStaticStructureFactor](APIs/FieldAnalysis/src/fieldanalysis/statistics/farmGenerateStaticStructureFactor.m): `function [structFact,scaledvanHove,vanHove] = farmGenerateStaticStructureFactor(inputField,subWin)`
-- [farmGenerateVanHove](APIs/FieldAnalysis/src/fieldanalysis/statistics/farmGenerateVanHove.m): `function [vanHove] = farmGenerateVanHove(dataSet)`
-- [farmLoglogBin](APIs/FieldAnalysis/src/fieldanalysis/statistics/farmLoglogBin.m): `function [meanLogXVals,meanLogYVals]=farmLoglogBin(xVals,yVals,numBins)`
-- [farmPairedFieldStatistics](APIs/FieldAnalysis/src/fieldanalysis/statistics/farmPairedFieldStatistics.m): `function result=farmPairedFieldStatistics(a,b)`
-- [farmRadiallyAverageMatrix](APIs/FieldAnalysis/src/fieldanalysis/statistics/farmRadiallyAverageMatrix.m): `function [meanVals,r_bin,r_counts,binnedInds]=farmRadiallyAverageMatrix(inputMat,sigma,polBool,ringSpace)`
-- [twoFieldsCrossCorr](APIs/FieldAnalysis/src/fieldanalysis/statistics/twoFieldsCrossCorr.m): `% Takes in two directories and name formats corresponding to tifs of the`
-- [fastWriteTiff](APIs/ImageStackIO/src/imagestackio/legacy/fastWriteTiff.m): `function fastWriteTiff(currTif,file_path,bit,compressionMethod)`
-- [genTifTagRGB](APIs/ImageStackIO/src/imagestackio/legacy/genTifTagRGB.m): `function [tagstruct] = genTifTagRGB(inMat)`
-- [loadH5](APIs/ImageStackIO/src/imagestackio/legacy/loadH5.m): `function [selMat] = loadH5(filePath,inString,chanNum,chanDim,dimOrder)`
-- [save3DTiff](APIs/ImageStackIO/src/imagestackio/legacy/save3DTiff.m): `function [] = save3DTiff(tiffIn,savePath)`
-- [saveNDTiffFIJI](APIs/ImageStackIO/src/imagestackio/legacy/saveNDTiffFIJI.m): `function [] = saveNDTiffFIJI(inMat,savePath,dimOrder)`
-- [saveNDTiffFIJI](APIs/ImageStackIO/src/imagestackio/legacy/variants/saveNDTiffFIJI.m): `function [] = saveNDTiffFIJI(inMat,savePath)`
-- [farmCoords2Mat_2DFils](APIs/ObjectGeometry/src/objectgeometry/centerlines/farmCoords2Mat_2DFils.m): `function [filMat,filamentInds,validLogic] = coords2Mat_Fils(currFils,initBoxDims,outMatSideLen)`
-- [farmFilBackBones2D](APIs/ObjectGeometry/src/objectgeometry/centerlines/farmFilBackBones2D.m): `function [outXs,outYs] = farmFilBackBones2D(CoMs, MajAxes, Oris)`
-- [farmFilBackBonesND](APIs/ObjectGeometry/src/objectgeometry/centerlines/farmFilBackBonesND.m): `function [bbStruct] = farmFilBackBonesND(CoMs,lens,direcs)`
-- [farmStoreFilCCs](APIs/ObjectGeometry/src/objectgeometry/centerlines/farmStoreFilCCs.m): `function [rp3D,rp2D] = farmStoreFilCCs(bwObjs)`
-- [farmBlobMat2CCProps](APIs/ObjectGeometry/src/objectgeometry/objects/farmBlobMat2CCProps.m): `function [ccObj,storeStruct] = farmBlobMat2CCProps(logicMat,reqFields,storeStruct)`
-- [farmConcatenateMeasurements](APIs/ObjectGeometry/src/objectgeometry/objects/farmConcatenateMeasurements.m): `function combined=farmConcatenateMeasurements(tables)`
-- [farmDistTransFromBoundary](APIs/ObjectGeometry/src/objectgeometry/objects/farmDistTransFromBoundary.m): `function [distMat,globalDistMat,regionFlip,primbgInds,secbgInds,primProximalInds] = ...`
-- [farmGetDistGrads](APIs/ObjectGeometry/src/objectgeometry/objects/farmGetDistGrads.m): `function [allGrads,distMat] = farmGetDistGrads(fullSegDir,h5Chans,outInOnChans,h5thresh,imgSize,imgScaling,inOnDist)`
-- [farmReturnSmoothBlobsBW](APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsBW.m): `function [outBounds] = farmReturnSmoothBlobsBW(ogBW,layerMean,layerWidth,gKern)`
-- [farmReturnSmoothBlobsIDed](APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsIDed.m): `function [outMat] = farmReturnSmoothBlobsIDed(inMat,layerMean,layerWidth,gKern,calcSpeed)`
-- [farmReturnSmoothBound](APIs/ObjectGeometry/src/objectgeometry/objects/farmReturnSmoothBound.m): `function [erodedBnd] = farmReturnSmoothBound(segBW,strelRad,ogSize)`
-- [farmReturnSmoothBoundsBW](APIs/ObjectGeometry/src/objectgeometry/objects/farmReturnSmoothBoundsBW.m): `function [outBounds] = farmReturnSmoothBoundsBW(ogBW,layerMean,layerWidth,gKern)`
-- [farmReturnSmoothBoundsIDed](APIs/ObjectGeometry/src/objectgeometry/objects/farmReturnSmoothBoundsIDed.m): `function [outMat] = farmReturnSmoothBoundsIDed(inMat,layerMean,layerWidth,gKern,calcSpeed)`
-- [farmSkel3DBlobs](APIs/ObjectGeometry/src/objectgeometry/objects/farmSkel3DBlobs.m): `function [validCores,coreMat] = farmSkel3DBlobs(inMat,gradCut,sigma,hBool)`
-- [farmSkel3DClean](APIs/ObjectGeometry/src/objectgeometry/objects/farmSkel3DClean.m): `function [trimSkel] = farmSkel3DClean(inputMat,distCO)`
-- [farmSkel3Dfrom2D](APIs/ObjectGeometry/src/objectgeometry/objects/farmSkel3Dfrom2D.m): `function [orMat,andMat] = farmSkel3Dfrom2D(inputMat)`
-- [farmSkel3DPop](APIs/ObjectGeometry/src/objectgeometry/objects/farmSkel3DPop.m): `function [ptCloud, orMat, andMat] = farmSkel3DPop(inputMat, andOrFrac, cutOff, orMat, andMat)`
-- [farmStructCutOffThresh](APIs/ObjectGeometry/src/objectgeometry/objects/farmStructCutOffThresh.m): `function [newStruct] = farmStructCutOffThresh(inStruct, choiceField, minCut, maxCut, changeFields)`
-- [farmRescalePatch](APIs/ObjectGeometry/src/objectgeometry/sheets/farmRescalePatch.m): `function [currentSurface] = farmRescalePatch(currentSurface,rescaleFactor)`
-- [farmStruct2Mat_sheets](APIs/ObjectGeometry/src/objectgeometry/sheets/farmStruct2Mat_sheets.m): `function [maskMat] = farmStruct2Mat_sheets(outputStruct,fieldNames,matSize)`
-- [blobDensityDeltaR_Blobs](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/blobDensityDeltaR_Blobs.m): `%% Returns density profiles as a function of distance over time`
-- [blobDensityDeltaR_Skels](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/blobDensityDeltaR_Skels.m): `%% Returns density profiles as a function of distance over time`
-- [distanceBinning](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/distanceBinning.m): `% Load data structures saved to distinguish objects over time. One object`
-- [dropIntensitiesDistRings](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/dropIntensitiesDistRings.m): `%% Data directory info`
-- [getMTProfile_afterSeg](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/getMTProfile_afterSeg.m): `%% This script assumes sheets have already been segmented and returns the profile of MTs in segmented pixels along z`
-- [farmConcatenateResults](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmConcatenateResults.m): `function combined=farmConcatenateResults(tables)`
-- [getHeightProfiles_eachLayer](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getHeightProfiles_eachLayer.m): `%% This script returns the height profile in each protein sheet from indices stored in segmentation structures`
-- [getIntensityFluxes_2DSheets](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getIntensityFluxes_2DSheets.m): `%% This script gets intensity in regions separated by 2D sheets of protein`
-- [getMaxInt_eachLayer](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getMaxInt_eachLayer.m): `%% This script returns the maximum intensity at each x,y pixel in each 2D sheet at indices defined in a segmentation structure over time`
-- [getMeanIntensityOverTime3D](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getMeanIntensityOverTime3D.m): `%% Data info`
-- [getMeanIntPerZOverT](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getMeanIntPerZOverT.m): `%% Iterate over a series of tifs (each time point) and store/plot the mean intensity for each z`
-- [regionInts_Sheets](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/regionInts_Sheets.m): `% Rough: sample intensities in different regions of sheets and get`
-- [rough_MeanIntProfile](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/rough_MeanIntProfile.m): `%% This script assumes sheets have already been segmented and returns the profile of MTs in segmented pixels along z`
-- [blobInertiaTensorCalcs](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobInertiaTensorCalcs.m): `% Calculate local inertia tensor along skeletons of blobs, then calculate`
-- [blobPropsFromTrajs_R_Inertia](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobPropsFromTrajs_R_Inertia.m): `% Takes in tifs of blob objects with pixel intensities denoting object ID.`
-- [blobPropsFromTrajs](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobPropsFromTrajs.m): `% Takes in tifs of blob objects with pixel intensities denoting object ID.`
-- [blobVolDistsFromCCs](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobVolDistsFromCCs.m): `%% Calculates simple quantities like fraction occupied by blobs over time`
-- [blobVolFractFromh5](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobVolFractFromh5.m): `%% Calculates simple quantities like fraction occupied by blobs over time`
-- [blobVolFractFromTifs](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobVolFractFromTifs.m): `%% Calculates simple quantities like fraction occupied by blobs over time`
-- [dropSurfacesCenters](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/dropSurfacesCenters.m): `% Take in h5 segmentations of droplets over time and detect object centers`
-- [estimateFirstInertiaMoment](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/estimateFirstInertiaMoment.m): `%% From Jakob's suggestion, plot integral of rho r dr over segmented bounds`
-- [meanPropsOverTime](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/meanPropsOverTime.m): `%% Very crude, very fast, mean proeprties from structures over time`
-- [percolationAnalysis](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/percolationAnalysis.m): `%% FFT analysis`
-- [secondSegQuant](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/secondSegQuant.m): `% Looks at drops that have been segmented twice, once to detect drop`
-- [volFractAndIntGlobal_Modular](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/volFractAndIntGlobal_Modular.m): `%Plot volumes, intensities, etc. from segmentations, then subsample`
-- [correlateHeightIntensity](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/sheetProfiles/correlateHeightIntensity.m): `%% This function takes in the height and intensity profiles of layers and correlates them`
-- [storeMeshProps_1_IntsCurvesVF](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/sheetProfiles/storeMeshProps_1_IntsCurvesVF.m): `% Get intensities, curvatures, clean up faces and verts from meshes.`
-- [storeMeshProps_Combined](APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/sheetProfiles/storeMeshProps_Combined.m): `%% Effectively composites three scripts:`
-- [farmAddFieldStruct2Traj](APIs/ObjectTracking/src/objecttracking/farmAddFieldStruct2Traj.m): `function [trajStruct] = farmAddFieldStruct2Traj(inStruct,trajStruct,desFields,desTrajs)`
-- [farmAttachMembership](APIs/ObjectTracking/src/objecttracking/farmAttachMembership.m): `function combined=farmAttachMembership(measurements,membership)`
-- [farmConsObjMatSelTrajs](APIs/ObjectTracking/src/objecttracking/farmConsObjMatSelTrajs.m): `function outMat = farmConsObjMatSelTrajs(selectTrajs,objIDs,totTable,matDims)`
-- [generateTrajsFromObjs](APIs/ObjectTracking/src/objecttracking/generateTrajsFromObjs.m): `%% Directory info`
-- [farmGetTimeObjTrajTableFromPyTrajs](APIs/ObjectTracking/src/objecttracking/farmGetTimeObjTrajTableFromPyTrajs.m): `function [totTable] = farmGetTimeObjTrajTableFromPyTrajs(Trajectories)`
-- [farmLineageGraph](APIs/ObjectTracking/src/objecttracking/farmLineageGraph.m): `function graph = farmLineageGraph(tracking)`
-- [farmMat2pyTrackMat](APIs/ObjectTracking/src/objecttracking/farmMat2pyTrackMat.m): `function [pyMat] = farmMat2pyTrackMat(storeStruct,customFields)`
-- [farmOverlapLinks](APIs/ObjectTracking/src/objecttracking/farmOverlapLinks.m): `function links = farmOverlapLinks(source, target)`
-- [farmSingleTimePointTrajGen](APIs/ObjectTracking/src/objecttracking/farmSingleTimePointTrajGen.m): `function [matchIndices,pointerMat,matchDists,totalCost] = farmSingleTimePointTrajGen(sourceCenters,targetCeters,cutOffVal)`
-- [tot2ts](APIs/ObjectTracking/src/objecttracking/farmTot2ts.m): `function trajStruct = farmTot2ts(input,minTrajLength)`
-- [ts2tot](APIs/ObjectTracking/src/objecttracking/farmTs2tot.m): `function totTable = farmTs2tot(trajStruct,fieldNames)`
-- [digraphOverlapTracking_UniqueIDs](APIs/ObjectTracking/src/objecttracking/blobLineage/digraphOverlapTracking_UniqueIDs.m): `% Takes in directory of blob objects saved tif per time point. Checks for`
-- [digraphOverlapTracking](APIs/ObjectTracking/src/objecttracking/blobLineage/digraphOverlapTracking.m): `% Takes in directory of blob objects saved tif per time point. Checks for`
-- [IsolateBlobLineage](APIs/ObjectTracking/src/objecttracking/blobLineage/IsolateBlobLineage.m): `%% Outline and testing to isolate blobs spatially and temporally`
-- [overlapBlobTrack_fromCCs](APIs/ObjectTracking/src/objecttracking/blobLineage/overlapBlobTrack_fromCCs.m): `% Assumes blobs are segmented and saved as connected component objects for`
-- [overlapBlobTracking_TrackObjectProps](APIs/ObjectTracking/src/objecttracking/blobLineage/overlapBlobTracking_TrackObjectProps.m): `% Takes in directory of blob objects saved tif per time point. Checks for`
-- [overlapBlobTracking](APIs/ObjectTracking/src/objecttracking/blobLineage/overlapBlobTracking.m): `% Takes in directory of blob objects saved tif per time point. Checks for`
-- [farmImportLinks](APIs/ObjectTracking/src/objecttracking/trackpy/farmImportLinks.m): `function membership = farmImportLinks(linkedRows, map)`
-- [activeContourFrame1](APIs/SegmentationTools/src/segmentationtools/activeContours/activeContourFrame1.m): `%% data info`
-- [activeContourFromH5](APIs/SegmentationTools/src/segmentationtools/activeContours/activeContourFromH5.m): `%% This script takes in .h5 files and applies active contouring to generate`
-- [generateFirstGuess_morphsnakes](APIs/SegmentationTools/src/segmentationtools/activeContours/generateFirstGuess_morphsnakes.m): `%% This script takes in a segmentation matrix and generates a mask tif`
-- [farmH5toSmooth3Chans](APIs/SegmentationTools/src/segmentationtools/binarization/farmH5toSmooth3Chans.m): `function [cleanIns,cleanOuts,cleanOns] = farmH5toSmooth3Chans(currSeg,outInOnChans,threshVec,strelRad,spanBool)`
-- [farmImbinarize3_4D](APIs/SegmentationTools/src/segmentationtools/binarization/farmImbinarize3_4D.m): `function [outData] = farmImbinarize3_4D(inData,threshVals)`
-- [farmFlatFill3D](APIs/SegmentationTools/src/segmentationtools/cleanup/farmFlatFill3D.m): `function outMat = farmFlatFill3D(inMat, dimFills)`
-- [farmRemoveConObjs](APIs/SegmentationTools/src/segmentationtools/cleanup/farmRemoveConObjs.m): `function [logicMat,toRemove] = farmRemoveConObjs(logicMat,toKeep,modeStr)`
-- [farmReturnSmoothBlobsBW](APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsBW.m): `function outBounds = farmReturnSmoothBlobsBW(ogBW, layerMean, layerWidth, gKern)`
-- [farmReturnSmoothBlobsIDed](APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsIDed.m): `function outMat = farmReturnSmoothBlobsIDed(inMat, layerMean, layerWidth, gKern, calcSpeed)`
-- [farmSidesHoleFill](APIs/SegmentationTools/src/segmentationtools/cleanup/farmSidesHoleFill.m): `function [outMat] = farmSidesHoleFill(inMat)`
-- [farmGetCentralSlice](APIs/SegmentationTools/src/segmentationtools/morphologySpecific/sheets/farmGetCentralSlice.m): `function [splitSlice] = farmGetCentralSlice(inputData)`
-- [farmReturnCorrectedBinarizedSurfaceIndices](APIs/SegmentationTools/src/segmentationtools/morphologySpecific/sheets/farmReturnCorrectedBinarizedSurfaceIndices.m): `function [newInds,holeLocVec] = farmReturnCorrectedBinarizedSurfaceIndices(surfaceInds,imgSize)`
-- [farmReturnTopBottom2DSheets](APIs/SegmentationTools/src/segmentationtools/morphologySpecific/sheets/farmReturnTopBottom2DSheets.m): `function [topLayer,botLayer,topLayerZs,botLayerZs, centerSlice,centerSliceZs,splitSlice] = farmReturnTopBottom2DSheets(inputData)`
-- [farmArrayCumSum](APIs/SharedUtilities/src/sharedutilities/arrays/farmArrayCumSum.m): `function [csVec] = farmArrayCumSum(inVec)`
-- [farmArrayOrganizer2D](APIs/SharedUtilities/src/sharedutilities/arrays/farmArrayOrganizer2D.m): `function [reorganizedArray,linear_grid] = farmArrayOrganizer2D(arr,Dcell)`
-- [farmBlockReshape2D](APIs/SharedUtilities/src/sharedutilities/arrays/farmBlockReshape2D.m): `function [outMat] = farmBlockReshape2D(inMat,outCol)`
-- [farmConsMatLnB](APIs/SharedUtilities/src/sharedutilities/arrays/farmConsMatLnB.m): `function [outMat] = farmConsMatLnB(baseMat,indices)`
-- [farmConsMinValsLayer](APIs/SharedUtilities/src/sharedutilities/arrays/farmConsMinValsLayer.m): `function [minMat] = farmConsMinValsLayer(dataMat,dimension)`
-- [farmConsScalerMat](APIs/SharedUtilities/src/sharedutilities/arrays/farmConsScalerMat.m): `function [scalerMat] = farmConsScalerMat(inputData,patchProbs)`
-- [farmFillin2D](APIs/SharedUtilities/src/sharedutilities/arrays/farmFillin2D.m): `function [outSlice] = farmFillin2D(inSlice,logicSlice)`
-- [farmFillin3D](APIs/SharedUtilities/src/sharedutilities/arrays/farmFillin3D.m): `function [outMat] = farmFillin3D(inMat,logicMat)`
-- [farmFlatFill3D](APIs/SegmentationTools/src/segmentationtools/cleanup/farmFlatFill3D.m): `function [outMat] = farmFlatFill3D(inMat,dimFills)`
-- [farmGenerateFieldInterps](APIs/SharedUtilities/src/sharedutilities/arrays/farmGenerateFieldInterps.m): `function [outFields] = farmGenerateFieldInterps(ivec,inFields)`
-- [farmGenerateMatrixSubdivisions](APIs/SharedUtilities/src/sharedutilities/arrays/farmGenerateMatrixSubdivisions.m): `function [outInds] = farmGenerateMatrixSubdivisions(inputArray,binWindow,overlapBool)`
-- [farmImresize3_4mat](APIs/SharedUtilities/src/sharedutilities/arrays/farmImresize3_4mat.m): `function [outData] = farmImresize3_4mat(inData,scaleVec)`
-- [farmInds3Dto2D](APIs/SharedUtilities/src/sharedutilities/arrays/farmInds3Dto2D.m): `function [outInds] = farmInds3Dto2D(inInds, size3D)`
-- [farmLens2Blocks](APIs/SharedUtilities/src/sharedutilities/arrays/farmLens2Blocks.m): `function [logicMat,validCoord1,validCoord2] = farmLens2Blocks(vecLens1,vecLens2)`
-- [farmRescaleCoords](APIs/SharedUtilities/src/sharedutilities/arrays/farmRescaleCoords.m): `function outCoords=farmRescaleCoords(inCoords,ogDims,newDims)`
-- [farmGenLenVec](APIs/SharedUtilities/src/sharedutilities/coordinates/farmGenLenVec.m): `function [outVec] = farmGenLenVec(contentsVec,repVec)`
-- [farmGenLineInds2D](APIs/SharedUtilities/src/sharedutilities/coordinates/farmGenLineInds2D.m): `function [outInds] = farmGenLineInds2D(matSize,cutInd,cutDim,lineStart,lineEnd)`
-- [farmGenReflVec](APIs/SharedUtilities/src/sharedutilities/coordinates/farmGenReflVec.m): `function [reflVec] = farmGenReflVec(inLength)`
-- [farmGetCCVectors](APIs/SharedUtilities/src/sharedutilities/coordinates/farmGetCCVectors.m): `function [objSizes,objVoxels,objIDs]=farmGetCCVectors(currCC)`
-- [farmGetUnitVecs](APIs/SharedUtilities/src/sharedutilities/coordinates/farmGetUnitVecs.m): `function outMat=farmGetUnitVecs(inMat)`
-- [farmRescaleCoords_Inds](APIs/SharedUtilities/src/sharedutilities/coordinates/farmRescaleCoords_Inds.m): `function scaleInds=farmRescaleCoords_Inds(inputInds,ogDims,newDims)`
-- [bndmod](APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmBndmod.m): `function [outVal] = farmBndmod(inVal,floorVal,ceilVal)`
-- [farmCellIndSizes](APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmCellIndSizes.m): `function [outVec] = farmCellIndSizes(inCell,desCol)`
-- [farmGenericLenVec](APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmGenericLenVec.m): `function [outVec] = farmGenericLenVec(inVec)`
-- [farmGenScaledKVec](APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmGenScaledKVec.m): `function outKs=farmGenScaledKVec(dimSize,dimdx)`
-- [farmLogic2Ply](APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmLogic2Ply.m): `function [] = farmLogic2Ply(logicMat,saveDir,scaleMat)`
-- [mod1b](APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmMod1b.m): `function [outNum] = farmMod1b(queryNums,baseNum)`
-- [farmFastLinIntNDScale2](APIs/SharedUtilities/src/sharedutilities/numerics/farmFastLinIntNDScale2.m): `function imageInterp=farmFastLinIntNDScale2(inputStack)`
-- [farmGenerate1DGaussian](APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerate1DGaussian.m): `function gaussMat = farmGenerate1DGaussian(gsize, xc, sigmax)`
-- [farmGenerate2DGaussian](APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerate2DGaussian.m): `function gaussMat = farmGenerate2DGaussian(gsize, xc, yc, sigmax, sigmay)`
-- [farmGenerate3DGaussian](APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerate3DGaussian.m): `function gaussMat = farmGenerate3DGaussian(gsize, centers, sigmas, coordMode)`
-- [farmGenerate3DGaussians](APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerate3DGaussians.m): `function gaussMat = farmGenerate3DGaussians(gsize, centers, sigmas)`
-- [farmGenerateNDHann](APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerateNDHann.m): `function [hannFunc] = farmGenerateNDHann(matDims)`
-- [farmLOG](APIs/SharedUtilities/src/sharedutilities/numerics/farmLOG.m): `function logstack = farmLOG(stack, sigma)`
-- [farmLogAB](APIs/SharedUtilities/src/sharedutilities/numerics/farmLogAB.m): `function newLog=farmLogAB(A,B)`
-- [myconvn](APIs/SharedUtilities/src/sharedutilities/numerics/farmMyconvn.m): `function convolved = farmMyconvn(stack, filter)`
-- [ndmeshgrid](APIs/SharedUtilities/src/sharedutilities/numerics/farmNdmeshgrid.m): `function [outMat1,outMat2,outMat3] = farmNdmeshgrid(inVec1, inVec2, inVec3)`
-- [ndndgrid](APIs/SharedUtilities/src/sharedutilities/numerics/farmNdndgrid.m): `function [outMat1,outMat2,outMat3] = farmNdndgrid(inVec1, inVec2, inVec3)`
-- [farmNoNan](APIs/SharedUtilities/src/sharedutilities/numerics/farmNoNan.m): `function outMat=farmNoNan(inMat,replVal)`
-- [farmNonZeroMean](APIs/SharedUtilities/src/sharedutilities/numerics/farmNonZeroMean.m): `function [outMat] = farmNonZeroMean(inMat, selDim)`
-- [farmPoissonDisc](APIs/SharedUtilities/src/sharedutilities/numerics/farmPoissonDisc.m): `function [pts] = farmPoissonDisc(sizeI,spacing,nPts,showIter)`
-- [farmSignedBWDist](APIs/SharedUtilities/src/sharedutilities/numerics/farmSignedBWDist.m): `function [outMat] = farmSignedBWDist(inMat)`
-- [farmFigSaves](APIs/VisualizationTools/src/visualizationtools/export/farmFigSaves.m): `function farmFigSaves(figHandle,saveDir,saveName,fileExts,saveBool)`
-- [farmLogAB](APIs/SharedUtilities/src/sharedutilities/numerics/farmLogAB.m): `function newLog=farmLogAB(A,B)`
-- [farmLoglogBin](APIs/FieldAnalysis/src/fieldanalysis/statistics/farmLoglogBin.m): `function [meanLogXVals,meanLogYVals]=farmLoglogBin(xVals,yVals,numBins)`
-- [farmManVlnPlot](APIs/VisualizationTools/src/visualizationtools/display/farmManVlnPlot.m): `function [meanVal,medVal]=farmManVlnPlot(xData,yDataSet,yBins,maxNorm)`
-- [farmPlotVlns](APIs/VisualizationTools/src/visualizationtools/display/farmPlotVlns.m): `function [allMeans,allMeds]=farmPlotVlns(xData,yData,xSuperBin,yBin,maxNorm)`
-- [farmProgressBar](APIs/SharedUtilities/src/sharedutilities/plotting/farmProgressBar.m): `function [progressObj] = farmProgressBar(currInd,totalInds,progressObj,updatePrct)`
-- [farmAddFieldsStruct](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmAddFieldsStruct.m): `function structObj=farmAddFieldsStruct(structObj,fieldNames,fieldVals,structInds)`
-- [farmAddFieldStruct](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmAddFieldStruct.m): `function structObj=farmAddFieldStruct(structObj,fieldName,fieldVals,structInds)`
-- [farmConcatTablesOverT](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmConcatTablesOverT.m): `function [superTable] = farmConcatTablesOverT(dataDir,dataName,selTimes,storeVar,saveBool,saveName)`
-- [farmStructFields2Cell](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmStructFields2Cell.m): `function [cellObj] = farmStructFields2Cell(structObj,selFields,structRange)`
-- [farmStructFieldSizes](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmStructFieldSizes.m): `function [numElmts] = farmStructFieldSizes(inStruct,fieldName)`
-- [farmStructLenVec](APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmStructLenVec.m): `function [outVec] = farmStructLenVec(inStruct,desField)`
-- [closedSurfaces_FieldsOnMesh](APIs/SurfaceFieldMapping/src/surfacefieldmapping/mapping/closedSurfaces_FieldsOnMesh.m): `%% Takes in meshes of segmented objects and samples velocities, intensities, and curvatures on faces`
-- [threeSeg_meanIntProfiles](APIs/SurfaceFieldMapping/src/surfacefieldmapping/mapping/threeSeg_meanIntProfiles.m): `%% Takes in .h5 segmentation and int corrected .tif, returns int. profile`
-- [closedSurfaces_h5ToMesh_EnforceNorms](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshConstruction/closedSurfaces_h5ToMesh_EnforceNorms.m): `%% Messy first take of a script to convert drop segmentations to meshes`
-- [closedSurfaces_h5ToPointCloud](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshConstruction/closedSurfaces_h5ToPointCloud.m): `%% A first pass on how to extract surfaces of roughly drop-like objects`
-- [closedSurfaces_splitPtCloudsMeshes](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshConstruction/closedSurfaces_splitPtCloudsMeshes.m): `%% A first pass on how to extract surfaces of roughly drop-like objects`
-- [farmConsPatchedSheetSurface_Flat](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshConstruction/farmConsPatchedSheetSurface_Flat.m): `function [selectDataOut,newSurfInds,holeIndVec] = farmConsPatchedSheetSurface_Flat(rawData,selectDataIn,surfPerim)`
-- [obj2ply](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/farmObj2ply.m): `function [plyStruct] = farmObj2ply(objStruct, saveBool, outDir, outName)`
-- [farmPlySurf2TIF](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/farmPlySurf2TIF.m): `function [] = farmPlySurf2TIF(dataDir,dataName,outFile,outName)`
-- [farmPlywrite_norms](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/farmPlywrite_norms.m): `function farmPlywrite_norms(filename,faces,verts,vertnorms)`
-- [farmReadObj_remi](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/farmReadObj_remi.m): `function [] = farmReadObj_remi(fileString)`
-- [saveObj2PlyFiles](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/saveObj2PlyFiles.m): `%% Define data info`
-- [farmCapPtCloudFlat](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmCapPtCloudFlat.m): `function [cappedLayers] = farmCapPtCloudFlat(topLayer, botLayer, capDim)`
-- [farmConfineMeshInMat](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmConfineMeshInMat.m): `function [subCoords] = farmConfineMeshInMat(matCoords,matDims)`
-- [farmGetMeshDims](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmGetMeshDims.m): `function [objInfo] = farmGetMeshDims(meshObj, pixDim, flipNorms)`
-- [farmInBetweenFill](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmInBetweenFill.m): `function [midSection] = farmInBetweenFill(mat1, mat2)`
-- [mesh2mat](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmMesh2mat.m): `function [outMat] = farmMesh2mat(verts,matDims)`
-- [farmMeshSideRemove](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmMeshSideRemove.m): `function [Fcut,Vcut] = farmMeshSideRemove(Fraw,Vraw, minCuts, maxCuts)`
-- [farmRemove_isolated_mesh_components](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmRemove_isolated_mesh_components.m): `function [ newFace, newVertex, oldVertexIDx, C ] = farmRemove_isolated_mesh_components( face, ...`
-- [farmRemoveFacesVerts_Mesh](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmRemoveFacesVerts_Mesh.m): `function [ newFace, newVertex, oldVertexIDx, newVertexIDx ] = ...`
-- [shiftMeshVerts](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/shiftMeshVerts.m): `%% Define data info`
-- [farmSplit_mesh_into_components](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmSplit_mesh_into_components.m): `function splitMeshes = farmSplit_mesh_into_components( face, vertex, cutoff, saveBool, saveDir, ignoreBounds )`
-- [farmSplit_single_mesh_object](APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmSplit_single_mesh_object.m): `function [validFaces, validVerts] = farmSplit_single_mesh_object(face, vertex, sortOrder, vertMeshIDs, meshID, saveBool, saveDir, ignoreBounds)`
-- [intsAndSegBoundaries_Tiffs](APIs/VisualizationTools/src/visualizationtools/intsAndSegBoundaries_Tiffs.m): `% Load tifs and segmentations/thresholded masks; generate drop boundaries`
-- [intsAndSegBoundaries2DImgs_Tiffs](APIs/VisualizationTools/src/visualizationtools/intsAndSegBoundaries2DImgs_Tiffs.m): `% Load tifs and segmentations/thresholded masks; generate drop boundaries`
-- [mapFieldOnBlobSegs](APIs/VisualizationTools/src/visualizationtools/mapFieldOnBlobSegs.m): `% Directory info`
-- [plotBlobStatistics_rEff](APIs/VisualizationTools/src/visualizationtools/plotBlobStatistics_rEff.m): `% Expects data from (test_)trajInfoFromOverlaps_MinAxis.m;`
-- [plotDeltaRBnds](APIs/VisualizationTools/src/visualizationtools/plotDeltaRBnds.m): `%% Takes in data calculated from blobDensityDeltaR_Blobs.m`
-- [plotDeltaRSkels](APIs/VisualizationTools/src/visualizationtools/plotDeltaRSkels.m): `%% Takes in data calculated from blobDensityDeltaR_Skels.m`
-- [plotFilamentAlignments](APIs/VisualizationTools/src/visualizationtools/plotFilamentAlignments.m): `%% From earlier scripts, split together a streamlined version for alignment`
-- [plotFirstInertiaMomentData](APIs/VisualizationTools/src/visualizationtools/plotFirstInertiaMomentData.m): `%% Plots data from estimateFirstInertiaMoment.m`
-- [plotRInertiaStruct](APIs/VisualizationTools/src/visualizationtools/plotRInertiaStruct.m): `%% Quick and dirty: plot quantities stored in sortedMat`
-- [plotSortedMat_MultipleOverlap](APIs/VisualizationTools/src/visualizationtools/plotSortedMat_MultipleOverlap.m): `%% Quick and dirty: plot quantities stored in sortedMat`
-- [plotSortedMat_MultipleSave](APIs/VisualizationTools/src/visualizationtools/plotSortedMat_MultipleSave.m): `%% Quick and dirty: plot quantities stored in sortedMat`
-- [plotSortedMat](APIs/VisualizationTools/src/visualizationtools/plotSortedMat.m): `%% Quick and dirty: plot quantities stored in sortedMat`
-- [stitchSkelsAndShells](APIs/VisualizationTools/src/visualizationtools/stitchSkelsAndShells.m): `%% Combine blob skeletons with blob surface contours, then save in tiffs`
-- [tiffs_BlobOverTime](APIs/VisualizationTools/src/visualizationtools/tiffs_BlobOverTime.m): `%% Test: given a trajectory ID, make tifs of blobs over time`
-- [farmGetPolyCoords](APIs/VisualizationTools/src/visualizationtools/display/farmGetPolyCoords.m): `function [outXs,outYs] = farmGetPolyCoords(yCoords,yHeights,xCoords)`
-- [farmManVlnPlot](APIs/VisualizationTools/src/visualizationtools/display/farmManVlnPlot.m): `function [meanVal,medVal] = farmManVlnPlot(xData,yDataSet,yBins,maxNorm)`
-- [farmPlotMeanStdPoly](APIs/VisualizationTools/src/visualizationtools/display/farmPlotMeanStdPoly.m): `function [] = farmPlotMeanStdPoly(meanVals,stdVals,xVals,currColor,alphaVal,lineColor)`
-- [plotVanHoveCorrs](APIs/VisualizationTools/src/visualizationtools/display/plotVanHoveCorrs.m): `%% Takes in .mats with van Hove data; plots correlation functions`
-- [farmPlotVlns](APIs/VisualizationTools/src/visualizationtools/display/farmPlotVlns.m): `function [allMeans,allMeds] = farmPlotVlns(xData, yData, xSuperBin, yBin, maxNorm)`
-- [farmFigSaves](APIs/VisualizationTools/src/visualizationtools/export/farmFigSaves.m): `function [] = farmFigSaves(figHandle,saveDir,saveName,fileExts,saveBool)`
+- [fitToFunction](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/fitToFunction.m): `%% Fit power spectra to structure factor`
+- [farmFrequencyCoordinates](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/farmFrequencyCoordinates.m): `function axes=farmFrequencyCoordinates(gridSize,spacing)`
+- [get_meanimg_LiangADAPT](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/get_meanimg_LiangADAPT.m): ``
+- [get_meanimg_LiangOG](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/get_meanimg_LiangOG.m): `clear all`
+- [get_ProfileScatterFunctions](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/get_ProfileScatterFunctions.m): `% Scattering function/power spectra of I(q) are calculated in `
+- [plotSpectra_Multiple](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/plotSpectra_Multiple.m): `% Data loaded from Fourier Analysis and make plots`
+- [plotSpectra](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/plotSpectra.m): `% Data loaded from Fourier Analysis and make plots`
+- [samCompare](../../APIs/FieldAnalysis/src/fieldanalysis/fourier/samCompare.m): `%% Load`
+- [farmScaleToReferenceTotal](../../APIs/FieldAnalysis/src/fieldanalysis/preprocessing/farmScaleToReferenceTotal.m): `function [scaled,factor]=farmScaleToReferenceTotal(field,referenceTotal)`
+- [farmGenerateRadialMatrix](../../APIs/FieldAnalysis/src/fieldanalysis/statistics/farmGenerateRadialMatrix.m): `function ringIndMat=farmGenerateRadialMatrix(matSize,ringNum)`
+- [farmGenerateStaticStructureFactor](../../APIs/FieldAnalysis/src/fieldanalysis/statistics/farmGenerateStaticStructureFactor.m): `function [structFact,scaledvanHove,vanHove] = farmGenerateStaticStructureFactor(inputField,subWin)`
+- [farmGenerateVanHove](../../APIs/FieldAnalysis/src/fieldanalysis/statistics/farmGenerateVanHove.m): `function [vanHove] = farmGenerateVanHove(dataSet)`
+- [farmLoglogBin](../../APIs/FieldAnalysis/src/fieldanalysis/statistics/farmLoglogBin.m): `function [meanLogXVals,meanLogYVals]=farmLoglogBin(xVals,yVals,numBins)`
+- [farmPairedFieldStatistics](../../APIs/FieldAnalysis/src/fieldanalysis/statistics/farmPairedFieldStatistics.m): `function result=farmPairedFieldStatistics(a,b)`
+- [farmRadiallyAverageMatrix](../../APIs/FieldAnalysis/src/fieldanalysis/statistics/farmRadiallyAverageMatrix.m): `function [meanVals,r_bin,r_counts,binnedInds]=farmRadiallyAverageMatrix(inputMat,sigma,polBool,ringSpace)`
+- [twoFieldsCrossCorr](../../APIs/FieldAnalysis/src/fieldanalysis/statistics/twoFieldsCrossCorr.m): `% Takes in two directories and name formats corresponding to tifs of the`
+- [fastWriteTiff](../../APIs/ImageStackIO/src/imagestackio/legacy/fastWriteTiff.m): `function fastWriteTiff(currTif,file_path,bit,compressionMethod)`
+- [genTifTagRGB](../../APIs/ImageStackIO/src/imagestackio/legacy/genTifTagRGB.m): `function [tagstruct] = genTifTagRGB(inMat)`
+- [loadH5](../../APIs/ImageStackIO/src/imagestackio/legacy/loadH5.m): `function [selMat] = loadH5(filePath,inString,chanNum,chanDim,dimOrder)`
+- [save3DTiff](../../APIs/ImageStackIO/src/imagestackio/legacy/save3DTiff.m): `function [] = save3DTiff(tiffIn,savePath)`
+- [saveNDTiffFIJI](../../APIs/ImageStackIO/src/imagestackio/legacy/saveNDTiffFIJI.m): `function [] = saveNDTiffFIJI(inMat,savePath,dimOrder)`
+- [saveNDTiffFIJI](../../APIs/ImageStackIO/src/imagestackio/legacy/variants/saveNDTiffFIJI.m): `function [] = saveNDTiffFIJI(inMat,savePath)`
+- [farmCoords2Mat_2DFils](../../APIs/ObjectGeometry/src/objectgeometry/centerlines/farmCoords2Mat_2DFils.m): `function [filMat,filamentInds,validLogic] = coords2Mat_Fils(currFils,initBoxDims,outMatSideLen)`
+- [farmFilBackBones2D](../../APIs/ObjectGeometry/src/objectgeometry/centerlines/farmFilBackBones2D.m): `function [outXs,outYs] = farmFilBackBones2D(CoMs, MajAxes, Oris)`
+- [farmFilBackBonesND](../../APIs/ObjectGeometry/src/objectgeometry/centerlines/farmFilBackBonesND.m): `function [bbStruct] = farmFilBackBonesND(CoMs,lens,direcs)`
+- [farmStoreFilCCs](../../APIs/ObjectGeometry/src/objectgeometry/centerlines/farmStoreFilCCs.m): `function [rp3D,rp2D] = farmStoreFilCCs(bwObjs)`
+- [farmBlobMat2CCProps](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmBlobMat2CCProps.m): `function [ccObj,storeStruct] = farmBlobMat2CCProps(logicMat,reqFields,storeStruct)`
+- [farmConcatenateMeasurements](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmConcatenateMeasurements.m): `function combined=farmConcatenateMeasurements(tables)`
+- [farmDistTransFromBoundary](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmDistTransFromBoundary.m): `function [distMat,globalDistMat,regionFlip,primbgInds,secbgInds,primProximalInds] = ...`
+- [farmGetDistGrads](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmGetDistGrads.m): `function [allGrads,distMat] = farmGetDistGrads(fullSegDir,h5Chans,outInOnChans,h5thresh,imgSize,imgScaling,inOnDist)`
+- [farmReturnSmoothBlobsBW](../../APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsBW.m): `function [outBounds] = farmReturnSmoothBlobsBW(ogBW,layerMean,layerWidth,gKern)`
+- [farmReturnSmoothBlobsIDed](../../APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsIDed.m): `function [outMat] = farmReturnSmoothBlobsIDed(inMat,layerMean,layerWidth,gKern,calcSpeed)`
+- [farmReturnSmoothBound](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmReturnSmoothBound.m): `function [erodedBnd] = farmReturnSmoothBound(segBW,strelRad,ogSize)`
+- [farmReturnSmoothBoundsBW](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmReturnSmoothBoundsBW.m): `function [outBounds] = farmReturnSmoothBoundsBW(ogBW,layerMean,layerWidth,gKern)`
+- [farmReturnSmoothBoundsIDed](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmReturnSmoothBoundsIDed.m): `function [outMat] = farmReturnSmoothBoundsIDed(inMat,layerMean,layerWidth,gKern,calcSpeed)`
+- [farmSkel3DBlobs](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmSkel3DBlobs.m): `function [validCores,coreMat] = farmSkel3DBlobs(inMat,gradCut,sigma,hBool)`
+- [farmSkel3DClean](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmSkel3DClean.m): `function [trimSkel] = farmSkel3DClean(inputMat,distCO)`
+- [farmSkel3Dfrom2D](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmSkel3Dfrom2D.m): `function [orMat,andMat] = farmSkel3Dfrom2D(inputMat)`
+- [farmSkel3DPop](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmSkel3DPop.m): `function [ptCloud, orMat, andMat] = farmSkel3DPop(inputMat, andOrFrac, cutOff, orMat, andMat)`
+- [farmStructCutOffThresh](../../APIs/ObjectGeometry/src/objectgeometry/objects/farmStructCutOffThresh.m): `function [newStruct] = farmStructCutOffThresh(inStruct, choiceField, minCut, maxCut, changeFields)`
+- [farmRescalePatch](../../APIs/ObjectGeometry/src/objectgeometry/sheets/farmRescalePatch.m): `function [currentSurface] = farmRescalePatch(currentSurface,rescaleFactor)`
+- [farmStruct2Mat_sheets](../../APIs/ObjectGeometry/src/objectgeometry/sheets/farmStruct2Mat_sheets.m): `function [maskMat] = farmStruct2Mat_sheets(outputStruct,fieldNames,matSize)`
+- [blobDensityDeltaR_Blobs](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/blobDensityDeltaR_Blobs.m): `%% Returns density profiles as a function of distance over time`
+- [blobDensityDeltaR_Skels](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/blobDensityDeltaR_Skels.m): `%% Returns density profiles as a function of distance over time`
+- [distanceBinning](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/distanceBinning.m): `% Load data structures saved to distinguish objects over time. One object`
+- [dropIntensitiesDistRings](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/dropIntensitiesDistRings.m): `%% Data directory info`
+- [getMTProfile_afterSeg](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/distance/getMTProfile_afterSeg.m): `%% This script assumes sheets have already been segmented and returns the profile of MTs in segmented pixels along z`
+- [farmConcatenateResults](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/farmConcatenateResults.m): `function combined=farmConcatenateResults(tables)`
+- [getHeightProfiles_eachLayer](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getHeightProfiles_eachLayer.m): `%% This script returns the height profile in each protein sheet from indices stored in segmentation structures`
+- [getIntensityFluxes_2DSheets](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getIntensityFluxes_2DSheets.m): `%% This script gets intensity in regions separated by 2D sheets of protein`
+- [getMaxInt_eachLayer](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getMaxInt_eachLayer.m): `%% This script returns the maximum intensity at each x,y pixel in each 2D sheet at indices defined in a segmentation structure over time`
+- [getMeanIntensityOverTime3D](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getMeanIntensityOverTime3D.m): `%% Data info`
+- [getMeanIntPerZOverT](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/getMeanIntPerZOverT.m): `%% Iterate over a series of tifs (each time point) and store/plot the mean intensity for each z`
+- [regionInts_Sheets](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/regionInts_Sheets.m): `% Rough: sample intensities in different regions of sheets and get`
+- [rough_MeanIntProfile](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/fieldSampling/rough_MeanIntProfile.m): `%% This script assumes sheets have already been segmented and returns the profile of MTs in segmented pixels along z`
+- [blobInertiaTensorCalcs](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobInertiaTensorCalcs.m): `% Calculate local inertia tensor along skeletons of blobs, then calculate`
+- [blobPropsFromTrajs_R_Inertia](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobPropsFromTrajs_R_Inertia.m): `% Takes in tifs of blob objects with pixel intensities denoting object ID.`
+- [blobPropsFromTrajs](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobPropsFromTrajs.m): `% Takes in tifs of blob objects with pixel intensities denoting object ID.`
+- [blobVolDistsFromCCs](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobVolDistsFromCCs.m): `%% Calculates simple quantities like fraction occupied by blobs over time`
+- [blobVolFractFromh5](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobVolFractFromh5.m): `%% Calculates simple quantities like fraction occupied by blobs over time`
+- [blobVolFractFromTifs](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/blobVolFractFromTifs.m): `%% Calculates simple quantities like fraction occupied by blobs over time`
+- [dropSurfacesCenters](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/dropSurfacesCenters.m): `% Take in h5 segmentations of droplets over time and detect object centers`
+- [estimateFirstInertiaMoment](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/estimateFirstInertiaMoment.m): `%% From Jakob's suggestion, plot integral of rho r dr over segmented bounds`
+- [meanPropsOverTime](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/meanPropsOverTime.m): `%% Very crude, very fast, mean proeprties from structures over time`
+- [percolationAnalysis](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/percolationAnalysis.m): `%% FFT analysis`
+- [secondSegQuant](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/secondSegQuant.m): `% Looks at drops that have been segmented twice, once to detect drop`
+- [volFractAndIntGlobal_Modular](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/objectMetrics/volFractAndIntGlobal_Modular.m): `%Plot volumes, intensities, etc. from segmentations, then subsample`
+- [correlateHeightIntensity](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/sheetProfiles/correlateHeightIntensity.m): `%% This function takes in the height and intensity profiles of layers and correlates them`
+- [storeMeshProps_1_IntsCurvesVF](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/sheetProfiles/storeMeshProps_1_IntsCurvesVF.m): `% Get intensities, curvatures, clean up faces and verts from meshes.`
+- [storeMeshProps_Combined](../../APIs/ObjectRelativeProfiles/src/objectrelativeprofiles/sheetProfiles/storeMeshProps_Combined.m): `%% Effectively composites three scripts:`
+- [farmAddFieldStruct2Traj](../../APIs/ObjectTracking/src/objecttracking/farmAddFieldStruct2Traj.m): `function [trajStruct] = farmAddFieldStruct2Traj(inStruct,trajStruct,desFields,desTrajs)`
+- [farmAttachMembership](../../APIs/ObjectTracking/src/objecttracking/farmAttachMembership.m): `function combined=farmAttachMembership(measurements,membership)`
+- [farmConsObjMatSelTrajs](../../APIs/ObjectTracking/src/objecttracking/farmConsObjMatSelTrajs.m): `function outMat = farmConsObjMatSelTrajs(selectTrajs,objIDs,totTable,matDims)`
+- [generateTrajsFromObjs](../../APIs/ObjectTracking/src/objecttracking/generateTrajsFromObjs.m): `%% Directory info`
+- [farmGetTimeObjTrajTableFromPyTrajs](../../APIs/ObjectTracking/src/objecttracking/farmGetTimeObjTrajTableFromPyTrajs.m): `function [totTable] = farmGetTimeObjTrajTableFromPyTrajs(Trajectories)`
+- [farmLineageGraph](../../APIs/ObjectTracking/src/objecttracking/farmLineageGraph.m): `function graph = farmLineageGraph(tracking)`
+- [farmMat2pyTrackMat](../../APIs/ObjectTracking/src/objecttracking/farmMat2pyTrackMat.m): `function [pyMat] = farmMat2pyTrackMat(storeStruct,customFields)`
+- [farmOverlapLinks](../../APIs/ObjectTracking/src/objecttracking/farmOverlapLinks.m): `function links = farmOverlapLinks(source, target)`
+- [farmSingleTimePointTrajGen](../../APIs/ObjectTracking/src/objecttracking/farmSingleTimePointTrajGen.m): `function [matchIndices,pointerMat,matchDists,totalCost] = farmSingleTimePointTrajGen(sourceCenters,targetCeters,cutOffVal)`
+- [tot2ts](../../APIs/ObjectTracking/src/objecttracking/farmTot2ts.m): `function trajStruct = farmTot2ts(input,minTrajLength)`
+- [ts2tot](../../APIs/ObjectTracking/src/objecttracking/farmTs2tot.m): `function totTable = farmTs2tot(trajStruct,fieldNames)`
+- [digraphOverlapTracking_UniqueIDs](../../APIs/ObjectTracking/src/objecttracking/blobLineage/digraphOverlapTracking_UniqueIDs.m): `% Takes in directory of blob objects saved tif per time point. Checks for`
+- [digraphOverlapTracking](../../APIs/ObjectTracking/src/objecttracking/blobLineage/digraphOverlapTracking.m): `% Takes in directory of blob objects saved tif per time point. Checks for`
+- [IsolateBlobLineage](../../APIs/ObjectTracking/src/objecttracking/blobLineage/IsolateBlobLineage.m): `%% Outline and testing to isolate blobs spatially and temporally`
+- [overlapBlobTrack_fromCCs](../../APIs/ObjectTracking/src/objecttracking/blobLineage/overlapBlobTrack_fromCCs.m): `% Assumes blobs are segmented and saved as connected component objects for`
+- [overlapBlobTracking_TrackObjectProps](../../APIs/ObjectTracking/src/objecttracking/blobLineage/overlapBlobTracking_TrackObjectProps.m): `% Takes in directory of blob objects saved tif per time point. Checks for`
+- [overlapBlobTracking](../../APIs/ObjectTracking/src/objecttracking/blobLineage/overlapBlobTracking.m): `% Takes in directory of blob objects saved tif per time point. Checks for`
+- [farmImportLinks](../../APIs/ObjectTracking/src/objecttracking/trackpy/farmImportLinks.m): `function membership = farmImportLinks(linkedRows, map)`
+- [activeContourFrame1](../../APIs/SegmentationTools/src/segmentationtools/activeContours/activeContourFrame1.m): `%% data info`
+- [activeContourFromH5](../../APIs/SegmentationTools/src/segmentationtools/activeContours/activeContourFromH5.m): `%% This script takes in .h5 files and applies active contouring to generate`
+- [generateFirstGuess_morphsnakes](../../APIs/SegmentationTools/src/segmentationtools/activeContours/generateFirstGuess_morphsnakes.m): `%% This script takes in a segmentation matrix and generates a mask tif`
+- [farmH5toSmooth3Chans](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmH5toSmooth3Chans.m): `function [cleanIns,cleanOuts,cleanOns] = farmH5toSmooth3Chans(currSeg,outInOnChans,threshVec,strelRad,spanBool)`
+- [farmImbinarize3_4D](../../APIs/SegmentationTools/src/segmentationtools/binarization/farmImbinarize3_4D.m): `function [outData] = farmImbinarize3_4D(inData,threshVals)`
+- [farmFlatFill3D](../../APIs/SegmentationTools/src/segmentationtools/cleanup/farmFlatFill3D.m): `function outMat = farmFlatFill3D(inMat, dimFills)`
+- [farmRemoveConObjs](../../APIs/SegmentationTools/src/segmentationtools/cleanup/farmRemoveConObjs.m): `function [logicMat,toRemove] = farmRemoveConObjs(logicMat,toKeep,modeStr)`
+- [farmReturnSmoothBlobsBW](../../APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsBW.m): `function outBounds = farmReturnSmoothBlobsBW(ogBW, layerMean, layerWidth, gKern)`
+- [farmReturnSmoothBlobsIDed](../../APIs/SegmentationTools/src/segmentationtools/cleanup/farmReturnSmoothBlobsIDed.m): `function outMat = farmReturnSmoothBlobsIDed(inMat, layerMean, layerWidth, gKern, calcSpeed)`
+- [farmSidesHoleFill](../../APIs/SegmentationTools/src/segmentationtools/cleanup/farmSidesHoleFill.m): `function [outMat] = farmSidesHoleFill(inMat)`
+- [farmGetCentralSlice](../../APIs/SegmentationTools/src/segmentationtools/morphologySpecific/sheets/farmGetCentralSlice.m): `function [splitSlice] = farmGetCentralSlice(inputData)`
+- [farmReturnCorrectedBinarizedSurfaceIndices](../../APIs/SegmentationTools/src/segmentationtools/morphologySpecific/sheets/farmReturnCorrectedBinarizedSurfaceIndices.m): `function [newInds,holeLocVec] = farmReturnCorrectedBinarizedSurfaceIndices(surfaceInds,imgSize)`
+- [farmReturnTopBottom2DSheets](../../APIs/SegmentationTools/src/segmentationtools/morphologySpecific/sheets/farmReturnTopBottom2DSheets.m): `function [topLayer,botLayer,topLayerZs,botLayerZs, centerSlice,centerSliceZs,splitSlice] = farmReturnTopBottom2DSheets(inputData)`
+- [farmArrayCumSum](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmArrayCumSum.m): `function [csVec] = farmArrayCumSum(inVec)`
+- [farmArrayOrganizer2D](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmArrayOrganizer2D.m): `function [reorganizedArray,linear_grid] = farmArrayOrganizer2D(arr,Dcell)`
+- [farmBlockReshape2D](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmBlockReshape2D.m): `function [outMat] = farmBlockReshape2D(inMat,outCol)`
+- [farmConsMatLnB](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmConsMatLnB.m): `function [outMat] = farmConsMatLnB(baseMat,indices)`
+- [farmConsMinValsLayer](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmConsMinValsLayer.m): `function [minMat] = farmConsMinValsLayer(dataMat,dimension)`
+- [farmConsScalerMat](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmConsScalerMat.m): `function [scalerMat] = farmConsScalerMat(inputData,patchProbs)`
+- [farmFillin2D](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmFillin2D.m): `function [outSlice] = farmFillin2D(inSlice,logicSlice)`
+- [farmFillin3D](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmFillin3D.m): `function [outMat] = farmFillin3D(inMat,logicMat)`
+- [farmFlatFill3D](../../APIs/SegmentationTools/src/segmentationtools/cleanup/farmFlatFill3D.m): `function [outMat] = farmFlatFill3D(inMat,dimFills)`
+- [farmGenerateFieldInterps](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmGenerateFieldInterps.m): `function [outFields] = farmGenerateFieldInterps(ivec,inFields)`
+- [farmGenerateMatrixSubdivisions](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmGenerateMatrixSubdivisions.m): `function [outInds] = farmGenerateMatrixSubdivisions(inputArray,binWindow,overlapBool)`
+- [farmImresize3_4mat](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmImresize3_4mat.m): `function [outData] = farmImresize3_4mat(inData,scaleVec)`
+- [farmInds3Dto2D](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmInds3Dto2D.m): `function [outInds] = farmInds3Dto2D(inInds, size3D)`
+- [farmLens2Blocks](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmLens2Blocks.m): `function [logicMat,validCoord1,validCoord2] = farmLens2Blocks(vecLens1,vecLens2)`
+- [farmRescaleCoords](../../APIs/SharedUtilities/src/sharedutilities/arrays/farmRescaleCoords.m): `function outCoords=farmRescaleCoords(inCoords,ogDims,newDims)`
+- [farmGenLenVec](../../APIs/SharedUtilities/src/sharedutilities/coordinates/farmGenLenVec.m): `function [outVec] = farmGenLenVec(contentsVec,repVec)`
+- [farmGenLineInds2D](../../APIs/SharedUtilities/src/sharedutilities/coordinates/farmGenLineInds2D.m): `function [outInds] = farmGenLineInds2D(matSize,cutInd,cutDim,lineStart,lineEnd)`
+- [farmGenReflVec](../../APIs/SharedUtilities/src/sharedutilities/coordinates/farmGenReflVec.m): `function [reflVec] = farmGenReflVec(inLength)`
+- [farmGetCCVectors](../../APIs/SharedUtilities/src/sharedutilities/coordinates/farmGetCCVectors.m): `function [objSizes,objVoxels,objIDs]=farmGetCCVectors(currCC)`
+- [farmGetUnitVecs](../../APIs/SharedUtilities/src/sharedutilities/coordinates/farmGetUnitVecs.m): `function outMat=farmGetUnitVecs(inMat)`
+- [farmRescaleCoords_Inds](../../APIs/SharedUtilities/src/sharedutilities/coordinates/farmRescaleCoords_Inds.m): `function scaleInds=farmRescaleCoords_Inds(inputInds,ogDims,newDims)`
+- [bndmod](../../APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmBndmod.m): `function [outVal] = farmBndmod(inVal,floorVal,ceilVal)`
+- [farmCellIndSizes](../../APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmCellIndSizes.m): `function [outVec] = farmCellIndSizes(inCell,desCol)`
+- [farmGenericLenVec](../../APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmGenericLenVec.m): `function [outVec] = farmGenericLenVec(inVec)`
+- [farmGenScaledKVec](../../APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmGenScaledKVec.m): `function outKs=farmGenScaledKVec(dimSize,dimdx)`
+- [farmLogic2Ply](../../APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmLogic2Ply.m): `function [] = farmLogic2Ply(logicMat,saveDir,scaleMat)`
+- [mod1b](../../APIs/SharedUtilities/src/sharedutilities/miscellaneous/farmMod1b.m): `function [outNum] = farmMod1b(queryNums,baseNum)`
+- [farmFastLinIntNDScale2](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmFastLinIntNDScale2.m): `function imageInterp=farmFastLinIntNDScale2(inputStack)`
+- [farmGenerate1DGaussian](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerate1DGaussian.m): `function gaussMat = farmGenerate1DGaussian(gsize, xc, sigmax)`
+- [farmGenerate2DGaussian](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerate2DGaussian.m): `function gaussMat = farmGenerate2DGaussian(gsize, xc, yc, sigmax, sigmay)`
+- [farmGenerate3DGaussian](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerate3DGaussian.m): `function gaussMat = farmGenerate3DGaussian(gsize, centers, sigmas, coordMode)`
+- [farmGenerate3DGaussians](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerate3DGaussians.m): `function gaussMat = farmGenerate3DGaussians(gsize, centers, sigmas)`
+- [farmGenerateNDHann](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmGenerateNDHann.m): `function [hannFunc] = farmGenerateNDHann(matDims)`
+- [farmLOG](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmLOG.m): `function logstack = farmLOG(stack, sigma)`
+- [farmLogAB](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmLogAB.m): `function newLog=farmLogAB(A,B)`
+- [myconvn](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmMyconvn.m): `function convolved = farmMyconvn(stack, filter)`
+- [ndmeshgrid](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmNdmeshgrid.m): `function [outMat1,outMat2,outMat3] = farmNdmeshgrid(inVec1, inVec2, inVec3)`
+- [ndndgrid](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmNdndgrid.m): `function [outMat1,outMat2,outMat3] = farmNdndgrid(inVec1, inVec2, inVec3)`
+- [farmNoNan](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmNoNan.m): `function outMat=farmNoNan(inMat,replVal)`
+- [farmNonZeroMean](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmNonZeroMean.m): `function [outMat] = farmNonZeroMean(inMat, selDim)`
+- [farmPoissonDisc](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmPoissonDisc.m): `function [pts] = farmPoissonDisc(sizeI,spacing,nPts,showIter)`
+- [farmSignedBWDist](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmSignedBWDist.m): `function [outMat] = farmSignedBWDist(inMat)`
+- [farmFigSaves](../../APIs/VisualizationTools/src/visualizationtools/export/farmFigSaves.m): `function farmFigSaves(figHandle,saveDir,saveName,fileExts,saveBool)`
+- [farmLogAB](../../APIs/SharedUtilities/src/sharedutilities/numerics/farmLogAB.m): `function newLog=farmLogAB(A,B)`
+- [farmLoglogBin](../../APIs/FieldAnalysis/src/fieldanalysis/statistics/farmLoglogBin.m): `function [meanLogXVals,meanLogYVals]=farmLoglogBin(xVals,yVals,numBins)`
+- [farmManVlnPlot](../../APIs/VisualizationTools/src/visualizationtools/display/farmManVlnPlot.m): `function [meanVal,medVal]=farmManVlnPlot(xData,yDataSet,yBins,maxNorm)`
+- [farmPlotVlns](../../APIs/VisualizationTools/src/visualizationtools/display/farmPlotVlns.m): `function [allMeans,allMeds]=farmPlotVlns(xData,yData,xSuperBin,yBin,maxNorm)`
+- [farmProgressBar](../../APIs/SharedUtilities/src/sharedutilities/plotting/farmProgressBar.m): `function [progressObj] = farmProgressBar(currInd,totalInds,progressObj,updatePrct)`
+- [farmAddFieldsStruct](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmAddFieldsStruct.m): `function structObj=farmAddFieldsStruct(structObj,fieldNames,fieldVals,structInds)`
+- [farmAddFieldStruct](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmAddFieldStruct.m): `function structObj=farmAddFieldStruct(structObj,fieldName,fieldVals,structInds)`
+- [farmConcatTablesOverT](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmConcatTablesOverT.m): `function [superTable] = farmConcatTablesOverT(dataDir,dataName,selTimes,storeVar,saveBool,saveName)`
+- [farmStructFields2Cell](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmStructFields2Cell.m): `function [cellObj] = farmStructFields2Cell(structObj,selFields,structRange)`
+- [farmStructFieldSizes](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmStructFieldSizes.m): `function [numElmts] = farmStructFieldSizes(inStruct,fieldName)`
+- [farmStructLenVec](../../APIs/SharedUtilities/src/sharedutilities/structsAndTables/farmStructLenVec.m): `function [outVec] = farmStructLenVec(inStruct,desField)`
+- [closedSurfaces_FieldsOnMesh](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/mapping/closedSurfaces_FieldsOnMesh.m): `%% Takes in meshes of segmented objects and samples velocities, intensities, and curvatures on faces`
+- [threeSeg_meanIntProfiles](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/mapping/threeSeg_meanIntProfiles.m): `%% Takes in .h5 segmentation and int corrected .tif, returns int. profile`
+- [closedSurfaces_h5ToMesh_EnforceNorms](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshConstruction/closedSurfaces_h5ToMesh_EnforceNorms.m): `%% Messy first take of a script to convert drop segmentations to meshes`
+- [closedSurfaces_h5ToPointCloud](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshConstruction/closedSurfaces_h5ToPointCloud.m): `%% A first pass on how to extract surfaces of roughly drop-like objects`
+- [closedSurfaces_splitPtCloudsMeshes](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshConstruction/closedSurfaces_splitPtCloudsMeshes.m): `%% A first pass on how to extract surfaces of roughly drop-like objects`
+- [farmConsPatchedSheetSurface_Flat](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshConstruction/farmConsPatchedSheetSurface_Flat.m): `function [selectDataOut,newSurfInds,holeIndVec] = farmConsPatchedSheetSurface_Flat(rawData,selectDataIn,surfPerim)`
+- [obj2ply](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/farmObj2ply.m): `function [plyStruct] = farmObj2ply(objStruct, saveBool, outDir, outName)`
+- [farmPlySurf2TIF](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/farmPlySurf2TIF.m): `function [] = farmPlySurf2TIF(dataDir,dataName,outFile,outName)`
+- [farmPlywrite_norms](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/farmPlywrite_norms.m): `function farmPlywrite_norms(filename,faces,verts,vertnorms)`
+- [farmReadObj_remi](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/farmReadObj_remi.m): `function [] = farmReadObj_remi(fileString)`
+- [saveObj2PlyFiles](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshIO/saveObj2PlyFiles.m): `%% Define data info`
+- [farmCapPtCloudFlat](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmCapPtCloudFlat.m): `function [cappedLayers] = farmCapPtCloudFlat(topLayer, botLayer, capDim)`
+- [farmConfineMeshInMat](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmConfineMeshInMat.m): `function [subCoords] = farmConfineMeshInMat(matCoords,matDims)`
+- [farmGetMeshDims](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmGetMeshDims.m): `function [objInfo] = farmGetMeshDims(meshObj, pixDim, flipNorms)`
+- [farmInBetweenFill](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmInBetweenFill.m): `function [midSection] = farmInBetweenFill(mat1, mat2)`
+- [mesh2mat](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmMesh2mat.m): `function [outMat] = farmMesh2mat(verts,matDims)`
+- [farmMeshSideRemove](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmMeshSideRemove.m): `function [Fcut,Vcut] = farmMeshSideRemove(Fraw,Vraw, minCuts, maxCuts)`
+- [farmRemove_isolated_mesh_components](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmRemove_isolated_mesh_components.m): `function [ newFace, newVertex, oldVertexIDx, C ] = farmRemove_isolated_mesh_components( face, ...`
+- [farmRemoveFacesVerts_Mesh](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmRemoveFacesVerts_Mesh.m): `function [ newFace, newVertex, oldVertexIDx, newVertexIDx ] = ...`
+- [shiftMeshVerts](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/shiftMeshVerts.m): `%% Define data info`
+- [farmSplit_mesh_into_components](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmSplit_mesh_into_components.m): `function splitMeshes = farmSplit_mesh_into_components( face, vertex, cutoff, saveBool, saveDir, ignoreBounds )`
+- [farmSplit_single_mesh_object](../../APIs/SurfaceFieldMapping/src/surfacefieldmapping/meshOperations/farmSplit_single_mesh_object.m): `function [validFaces, validVerts] = farmSplit_single_mesh_object(face, vertex, sortOrder, vertMeshIDs, meshID, saveBool, saveDir, ignoreBounds)`
+- [intsAndSegBoundaries_Tiffs](../../APIs/VisualizationTools/src/visualizationtools/intsAndSegBoundaries_Tiffs.m): `% Load tifs and segmentations/thresholded masks; generate drop boundaries`
+- [intsAndSegBoundaries2DImgs_Tiffs](../../APIs/VisualizationTools/src/visualizationtools/intsAndSegBoundaries2DImgs_Tiffs.m): `% Load tifs and segmentations/thresholded masks; generate drop boundaries`
+- [mapFieldOnBlobSegs](../../APIs/VisualizationTools/src/visualizationtools/mapFieldOnBlobSegs.m): `% Directory info`
+- [plotBlobStatistics_rEff](../../APIs/VisualizationTools/src/visualizationtools/plotBlobStatistics_rEff.m): `% Expects data from (test_)trajInfoFromOverlaps_MinAxis.m;`
+- [plotDeltaRBnds](../../APIs/VisualizationTools/src/visualizationtools/plotDeltaRBnds.m): `%% Takes in data calculated from blobDensityDeltaR_Blobs.m`
+- [plotDeltaRSkels](../../APIs/VisualizationTools/src/visualizationtools/plotDeltaRSkels.m): `%% Takes in data calculated from blobDensityDeltaR_Skels.m`
+- [plotFilamentAlignments](../../APIs/VisualizationTools/src/visualizationtools/plotFilamentAlignments.m): `%% From earlier scripts, split together a streamlined version for alignment`
+- [plotFirstInertiaMomentData](../../APIs/VisualizationTools/src/visualizationtools/plotFirstInertiaMomentData.m): `%% Plots data from estimateFirstInertiaMoment.m`
+- [plotRInertiaStruct](../../APIs/VisualizationTools/src/visualizationtools/plotRInertiaStruct.m): `%% Quick and dirty: plot quantities stored in sortedMat`
+- [plotSortedMat_MultipleOverlap](../../APIs/VisualizationTools/src/visualizationtools/plotSortedMat_MultipleOverlap.m): `%% Quick and dirty: plot quantities stored in sortedMat`
+- [plotSortedMat_MultipleSave](../../APIs/VisualizationTools/src/visualizationtools/plotSortedMat_MultipleSave.m): `%% Quick and dirty: plot quantities stored in sortedMat`
+- [plotSortedMat](../../APIs/VisualizationTools/src/visualizationtools/plotSortedMat.m): `%% Quick and dirty: plot quantities stored in sortedMat`
+- [stitchSkelsAndShells](../../APIs/VisualizationTools/src/visualizationtools/stitchSkelsAndShells.m): `%% Combine blob skeletons with blob surface contours, then save in tiffs`
+- [tiffs_BlobOverTime](../../APIs/VisualizationTools/src/visualizationtools/tiffs_BlobOverTime.m): `%% Test: given a trajectory ID, make tifs of blobs over time`
+- [farmGetPolyCoords](../../APIs/VisualizationTools/src/visualizationtools/display/farmGetPolyCoords.m): `function [outXs,outYs] = farmGetPolyCoords(yCoords,yHeights,xCoords)`
+- [farmManVlnPlot](../../APIs/VisualizationTools/src/visualizationtools/display/farmManVlnPlot.m): `function [meanVal,medVal] = farmManVlnPlot(xData,yDataSet,yBins,maxNorm)`
+- [farmPlotMeanStdPoly](../../APIs/VisualizationTools/src/visualizationtools/display/farmPlotMeanStdPoly.m): `function [] = farmPlotMeanStdPoly(meanVals,stdVals,xVals,currColor,alphaVal,lineColor)`
+- [plotVanHoveCorrs](../../APIs/VisualizationTools/src/visualizationtools/display/plotVanHoveCorrs.m): `%% Takes in .mats with van Hove data; plots correlation functions`
+- [farmPlotVlns](../../APIs/VisualizationTools/src/visualizationtools/display/farmPlotVlns.m): `function [allMeans,allMeds] = farmPlotVlns(xData, yData, xSuperBin, yBin, maxNorm)`
+- [farmFigSaves](../../APIs/VisualizationTools/src/visualizationtools/export/farmFigSaves.m): `function [] = farmFigSaves(figHandle,saveDir,saveName,fileExts,saveBool)`

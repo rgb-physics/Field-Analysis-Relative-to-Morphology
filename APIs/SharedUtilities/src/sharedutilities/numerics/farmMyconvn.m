@@ -1,8 +1,13 @@
 function convolved = farmMyconvn(stack, filter)
-    % convn with mirrored padding (historical implementation)
-    %
-    % farmMyconvn(stack,filter)
-    
+%FARMMYCONVN Convolve an array using the historical mirrored padding.
+% Inputs:
+%   stack       Numeric 2D image or 3D volume.
+%   filter      Convolution kernel; normally odd-sized Gaussian derivatives.
+% Outputs:
+%   convolved   Result of mirrored padding followed by convn(..., 'valid').
+%
+% See also farmGaussD, farmLOG
+
     %---------------------------------------------------------------------
     % license
     %---------------------------------------------------------------------
@@ -66,3 +71,16 @@ function convolved = farmMyconvn(stack, filter)
     
 end
 
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% Preserves the bundled ImSAnE padding and convolution implementation.
+% Padding along each dimension is ceil(size(filter) / 2) - 1.
+% Odd-sized kernels preserve input dimensions. Even-sized kernels can reduce
+% a dimension; this historical behavior is unchanged. Oversized padding errors.
+% No filtering or normalization beyond the supplied kernel is inferred.
+%
+% EXAMPLE
+% -------------------------------------------------------------------------
+% result = farmMyconvn(ones(16, 16), farmGaussD(1, 0, 2));

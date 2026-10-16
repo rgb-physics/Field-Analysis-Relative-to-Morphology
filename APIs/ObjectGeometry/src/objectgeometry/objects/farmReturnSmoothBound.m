@@ -1,9 +1,14 @@
 function [erodedBnd] = farmReturnSmoothBound(segBW,strelRad,ogSize)
-%FARMRETURNSMOOTHBOUND Generate a perimeter at interfaces of objects in a
-%binarized image ogBW. The perimeter is made approximately smooth in a
-%matrix of different size, optionally, than the original binarized image.
-%Useful for distance transform in cubic voxels, then defining perimeters in
-%image with different/rescaled voxel representation.
+%FARMRETURNSMOOTHBOUND Construct and smooth a resized morphological boundary.
+% Inputs:
+%   segBW       Binary 3D foreground volume.
+%   strelRad    Signed spherical radius: positive dilates, otherwise erodes.
+%   ogSize      Reference grid dimensions used to calculate a uniform scale.
+% Outputs:
+%   erodedBnd   Smoothed, thresholded and eroded logical boundary volume.
+%
+% See also farmReturnSmoothBoundsBW
+
 %2025-04-18 - Rémi Boros
 
 % Generate morpho kernel
@@ -26,3 +31,18 @@ erodedBnd = imerode(imbinarize(smoothBnd,.5),strel('sphere',1));
 
 end
 
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% Preserves uniform resizing by max(ogSize ./ size(segBW)), followed by
+% Gaussian smoothing with sigma=2, thresholding at 0.5 and radius-1 erosion.
+% Output dimensions need not equal ogSize when axis scale factors differ.
+% imresize3 uses its default interpolation; this is resampling, not axis
+% reordering or a registration operation. No physical calibration is inferred.
+%
+% EXAMPLE
+% -------------------------------------------------------------------------
+% mask = false(12, 12, 12);
+% mask(4:9, 4:9, 4:9) = true;
+% boundary = farmReturnSmoothBound(mask, 1, [12 12 12]);

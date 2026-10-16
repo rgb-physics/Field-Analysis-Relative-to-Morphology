@@ -1,34 +1,22 @@
 function image = farmReadH5(filePath, datasetPath, options)
 %FARMREADH5 Read an HDF5 dataset and normalize it to [Y X Z C T] array order.
-%   IMAGE = farmReadH5(FILEPATH, DATASETPATH, OPTIONS) reads the
-%   requested HDF5 dataset and returns a struct containing the normalized
-%   array, axis labels, source-axis information, and HDF5 dataset metadata.
-%
-%   DATASETPATH is required. OPTIONS is an optional struct with fields:
-%       SourceAxes  Axis labels for the array returned by h5read, such as
-%                   "CYXZ". Use this when the file does not contain the
-%                   supported MATLAB_AXIS_ORDER attribute.
-%       Channels    Channel indices to retain after normalization. By
-%                   default, all channels are retained.
-%       Spacing     Spatial sample spacing in [Y X Z] order. The default
-%                   is [1 1 1].
-%       SpacingUnit Unit for Spacing, such as "um" or "nm". The default
-%                   is "pixel".
-%
-%   The only automatically recognized axis attribute is
-%   MATLAB_AXIS_ORDER. Its value must describe the order returned by
-%   MATLAB's h5read function, not an assumed on-disk byte order.
+% Inputs:
+%   filePath        Full input or output file path, including filename.
+%   datasetPath     HDF5 dataset path within the file.
+%   options         Operation settings struct.
+% Outputs:
+%   image           Image struct containing normalized Data, YXZCT axes and source metadata.
 
 if nargin < 2 || isempty(datasetPath)
     error('imagestackio:MissingDatasetPath', ...
-        'Specify the HDF5 dataset path to read.');
+          'Specify the HDF5 dataset path to read.');
 end
 if nargin < 3 || isempty(options)
     options = struct();
 end
 if ~isstruct(options) || ~isscalar(options)
     error('imagestackio:InvalidOptions', ...
-        'OPTIONS must be a scalar struct.');
+          'OPTIONS must be a scalar struct.');
 end
 [spacing, spacingUnit] = farmParseSpacingOptions(options);
 
@@ -50,15 +38,15 @@ if isfield(options, 'SourceAxes') && ~isempty(options.SourceAxes)
         catch
             parsedMetadataAxes = '';
             warning('imagestackio:InvalidAxisMetadata', ...
-                ['The MATLAB_AXIS_ORDER attribute is not a supported axis ' ...
-                 'string; using the explicit OPTIONS.SourceAxes value.']);
+                    ['The MATLAB_AXIS_ORDER attribute is not a supported axis ' ...
+                     'string; using the explicit OPTIONS.SourceAxes value.']);
         end
         if ~isempty(parsedMetadataAxes) && ...
                 ~strcmp(sourceAxes, parsedMetadataAxes)
             warning('imagestackio:SourceAxesOverridesMetadata', ...
-                ['OPTIONS.SourceAxes (%s) differs from the dataset ' ...
-                 'MATLAB_AXIS_ORDER attribute (%s); using the explicit option.'], ...
-                sourceAxes, parsedMetadataAxes);
+                    ['OPTIONS.SourceAxes (%s) differs from the dataset ' ...
+                     'MATLAB_AXIS_ORDER attribute (%s); using the explicit option.'], ...
+                    sourceAxes, parsedMetadataAxes);
         end
     end
 elseif ~isempty(metadataAxes)
@@ -66,8 +54,8 @@ elseif ~isempty(metadataAxes)
     axisSource = metadataAxisSource;
 else
     error('imagestackio:SourceAxesRequired', ...
-        ['Could not determine the dimensions of the array returned by ' ...
-         'h5read. Set OPTIONS.SourceAxes, for example "CYXZ".']);
+          ['Could not determine the dimensions of the array returned by ' ...
+           'h5read. Set OPTIONS.SourceAxes, for example "CYXZ".']);
 end
 
 rawData = h5read(filePath, datasetPath);
@@ -79,12 +67,12 @@ if isfield(options, 'Channels') && ~isempty(options.Channels)
             any(~isfinite(channels)) || any(channels < 1) || ...
             any(channels ~= fix(channels))
         error('imagestackio:InvalidChannels', ...
-            'OPTIONS.Channels must contain positive integer indices.');
+              'OPTIONS.Channels must contain positive integer indices.');
     end
     if any(channels > size(data, 4))
         error('imagestackio:ChannelOutOfRange', ...
-            'A requested channel exceeds the channel dimension (%d).', ...
-            size(data, 4));
+              'A requested channel exceeds the channel dimension (%d).', ...
+              size(data, 4));
     end
     data = data(:, :, :, channels, :);
 end
@@ -103,11 +91,12 @@ image.SpacingUnit = spacingUnit;
 end
 
 function value = localTextScalar(value, argumentName)
+% Internal helper.
 if isstring(value) && isscalar(value)
     value = char(value);
 elseif ~ischar(value) || ~isrow(value)
     error('imagestackio:InvalidTextInput', ...
-        '%s must be a character row vector or string scalar.', argumentName);
+          '%s must be a character row vector or string scalar.', argumentName);
 end
 if isempty(value)
     error('imagestackio:EmptyTextInput', '%s cannot be empty.', argumentName);
@@ -115,6 +104,7 @@ end
 end
 
 function [axes, source] = localReadAxisAttribute(datasetInfo)
+% Internal helper.
 axes = '';
 source = '';
 if ~isfield(datasetInfo, 'Attributes') || isempty(datasetInfo.Attributes)
@@ -132,12 +122,13 @@ end
 end
 
 function axes = localValidateAxes(value)
+% Internal helper.
 if isstring(value) && isscalar(value)
     value = char(value);
 end
 if ~ischar(value) || ~isrow(value)
     error('imagestackio:InvalidSourceAxes', ...
-        'SourceAxes must be a character row vector or string scalar.');
+          'SourceAxes must be a character row vector or string scalar.');
 end
 
 axes = upper(regexprep(value, '[\s,_-]', ''));
@@ -146,7 +137,30 @@ if isempty(axes) || any(~ismember(axes, validAxes)) || ...
         numel(unique(axes)) ~= numel(axes) || ...
         ~all(ismember('YX', axes))
     error('imagestackio:InvalidSourceAxes', ...
-        ['SourceAxes must list unique axes from Y, X, Z, C, and T, ' ...
-         'including both Y and X (for example "CYXZ").']);
+          ['SourceAxes must list unique axes from Y, X, Z, C, and T, ' ...
+           'including both Y and X (for example "CYXZ").']);
 end
 end
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% FARMREADH5 Read an HDF5 dataset and normalize it to [Y X Z C T] array order.
+%   IMAGE = farmReadH5(FILEPATH, DATASETPATH, OPTIONS) reads the
+%   requested HDF5 dataset and returns a struct containing the normalized
+%   array, axis labels, source-axis information, and HDF5 dataset metadata.
+%
+%   DATASETPATH is required. OPTIONS is an optional struct with fields:
+%       SourceAxes  Axis labels for the array returned by h5read, such as
+%                   "CYXZ". Use this when the file does not contain the
+%                   supported MATLAB_AXIS_ORDER attribute.
+%       Channels    Channel indices to retain after normalization. By
+%                   default, all channels are retained.
+%       Spacing     Spatial sample spacing in [Y X Z] order. The default
+%                   is [1 1 1].
+%       SpacingUnit Unit for Spacing, such as "um" or "nm". The default
+%                   is "pixel".
+%
+%   The only automatically recognized axis attribute is
+%   MATLAB_AXIS_ORDER. Its value must describe the order returned by
+%   MATLAB's h5read function, not an assumed on-disk byte order.

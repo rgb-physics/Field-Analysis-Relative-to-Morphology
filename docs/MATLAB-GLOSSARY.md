@@ -1,5 +1,10 @@
 # Look up package terminology in MATLAB
 
+For reading in a browser, start with the [scientific topic pages](reference/README.md)
+or [alphabetical index](reference/terms.md). Those generated pages and the MATLAB
+lookups use the same editable glossary source. Each entry has one topic-page
+location; definitions and MATLAB return fields are unchanged by this presentation.
+
 From the MeMo repository root, run:
 
 ```matlab
@@ -98,8 +103,7 @@ inputs = farmGetGlossaryInputs( ...
 ```
 
 The root `farmGlossary` command adds that source directory if needed. The
-namespaced getters also work when only the API source directory has been
-added and the repository root is not on the MATLAB path.
+ordinary getter functions work after `farmSetup` adds the API source folders.
 
 ## Other MATLAB presentations
 
@@ -116,7 +120,34 @@ fields listed under `diagnostics`. These are generated quantities, so their
 input getter returns `Inputs: {''}`. In tables they normally appear with a
 field, query or vector-component prefix rather than as bare names.
 
-The [candidate inventory](DATA-DICTIONARY-CANDIDATES.md) and
-[CSV with source evidence](DATA-DICTIONARY-CANDIDATES.csv) list other names to
-review. This inventory is separate from the published dictionary: an occurrence
-in code does not establish a shared meaning or a supported public contract.
+An [older candidate scan](history/DATA-DICTIONARY-CANDIDATES.md) and its
+[CSV evidence](history/DATA-DICTIONARY-CANDIDATES.csv) are retained as historical
+material. They include removed source trees and are not a current inventory.
+The full inventory remains deferred. An occurrence in code does not establish
+a shared meaning or a supported public contract.
+
+## Maintain the topic pages
+
+Edit definitions, representations and input layouts in
+[GLOSSARY-CAPABILITIES-MOCKUP.md](../GLOSSARY-CAPABILITIES-MOCKUP.md).
+Keep interpretation notes there as well. The topic pages are generated views,
+so do not edit their copies independently. Topic assignments and construct labels
+are maintained in [tools/build_reference.py](../tools/build_reference.py).
+The generated [entry map](reference/ENTRIES.csv) records each topic, anchor and
+source line; it is a documentation entry map, not a public-function inventory.
+
+Python 3.10 or later is needed only to rebuild/check documentation. No Python
+packages or tracking installation are required. From the repository root:
+
+```text
+python tools/build_reference.py
+python tools/build_reference.py --check
+```
+
+The check verifies current generated content, local links and anchors, one
+topic-page location per entry, and balanced expandable sections/code blocks.
+MATLAB continues to read the source directly, so its lookups need no build step.
+
+The full public-function and test inventory is deferred until the remaining
+functionality has been evaluated. These pages publish the current entries and
+do not claim to document every output of every retained function.

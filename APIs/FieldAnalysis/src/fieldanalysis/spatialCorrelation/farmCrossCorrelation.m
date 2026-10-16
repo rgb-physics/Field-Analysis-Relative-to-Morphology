@@ -1,34 +1,62 @@
-function result = farmCrossCorrelation(a,b,options)
+function result = farmCrossCorrelation(a, b, options)
 %FARMCROSSCORRELATION Unnormalized linear correlation, native xcorr2 in 2D.
-% 3D uses FFT convolution of A with reversed B (equivalent lag convention).
-% Positive lag means A is displaced toward increasing indices relative to B.
-if nargin<3, options = struct(); end
-a = farmFAField(a); b = farmFAField(b);
-if ~isequal(size(a),size(b)), error('fieldanalysis:SizeMismatch','Fields must have matching dimensions.'); end
-nD = ndims(a);
-o = farmFAOptions(options, struct('MeanSubtract',false,'Window',false, ...
-    'Spacing',ones(1,nD),'SpacingUnit','voxel'));
-validateattributes(o.MeanSubtract,{'logical'},{'scalar'});
-validateattributes(o.Window,{'logical'},{'scalar'});
-validateattributes(o.Spacing,{'numeric'},{'vector','positive','finite','numel',nD});
-originalMeans = [mean(a(:)),mean(b(:))];
-if o.MeanSubtract, a = a-originalMeans(1); b = b-originalMeans(2); end
-if o.Window
-    w = farmGenerateNDHann(size(a)); a = a.*w; b = b.*w;
+% Inputs:
+%   a               First numeric field or sample vector.
+%   b               Corresponding second numeric field or sample vector.
+%   options         Operation settings struct.
+% Outputs:
+%   result          Linear cross-correlation array with lag and normalization metadata.
+
+if nargin < 3
+    options = struct();
 end
-if nD==2
-    if exist('xcorr2','file')==0, error('fieldanalysis:Dependency','2D correlation requires MATLAB xcorr2 (Signal Processing Toolbox).'); end
-    correlation = xcorr2(a,b);
+a = farmFAField(a);
+b = farmFAField(b);
+if ~isequal(size(a), size(b))
+    error('fieldanalysis:SizeMismatch', 'Fields must have matching dimensions.');
+end
+nD = ndims(a);
+o = farmFAOptions(options, struct('MeanSubtract', false, 'Window', false, ...
+                                  'Spacing', ones(1, nD), 'SpacingUnit', 'voxel'));
+validateattributes(o.MeanSubtract, {'logical'}, {'scalar'});
+validateattributes(o.Window, {'logical'}, {'scalar'});
+validateattributes(o.Spacing, {'numeric'}, {'vector', 'positive', 'finite', 'numel', nD});
+originalMeans = [mean(a(:)), mean(b(:))];
+if o.MeanSubtract
+    a = a - originalMeans(1);
+    b = b - originalMeans(2);
+end
+if o.Window
+    w = farmGenerateNDHann(size(a));
+    a = a .* w;
+    b = b .* w;
+end
+if nD == 2
+    if exist('xcorr2', 'file') == 0
+        error('fieldanalysis:Dependency', '2D correlation requires MATLAB xcorr2 (Signal Processing Toolbox).');
+    end
+    correlation = xcorr2(a, b);
 else
     rev = b;
-    for d = 1:nD, rev = flip(rev,d); end
-    outSize = size(a)+size(b)-1;
-    correlation = real(ifftn(fftn(a,outSize).*fftn(rev,outSize)));
+    for d = 1:nD
+        rev = flip(rev, d);
+    end
+    outSize = size(a) + size(b) - 1;
+    correlation = real(ifftn(fftn(a, outSize) .* fftn(rev, outSize)));
 end
-lags = cell(1,nD);
-for d = 1:nD, lags{d} = (-(size(b,d)-1):(size(a,d)-1))*o.Spacing(d); end
-result = struct('Correlation',correlation,'LagAxes',{lags}, ...
-    'ZeroLagIndex',size(b),'Boundary','linear','Normalization','none', ...
-    'MeanSubtract',o.MeanSubtract,'Window',o.Window,'InputMeans',originalMeans, ...
-    'GridSize',size(a),'Spacing',o.Spacing,'SpacingUnit',o.SpacingUnit);
+lags = cell(1, nD);
+for d = 1:nD
+    lags{d} = (-(size(b, d) - 1):(size(a, d) - 1)) * o.Spacing(d);
 end
+result = struct('Correlation', correlation, 'LagAxes', {lags}, ...
+                'ZeroLagIndex', size(b), 'Boundary', 'linear', 'Normalization', 'none', ...
+                'MeanSubtract', o.MeanSubtract, 'Window', o.Window, 'InputMeans', originalMeans, ...
+                'GridSize', size(a), 'Spacing', o.Spacing, 'SpacingUnit', o.SpacingUnit);
+end
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% FARMCROSSCORRELATION Unnormalized linear correlation, native xcorr2 in 2D.
+% 3D uses FFT convolution of A with reversed B (equivalent lag convention).
+% Positive lag means A is displaced toward increasing indices relative to B.

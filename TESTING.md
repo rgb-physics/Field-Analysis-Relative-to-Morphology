@@ -30,5 +30,10 @@ Covered: SegmentationTools, ObjectGeometry, scalar/vector field sampling, Object
 
 Not covered: manual visual validation scripts, real-data scientific comparisons, scalability benchmarks, deferred full VisualizationTools and SurfaceFieldMapping test suites. This runner collects existing coverage; it does not make the package fully scientifically validated.
 
-MATLAB with the toolboxes/dependencies required by the individual suites is needed. This runner has been statically checked; execution must be confirmed in a licensed MATLAB session.
+MATLAB with the toolboxes/dependencies required by the individual suites is needed.
+The most recent recorded full-suite run on October 15, 2026 passed 182 checks,
+with no failures, incomplete checks or suite execution errors. See
+[refactor progress](docs/REFACTOR-PROGRESS.md) for saved log locations and later
+focused checks. This is recorded evidence for that revision, not a guarantee
+that an edited checkout or another environment will pass.
 

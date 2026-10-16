@@ -1,11 +1,9 @@
 function entries = farmGlossaryEntries(varargin)
-%FARMGLOSSARYENTRIES Read every defined entry from the repository's written glossary.
-% Returns string columns Term, Section, Group, DataType, Definition, Inputs, Notes.
-% Section defaults to "all"; optionally select "Glossary", "DataDictionary",
-% or a string vector of sections. Group is the topical heading within a section.
-% No cached copy: edits to the document appear on the next call. Source order
-% and capitalization are preserved, including separate workflow-variable entries.
-% A missing input layout is represented by exactly "Inputs: {''}".
+%FARMGLOSSARYENTRIES Read every defined entry from the repository's written farmGlossary.
+% Inputs:
+%   varargin        Optional Section filter as name/value pairs.
+% Outputs:
+%   entries         Table of glossary and Data Dictionary entries in source order.
 
 folder = fileparts(mfilename('fullpath'));
 source = fullfile(folder, '..', '..', '..', '..', '..', 'GLOSSARY-CAPABILITIES-MOCKUP.md');
@@ -14,7 +12,7 @@ if ~isfile(source)
 end
 lines = regexp(fileread(source), '\r\n|\n|\r', 'split');
 prototype = struct('Term', "", 'Section', "", 'Group', "", 'DataType', "", ...
-    'Definition', "", 'Inputs', "Inputs: {''}", 'Notes', "");
+                   'Definition', "", 'Inputs', "Inputs: {''}", 'Notes', "");
 records = repmat(prototype, 0, 1);
 section = "";
 group = "";
@@ -44,9 +42,13 @@ for k = 1:numel(lines)
         definitionComplete = false;
         continue
     end
-    if current == 0, continue; end
+    if current == 0
+        continue
+    end
     if isempty(line)
-        if strlength(records(current).Definition) > 0, definitionComplete = true; end
+        if strlength(records(current).Definition) > 0
+            definitionComplete = true;
+        end
         continue
     end
     line = cleanMarkup(line);
@@ -55,7 +57,9 @@ for k = 1:numel(lines)
         definitionComplete = true;
     elseif ~definitionComplete
         separator = " ";
-        if startsWith(line, '['), separator = string(newline); end
+        if startsWith(line, '[')
+            separator = string(newline);
+        end
         records(current).Definition = joinText(records(current).Definition, line, separator);
     else
         records(current).Notes = joinText(records(current).Notes, line, " ");
@@ -72,10 +76,26 @@ entries = farmSUSelectGlossaryEntries(entries, false, varargin{:});
 end
 
 function text = cleanMarkup(text)
+% Internal helper.
 text = string(strrep(strrep(text, '\*', '*'), '`', ''));
 end
 
 function text = joinText(previous, next, separator)
-if strlength(previous) == 0, text = next;
-else, text = previous + separator + next; end
+% Internal helper.
+if strlength(previous) == 0
+    text = next;
+else
+    text = previous + separator + next;
 end
+end
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% FARMGLOSSARYENTRIES Read every defined entry from the repository's written farmGlossary.
+% Returns string columns Term, Section, Group, DataType, Definition, Inputs, Notes.
+% Section defaults to "all"; optionally select "Glossary", "DataDictionary",
+% or a string vector of sections. Group is the topical heading within a section.
+% No cached copy: edits to the document appear on the next call. Source order
+% and capitalization are preserved, including separate workflow-variable entries.
+% A missing input layout is represented by exactly "Inputs: {''}".

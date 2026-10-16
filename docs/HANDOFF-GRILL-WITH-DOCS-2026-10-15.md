@@ -36,13 +36,13 @@ and the adjacent `Package Repo Refactor MAIN - Transcript.md`. It ends before th
 Use repository-relative paths below, resolved from the root above.
 
 1. `README.md`, `docs/README.md`, and `TESTING.md`: package purpose, navigation, available verification.
-2. `docs/FARM-NAMING-MIGRATION.md`, `docs/FARM-MIGRATION-VALIDATION.md`: current naming, archive policy, checks and limitations.
+2. `docs/FARM-NAMING-MIGRATION.md`, `docs/history/FARM-MIGRATION-VALIDATION.md`: current naming, archive policy, checks and limitations.
 3. `docs/FARM-FUNCTION-NAMES.json`, `docs/FARM-MIGRATION-MANIFEST.csv`, `docs/CURRENT_SOURCE_TREES.md`: exact function mapping and retained files.
 4. `GLOSSARY-CAPABILITIES-MOCKUP.md`, `docs/MATLAB-GLOSSARY.md`, `farmGlossary.m`: terminology and interactive reference. The filename “MOCKUP” is historical; this document is used by the implemented reference.
 5. `CONFIGURATION-BUILDERS.md`, `docs/READING-STRUCTURES.md`, `docs/CHANGING-AN-ANALYSIS.md`, `docs/WORKFLOW-1-WALKTHROUGH.md`: configuration and user experience.
 6. `Workflows/examples/setupWorkflow1.m` through `setupWorkflow5.m`, plus `setupWorkflow2Staged.m`: user-facing analysis choices and the alternate staged presentation.
-7. Relevant API README, function help, tests, and implementation for each question. `OPTIONS-AND-BUILDERS-AUDIT.md` is useful background but must be checked against code.
-8. `docs/DATA-DICTIONARY-CANDIDATES.md` and `.csv`: candidate fields, not an approved requirement to document every implementation variable.
+7. Relevant API README, function help, tests, and implementation for each question. `docs/history/OPTIONS-AND-BUILDERS-AUDIT.md` is useful background but must be checked against code.
+8. `docs/history/DATA-DICTIONARY-CANDIDATES.md` and `.csv`: candidate fields, not an approved requirement to document every implementation variable.
 
 Read applicable AGENTS.md instructions before editing. Do not infer present behavior solely from old pseudocode, old handoffs, or archived functions.
 

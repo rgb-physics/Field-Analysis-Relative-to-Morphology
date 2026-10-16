@@ -1,3 +1,5 @@
+> Historical snapshot, retained October 15, 2026. Read the [current user guide](../README.md) and [history index](README.md) before following these older notes.
+
 # FARM migration validation — 2026-10-15
 
 The ordinary-folder migration was checked with MATLAB R2023a's standalone
@@ -41,7 +43,7 @@ retired writer checks are preserved with the original runner in MeMo-Archive.
 A synthetic HDF5 mapping check also runs without external fixtures.
 
 Original scientific algorithms were retained. Intentional implementation
-adaptations are documented in the [migration guide](FARM-NAMING-MIGRATION.md):
+adaptations are documented in the [migration guide](../FARM-NAMING-MIGRATION.md):
 consistent options order, explicit historical HDF5 axes, and the current TIFF
 writer for retained transforms. Source datasets, Git history and local MATLAB
 preferences were excluded from the archive/migration operations.

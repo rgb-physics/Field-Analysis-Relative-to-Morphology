@@ -6,6 +6,14 @@ overwritten by the workflows. No output is written beside source data.
 
 ## Start here
 
+For a small example requiring no image files, run
+[exampleObjectInspection.m](exampleObjectInspection.m) from the repository root
+after `farmSetup('IncludeExamples', true)`. Run its sections in order or run the
+whole script. It retains objects, boundary geometry, queried measurements and
+distance-profile tables in the workspace. Display subsampling affects only the
+3D figure. The final comments explain where stopping and resuming is limited.
+This example needs Image Processing Toolbox and opens figures; it writes no files.
+
 Read [Understanding workflow 1](../../docs/WORKFLOW-1-WALKTHROUGH.md) for a
 step-by-step explanation of the data, settings, requests and output structures.
 

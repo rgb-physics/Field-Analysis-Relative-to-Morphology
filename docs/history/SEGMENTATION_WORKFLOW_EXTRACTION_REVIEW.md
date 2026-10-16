@@ -1,3 +1,5 @@
+> Historical snapshot, retained October 15, 2026. Read the [current user guide](../README.md) and [history index](README.md) before following these older notes.
+
 # SegmentationTools: extraction candidates from workflows
 
 Reviewed 2026-10-10 in the FARM checkout named `MeMo`.

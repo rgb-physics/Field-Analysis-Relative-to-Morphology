@@ -1,9 +1,12 @@
-function [progressObj] = farmProgressBar(currInd,totalInds,progressObj,updatePrct)
+function [progressObj] = farmProgressBar(currInd, totalInds, progressObj, updatePrct)
 %FARMPROGRESSBAR Generates a waitbar object to show progress on a loop. The
-%waitbar object is instantiated for currInd = 1, the first iteration, and
-%is closed on the final iteration. updatePrct is a number corresponding to
-%the percentage of iterations over which the waitbar should be updated.
-% Rémi Boros, 2024-04-30
+% Inputs:
+%   currInd         Current iteration index.
+%   totalInds       Total iteration count.
+%   progressObj     Existing waitbar handle when updating a progress display.
+%   updatePrct      Optional percentage interval for progress updates.
+% Outputs:
+%   progressObj     Waitbar handle, updated or closed by the current iteration.
 
 % Instantiate edge cases
 if nargin == 3
@@ -14,18 +17,26 @@ if numel(totalInds) > 1
 end
 updateBreaks = 0:updatePrct:100;
 % Calculate precent done from current index and total indices
-prctDone = round(100*currInd/totalInds);
+prctDone = round(100 * currInd / totalInds);
 % Display percent done and clean up
 if currInd == 1
     close(progressObj);
-    progressObj = waitbar(0,progressObj,'Starting up...');
+    progressObj = waitbar(0, progressObj, 'Starting up...');
 elseif currInd == totalInds
     close(progressObj)
     progressObj = '';
 else
-    updateIdx = find(updateBreaks<prctDone, 1,'last');
+    updateIdx = find(updateBreaks < prctDone, 1, 'last');
     currPrctBreak = updateBreaks(updateIdx);
-    waitbar(currPrctBreak/100,progressObj,sprintf('Finished %02d%%...',currPrctBreak));
+    waitbar(currPrctBreak / 100, progressObj, sprintf('Finished %02d%%...', currPrctBreak));
 end
 end
 
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% FARMPROGRESSBAR Generates a waitbar object to show progress on a loop. The
+% waitbar object is instantiated for currInd = 1, the first iteration, and
+% is closed on the final iteration. updatePrct is a number corresponding to
+% the percentage of iterations over which the waitbar should be updated.
+% Rémi Boros, 2024-04-30

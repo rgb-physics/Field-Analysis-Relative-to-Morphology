@@ -1,25 +1,16 @@
 function [outMat] = farmReturnSmoothBoundsIDed(inMat,layerMean,layerWidth,gKern,calcSpeed)
-%FARMRETURNSMOOTHBOUNDSIDED Generate smooth boundaries for objects in a grayscale
-% matrix inMat. Contiguous objects in inMat should be labeled with unique
-% integer values, ie via bwlabel or some analog.
-% Smoothing is implemented via gaussian smoothing of the
-% distance transform of the input matrix to circumvent pixelated artifacts
-% in low-resolution images. 
-% The bounding shell is generated a distance layerMean from blob boundaries
-% with a half-width of layerWidth. layerMean < 0 correspond to layers
-% in blobs interiors.
-% gKern is the kernel size used to smooth the distance transform via 
-% Gaussian smoothing and outSize is the dims of the output matrix. 
-% Negative values of gKern will define a pointcloud towards blob interiors 
-% rather than their exterior
-% calcSpeed can be 'fast' or 'slow':
-% calcSpeed = 'fast' will asign values to boundaries via direct dilation of
-% the input image. This may not be desirable in the event that objects are
-% too close. 
-% calcSpeed = 'slow' will calculate boundaries individually before
-% concatenating all objects together.
-% NOTE: for best results, the voxel dimensions of inMat should be equal in
-% all dimensions (cubic).
+%FARMRETURNSMOOTHBOUNDSIDED Label distance layers around input object IDs.
+% Inputs:
+%   inMat        Label matrix with positive IDs and zero background.
+%   layerMean    Center of the signed-distance interval, in voxels.
+%   layerWidth   Half-width of the interval; absolute value is used.
+%   gKern        Gaussian standard deviation in voxels; zero skips smoothing.
+%   calcSpeed    'fast' for union distance/dilation; 'slow' for per-ID layers.
+% Outputs:
+%   outMat       Selected layers carrying assigned input IDs.
+%
+% See also farmReturnSmoothBoundsBW
+
 %2025-04-18 - Rémi Boros
 % Reimplemented 2026-04-28
 
@@ -34,8 +25,11 @@ if matches(calcSpeed,'fast')
     boundMat = farmReturnSmoothBoundsBW(bwMat,layerMean,layerWidth,gKern);
     % Dilate the original matrix
     outerBound = round(max(layerWidth,layerMean+layerWidth));
-    if ndims(inMat)==2, kernel = strel('disk',max(0,outerBound),0);
-    else, kernel = strel('sphere',max(0,outerBound)); end
+    if ndims(inMat) == 2
+        kernel = strel('disk', max(0, outerBound), 0);
+    else
+        kernel = strel('sphere', max(0, outerBound));
+    end
     fillMat = imdilate(inMat,kernel);
     % Sample the dilated image on the constructed boundaries
     outMat = farmConsMatLnB(fillMat, boundMat);
@@ -59,3 +53,23 @@ end
 
 end
 
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% 'fast' uses a foreground-union distance selection and grayscale dilation.
+% Nearby objects can influence ID assignment. 'slow' calculates a full-grid
+% layer for each ID; later IDs overwrite earlier ones at overlapping layers.
+% These historical modes are not scientifically interchangeable.
+% Interval endpoints are excluded, following farmReturnSmoothBoundsBW.
+%
+% EXAMPLE
+% -------------------------------------------------------------------------
+% labels = zeros(20, 20);
+% labels(5:8, 5:8) = 7;
+% layers = farmReturnSmoothBoundsIDed(labels, 0, 2, 0, 'slow');
+%
+% UNITS AND COORDINATES
+% -------------------------------------------------------------------------
+% Distance and Gaussian width are in voxel units. No spacing conversion occurs.
+% Per-ID computation allocates full-grid arrays repeatedly.

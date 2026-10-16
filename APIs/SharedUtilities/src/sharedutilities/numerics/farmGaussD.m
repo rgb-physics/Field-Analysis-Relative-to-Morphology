@@ -1,12 +1,13 @@
 function dG = farmGaussD(sigma, n, varargin)
-    % create an Nx1 Gaussian derivative kernel of std dev s
-    %
-    % dG = farmGaussD(sigma, n)
-    % dG = farmGaussD(sigma, n, dimension)
-    %
-    % the Gaussian is separable so we only need one dimension at a time
-    % n is the order of the derivative
-    % optional: dimension 1,2,3
+%FARMGAUSSD Construct a sampled one-dimensional Gaussian derivative kernel.
+% Inputs:
+%   sigma      Positive Gaussian standard deviation in voxels.
+%   n          Derivative order: 0, 1 or 2.
+%   varargin   Optional array dimension: 1 (column), 2 (row) or 3.
+% Outputs:
+%   dG         Kernel oriented along the selected array dimension.
+%
+% See also farmLOG, farmMyconvn
 
     %---------------------------------------------------------------------
     % license
@@ -61,5 +62,17 @@ function dG = farmGaussD(sigma, n, varargin)
         end
     end
 end
-    
 
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% Preserves the bundled ImSAnE formulas and support -ceil(3*sigma):ceil(3*sigma).
+% The sampled Gaussian is normalized before differentiation. Derivative
+% kernels are not subsequently renormalized. Dimensions are array dimensions,
+% not named XYZ components; no physical-unit conversion is performed.
+%
+% EXAMPLES
+% -------------------------------------------------------------------------
+% gaussian = farmGaussD(1, 0);
+% dxKernel = farmGaussD(1, 1, 2);

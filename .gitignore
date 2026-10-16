@@ -6,6 +6,7 @@
 *.p
 slprj/
 codegen/
+MathWorks/
 
 # MATLAB datasets and generated figures
 *.mat
@@ -43,3 +44,6 @@ desktop.ini
 # Python bridge test caches
 __pycache__/
 *.py[cod]
+
+# Local external installations are not redistributed with FARM.
+local-dependencies/

@@ -1,9 +1,16 @@
 function [validCores,coreMat] = farmSkel3DBlobs(inMat,gradCut,sigma,hBool)
-%FARMSKEL3DBLOBS 
-% Load blob .tifs, extract 3D skeletons through manipulation of the
-% distance transform.
-% Uses external dependency to calculate gaussian derivatives:
-% https://www.mathworks.com/matlabcentral/fileexchange/19696-gaussdiff
+%FARMSKEL3DBLOBS Extract candidate blob cores from a 3D distance transform.
+% Inputs:
+%   inMat        Binary 3D foreground volume.
+%   gradCut      Threshold on the largest absolute distance derivative.
+%   sigma        Gaussian derivative scale and spherical erosion radius.
+%   hBool        Zero skips the historical Hessian refinement.
+% Outputs:
+%   validCores   Linear indices of selected core locations.
+%   coreMat      Corresponding full-grid core selection.
+%
+% See also farmGenerateGeometry
+
 % Rémi Boros - 2026-01-27
 
 if exist('gfilter','file') ~= 2
@@ -69,3 +76,20 @@ end
 
 end
 
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% Uses gaussdiff gfilter for Gaussian derivatives:
+% https://www.mathworks.com/matlabcentral/fileexchange/19696-gaussdiff
+% No images are loaded here. The supplied volume is converted to logical.
+% The historical Hessian branch allocates derivative volumes and computes
+% eigenvalues at candidate voxels; its tic/toc output is preserved.
+% sigma is in voxel units. No anisotropic distance correction is performed.
+% The output describes derived blob-core geometry, not image filaments.
+%
+% EXAMPLE
+% -------------------------------------------------------------------------
+% mask = false(15, 15, 15);
+% mask(4:12, 4:12, 4:12) = true;
+% [indices, cores] = farmSkel3DBlobs(mask, 0.2, 1, 0); % requires gfilter

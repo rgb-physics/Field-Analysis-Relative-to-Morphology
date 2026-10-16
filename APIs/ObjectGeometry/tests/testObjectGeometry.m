@@ -19,6 +19,55 @@ addpath(fullfile(root,'APIs','ImageStackIO','src'));
 testCase.TestData.Root = root;
 addpath(fullfile(root,'tests'));
 end
+
+function testFieldOnObjectsSelectionAndOverlap(testCase)
+selected = logical([1 1 0; 1 0 1]);
+indices = [1; 2; 4; 6];
+[values, returnedIndices, returnedSelection] = ...
+    farmFieldOnObjs([10; 20], [2 3], indices, selected);
+verifyEqual(testCase, values, [10 0 0; 20 10 20]);
+verifyClass(testCase, values, 'double');
+verifyEqual(testCase, returnedIndices, indices);
+verifyEqual(testCase, returnedSelection, selected);
+
+overlap = farmFieldOnObjs([10; 20], [2 3 2], [1; 1], true(2, 1));
+expected = zeros(2, 3, 2);
+expected(1) = 20;
+verifyEqual(testCase, overlap, expected);
+
+empty = farmFieldOnObjs([], [2 3], [], false(0, 0));
+verifyEqual(testCase, empty, zeros(2, 3));
+end
+
+function testEndpointRasterizerUsesIncludedAssignment(testCase)
+% Historical sampling uses round(length) points, including both endpoints.
+filaments = array2table([0 0 0 1 2 2 4 2 2]);
+[labels, indices, selected] = farmCoords2Mat_2DFils(filaments, [5 5 5], 5);
+expected = zeros(5, 5, 5);
+expected([1 3 4], 2, 2) = 1;
+verifyEqual(testCase, labels, expected);
+verifyEqual(testCase, indices, sub2ind([5 5 5], [1; 3; 4], 2*ones(3,1), 2*ones(3,1)));
+verifyEqual(testCase, selected, true(1, 3));
+end
+
+function testSkeletonCleanupPreservesInputGrid(testCase)
+% A 20-voxel component exceeds median size + one standard deviation;
+% three separated singletons do not. Distance cutoff 1 adds no neighbors.
+input = false(60, 60, 10);
+input(5:24, 5, 5) = true;
+input(40, 40, 5) = true;
+input(50, 40, 5) = true;
+input(40, 50, 5) = true;
+
+expected = zeros(size(input));
+expected(5:24, 5, 5) = 1;
+actual = farmSkel3DClean(input, 1);
+
+verifyEqual(testCase, actual, expected);
+verifyClass(testCase, actual, 'double');
+verifySize(testCase, actual, size(input));
+end
+
 function testMaskIdentity(testCase)
 mask = false(12); mask(2:4,3:6) = true; mask(9:10,9:10) = true;
 [t,o] = farmMeasureObjects(mask,{'Area','Centroid'}, ...

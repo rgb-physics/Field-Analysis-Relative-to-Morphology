@@ -1,10 +1,11 @@
 function matches = farmSearchGlossary(text, varargin)
-%FARMSEARCHGLOSSARY Case-insensitive literal search across all glossary text.
-% Returns matching rows of glossaryEntries; no matches returns an empty table.
-% Optional Section="all" and SearchIn="all" also accept string vectors:
-% farmSearchGlossary("geometry", 'SearchIn', ["Term", "Definition"], ...
-%     'Section', ["Glossary", "DataDictionary"]). Fields combine with OR;
-% the section filter and text-match filter combine with AND.
+%FARMSEARCHGLOSSARY Case-insensitive literal search across all farmGlossary text.
+% Inputs:
+%   text            Literal case-insensitive search text.
+%   varargin        Optional Section and SearchIn filters as name/value pairs.
+% Outputs:
+%   matches         Table of entries matching the literal text and selected filters.
+
 validateattributes(text, {'char', 'string'}, {'nonempty'});
 text = string(text);
 if ~isscalar(text) || ismissing(text) || strlength(strtrim(text)) == 0
@@ -18,3 +19,13 @@ for name = searchIn
 end
 matches = entries(selected, :);
 end
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% FARMSEARCHGLOSSARY Case-insensitive literal search across all farmGlossary text.
+% Returns matching rows of farmGlossaryEntries; no matches returns an empty table.
+% Optional Section="all" and SearchIn="all" also accept string vectors:
+% farmSearchGlossary("geometry", 'SearchIn', ["Term", "Definition"], ...
+%     'Section', ["Glossary", "DataDictionary"]). Fields combine with OR;
+% the section filter and text-match filter combine with AND.

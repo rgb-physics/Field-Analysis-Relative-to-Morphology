@@ -1,10 +1,18 @@
 function [outVec] = farmGenericLenVec(inVec)
 %FARMGENERICLENVEC Takes in a vector of positive definite integers and returns
-%a vector with repetitions of each element a number of times equal to the
-%element. i.e. [3 4 1] yields [3 3 3 4 4 4 4 1]
-% 2024-06-04 - Rémi Boros
+% Inputs:
+%   inVec           Input numeric vector.
+% Outputs:
+%   outVec          Each input value repeated that many times.
 
-outVec = farmGenLenVec(inVec,inVec);
+outVec = farmGenLenVec(inVec, inVec);
 
 end
 
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% FARMGENERICLENVEC Takes in a vector of positive definite integers and returns
+% a vector with repetitions of each element a number of times equal to the
+% element. i.e. [3 4 1] yields [3 3 3 4 4 4 4 1]
+% 2024-06-04 - Rémi Boros

@@ -4,6 +4,20 @@ These helpers render geometry; they do not redefine the source geometry or measu
 
 ## Existing index geometry
 
+`farmFieldOnObjs(values, matrixSize, indices, selected)` assigns one scalar per
+object to an existing voxel-index list. `selected` is a logical array with one
+row per object; `indices` must follow the column-major order of its true entries.
+The output is double, zero outside those indices, and retains the last value
+assigned at an overlapping index. The indices and selection array are also
+returned unchanged. This preserves the author's supplied `fieldOnObjs.m` method
+and is used by the historical endpoint rasterizer `farmCoords2Mat_2DFils`.
+
+```matlab
+selected = logical([1 1; 1 0]);
+values = farmFieldOnObjs([10; 20], [2 3], [1; 2; 4], selected);
+% values = [10 0 0; 20 10 0]
+```
+
 ```matlab
 [mask, grid, info] = farmGeometryToMatrix(supports.boundary);
 labels = farmGeometryToMatrix(supports.objects, ...

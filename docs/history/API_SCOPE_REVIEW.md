@@ -1,3 +1,5 @@
+> Historical snapshot, retained October 15, 2026. Read the [current user guide](../README.md) and [history index](README.md) before following these older notes.
+
 # API scope follow-up
 
 Return to these items when refining the API boundaries and repository descriptions. The current first-pass organization is intentionally preserved until each decision is made.

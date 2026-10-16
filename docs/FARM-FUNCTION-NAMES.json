@@ -258,5 +258,6 @@
   "sharedutilities.plotting.figSaves": "farmFigSaves",
   "sharedutilities.plotting.manVlnPlot": "farmManVlnPlot",
   "sharedutilities.plotting.plotVlns": "farmPlotVlns",
-  "segmentationtools.binarization.makeClassConfig": "farmMakeClasses"
+  "segmentationtools.binarization.makeClassConfig": "farmMakeClasses",
+  "fieldOnObjs": "farmFieldOnObjs"
 }

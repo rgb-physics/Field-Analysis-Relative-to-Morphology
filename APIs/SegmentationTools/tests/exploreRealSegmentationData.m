@@ -19,7 +19,7 @@ probabilityThresholdSets = [0.5 0.5 0.5];
 openingRadius = 1;          % voxels; inspect loss of thin walls
 intensityThresholds = [0.2 0.4 0.6]; % fractions of each channel's min-max range
 keepLargest = 3;
-fillDirections = [0 1 2];  % 0=XY, 1=YZ, 2=XZ; independently filled and unioned
+fillDirections = [0 1 2];  % 0=XY, 1=XZ, 2=YZ; independently filled and unioned
 runDistanceCleanup = false; % enable only for verified isotropic data
 distanceMean = 0; distanceWidth = 0; gaussianSigma = 0.5;
 runSheetExperiment = false; % enable only if chosen mask contains two Z sheets

@@ -1,3 +1,5 @@
+> Historical snapshot, retained October 15, 2026. Read the [current user guide](../README.md) and [history index](README.md) before following these older notes.
+
 # SegmentationTools historical methods and implementation decisions
 
 Recorded 2026-10-10 from the FARM workflow review. This document identifies

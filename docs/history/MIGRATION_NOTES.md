@@ -1,3 +1,5 @@
+> Historical snapshot, retained October 15, 2026. Read the [current user guide](../README.md) and [history index](README.md) before following these older notes.
+
 # Migration notes
 
 The local `MeMo` checkout is a first-pass organization of the files named in `PROPOSED_TREE.md` and its user-marked routing section. The source archive and the existing `imagestackio` package were left unchanged.

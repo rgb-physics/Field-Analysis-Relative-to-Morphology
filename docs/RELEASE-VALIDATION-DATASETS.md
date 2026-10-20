@@ -28,7 +28,7 @@ to be completed.
 - Known limitations, annotations and which regions/frames were manually reviewed.
 
 Select small representative subsets first. Preserve original datasets and write
-generated outputs to fresh locations under package test-data.
+generated outputs to fresh locations under package tests/data.
 
 ## Inputs that do not require user-supplied data
 
@@ -40,7 +40,7 @@ comparisons supplement those checks.
 
 ## Candidates to inspect before requesting new files
 
-The handoff identifies Experiment 4 on drive O: and local test-data fixtures.
+The handoff identifies Experiment 4 on drive O: and local tests/data fixtures.
 Neither availability nor suitability is established by this checklist. Reuse
 them where appropriate after checking access, metadata and coverage.
 

@@ -24,7 +24,8 @@ for k = 1:numel(parts)
     end
     field = regexp(char(text), '^(.+?)\s*=\s*(.+)$', 'tokens', 'once');
     if isempty(field)
-        error('sharedutilities:GlossarySource', 'Malformed input field for %s: %s', string(term), text);
+        % Descriptive inputs explain concepts without defining named options.
+        continue
     end
     name = strtrim(string(field{1}));
     required = endsWith(name, '*');
@@ -42,3 +43,4 @@ end
 % Required reflects the written asterisk. Conditions remain in Type and entry
 % Notes; generated layouts do not imply required user-entered arguments.
 % An existing entry without a layout returns a typed, zero-row table.
+% Descriptive input text without name = value pairs does not add table rows.

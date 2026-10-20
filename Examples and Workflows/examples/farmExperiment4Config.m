@@ -15,7 +15,7 @@ for api = {'ImageStackIO','SegmentationTools','ObjectGeometry','ObjectTracking',
     addpath(fullfile(repo,'APIs',api{1},'src'));
 end
 addpath(here);
-addpath(fullfile(repo,'Workflows','src'));
+addpath(fullfile(repo,'Examples and Workflows','src'));
 c = struct;
 c.IncludeDiagnostics = false; % workflow 1 also retains a separate Diagnostics table
 c.RepositoryRoot = repo;
@@ -48,5 +48,5 @@ c.CorrelationMode = '2d'; % '3d' is opt-in; full linear volume can be very large
 c.CorrelationCrossChannel = false;
 c.ProfileEdges = -30:.5:30; c.ProfileReference = 'boundary'; % Or 'skeleton'
 c.ProfileChannels = {'560','647'}; c.ProfileSigma = 2;
-c.OutputRoot = fullfile(repo,'test-data','workflow-results');
+c.OutputRoot = fullfile(repo,'tests', 'data','workflow-results');
 end

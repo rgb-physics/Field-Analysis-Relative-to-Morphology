@@ -78,6 +78,69 @@ function mask = localMask
 mask = false(8,9,4); mask(3:5,3:6,2:3) = true;
 end
 
+function testWorkflow1StagedPreviewAndBatchParity(t)
+% Exercise the editable sections without changing the user's saved setup.
+repo = t.TestData.Config.RepositoryRoot;
+preview = localWorkflow1Preview(repo);
+verifyEqual(t, preview.Mask, preview.ExpectedMask);
+verifyEqual(t, height(preview.Measurements), 2);
+verifyEqual(t, sum(preview.Measurements.Volume), nnz(preview.ExpectedMask));
+verifyEqual(t, preview.Measurements.PhysicalVolume, preview.Measurements.Volume);
+verifyFalse(t, isempty(preview.Profile.Statistics));
+
+% Batch processing must reproduce the inspected frame and optional saved data.
+c = preview.Config;
+c.Frames = preview.Frame;
+c.SaveGeometry = true;
+c.SaveSupports = true;
+batch = farmWorkflow1Objects(c);
+% The combined manifest adds FrameMetadata; compare each saved frame exactly.
+verifyEqual(t, table2cell(batch.Measurements), table2cell(preview.Measurements));
+verifyEqual(t, batch.Measurements.Properties.VariableUnits, ...
+    preview.Measurements.Properties.VariableUnits);
+verifyEqual(t, table2cell(batch.Diagnostics), table2cell(preview.Diagnostics));
+verifyEqual(t, batch.Measurements.Properties.UserData.FrameMetadata{1}, ...
+    preview.Measurements.Properties.UserData);
+verifyEqual(t, batch.Diagnostics.Properties.UserData.FrameMetadata{1}, ...
+    preview.Diagnostics.Properties.UserData);
+saved = load(fullfile(batch.Directory, sprintf('frame%03i.mat', preview.Frame)));
+verifyEqual(t, saved.result.Measurements, preview.Measurements);
+verifyEqual(t, saved.result.Diagnostics, preview.Diagnostics);
+verifyEqual(t, saved.result.DistanceProfile, preview.Profile);
+verifyEqual(t, saved.result.Geometry, preview.Geometry);
+verifyTrue(t, isfield(saved.result.Supports, 'objects'));
+
+% Changing requests uses the retained fields/supports, without loading again.
+request = farmMakeQuery('Name', 'BoundaryMax', 'Field', 'Intensity', ...
+    'Support', 'boundary', 'Statistics', {'Max'});
+sampled = farmQueryFrame(preview.Fields, preview.Supports, request);
+verifyEqual(t, height(sampled), 2);
+verifyTrue(t, all(isfinite(sampled.BoundaryMax_Max)));
+end
+
+function preview = localWorkflow1Preview(repo)
+text = fileread(fullfile(repo, 'Examples and Workflows', 'examples', 'setupWorkflow1.m'));
+% Use this checkout's root in memory; keep the user's explicit editor path.
+text = regexprep(text, '(?m)^repo = ''[^'']*'';', 'repo = repo;');
+text = strrep(text, 'showFigures = true;', 'showFigures = false;');
+% Declare outputs used below so eval cannot resolve them as MATLAB functions.
+c = struct();
+frame = [];
+mask = [];
+demoMask = [];
+measurements = table();
+diagnostics = table();
+distanceProfile = [];
+fields = struct();
+supports = struct();
+geometry = struct();
+eval(text);
+preview = struct('Config', c, 'Frame', frame, 'Mask', mask, ...
+    'ExpectedMask', demoMask, 'Measurements', measurements, ...
+    'Diagnostics', diagnostics, 'Profile', distanceProfile, ...
+    'Fields', fields, 'Supports', supports, 'Geometry', geometry);
+end
+
 function testSyntheticWorkflow2CombinedScript(t)
 c = localNamedWorkflowFixture;
 r = farmWorkflow2Filaments(c); % compatibility entry executes combined script's helper

@@ -11,7 +11,7 @@ entry = farmGlossary("Experiment");
 report = runAllTests;
 ```
 
-`farmSetup` adds all API source subfolders and Workflows/src for this session.
+`farmSetup` adds all API source subfolders and Examples and Workflows/src for this session.
 Examples and tests are opt-in. It does not add datasets, archives or private
 folders, and does not call savepath. Restart MATLAB, or remove old MeMo source
 paths, before using the migrated tree if you previously saved package paths.

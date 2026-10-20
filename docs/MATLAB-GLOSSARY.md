@@ -14,8 +14,9 @@ farmGlossary("Support")
 ```
 
 The first command displays a catalog. A term displays its data type,
-definition, input-field layout and any notes. An entry without a documented
-input layout displays exactly `Inputs: {''}`. An unknown term produces an
+definition and additional notes, followed by Inputs at the bottom. Inputs
+can describe supplied data or list named settings. Concepts without a fixed
+input list say so explicitly. An unknown term produces an
 error, so a misspelled term cannot be mistaken for one without input fields.
 
 All entries come directly from the [written glossary and data dictionary](../GLOSSARY-CAPABILITIES-MOCKUP.md).
@@ -36,12 +37,12 @@ notes = farmGlossary("Experiment", "Notes");
 `entry` is a scalar struct of strings. `options` is a table with `Name`,
 `Type` and `Required` columns. `Required` records the written asterisk;
 conditions such as file-source requirements remain in the type text and
-entry notes. An entry without listed inputs returns a zero-row options table.
+entry notes. Descriptive inputs without named settings return a zero-row options table.
 
 An input layout is documentation, not executable validation or a builder.
-Some entries show the fields of generated results rather than arguments a
-user must supply. Always retain the notes when presenting these layouts.
-For example, the axial-alignment entry lists generated result fields.
+Inputs describes what users supply. Contents describes stored or generated
+fields and appears in the additional notes. For example, axial-alignment
+scores are returned contents, while the directions being compared are inputs.
 
 ## Search and browse
 
@@ -116,8 +117,8 @@ entries, not another source of definitions.
 ## Expanding the Data Dictionary
 
 The dictionary currently defines the ten scalar/component sampling diagnostic
-fields listed under `diagnostics`. These are generated quantities, so their
-input getter returns `Inputs: {''}`. In tables they normally appear with a
+fields listed under `diagnostics`. Their Inputs describe the sampled values
+or geometry records used to calculate them. In tables they normally appear with a
 field, query or vector-component prefix rather than as bare names.
 
 An [older candidate scan](history/DATA-DICTIONARY-CANDIDATES.md) and its
@@ -132,7 +133,7 @@ Edit definitions, representations and input layouts in
 [GLOSSARY-CAPABILITIES-MOCKUP.md](../GLOSSARY-CAPABILITIES-MOCKUP.md).
 Keep interpretation notes there as well. The topic pages are generated views,
 so do not edit their copies independently. Topic assignments and construct labels
-are maintained in [tools/build_reference.py](../tools/build_reference.py).
+are maintained in [APIs/SharedUtilities/tools/build_reference.py](../APIs/SharedUtilities/tools/build_reference.py).
 The generated [entry map](reference/ENTRIES.csv) records each topic, anchor and
 source line; it is a documentation entry map, not a public-function inventory.
 
@@ -140,8 +141,8 @@ Python 3.10 or later is needed only to rebuild/check documentation. No Python
 packages or tracking installation are required. From the repository root:
 
 ```text
-python tools/build_reference.py
-python tools/build_reference.py --check
+python APIs/SharedUtilities/tools/build_reference.py
+python APIs/SharedUtilities/tools/build_reference.py --check
 ```
 
 The check verifies current generated content, local links and anchors, one

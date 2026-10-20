@@ -12,6 +12,10 @@ MATLAB package namespaces. See the [FARM migration guide](docs/FARM-NAMING-MIGRA
 for the function-name map and archive locations.
 See [Testing](TESTING.md) for coverage, fixture requirements and saved reports.
 
+Browse [Examples and Workflows](Examples%20and%20Workflows/README.md) for editable
+analysis setups. Shared test helpers and local datasets live together under
+`tests/`; documentation maintenance tools live in `APIs/SharedUtilities/tools/`.
+
 Browse the [glossary and Data Dictionary by scientific topic](docs/reference/README.md)
 or use the [alphabetical entry index](docs/reference/terms.md). Definitions,
 representations and input layouts have expandable details. The pages cover the

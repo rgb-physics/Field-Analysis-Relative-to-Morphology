@@ -4,7 +4,7 @@
 
 
 %% WORKFLOW 5 -- editable setup and execution (run sections in order)
-% Standalone script. Original sources remain read-only; outputs use fresh test-data folders.
+% Standalone script. Original sources remain read-only; outputs use fresh tests/data folders.
 % Compatibility entry: public workflow wrappers supply workflowInput and skip setup.
 if exist('workflowInput','var') && isstruct(workflowInput)
     result = farmWorkflow5Profiles(workflowInput,workflowExtra{:});
@@ -17,11 +17,11 @@ end
 repo = 'C:\Users\Remi Boros\OneDrive\Documents\ChatGPT\MATLAB - Split Repos\MeMo';
 addpath(repo);
 farmSetup('IncludeExamples', true);
-here = fullfile(repo,'Workflows','examples');
+here = fullfile(repo,'Examples and Workflows','examples');
 apis = {'ImageStackIO','SegmentationTools','ObjectGeometry',...
     'ObjectRelativeProfiles','SharedUtilities','ObjectTracking','FieldAnalysis','VisualizationTools'};
 sourceFolders = cellfun(@(api)fullfile(repo,'APIs',api,'src'),apis,'UniformOutput',false);
-folders = [sourceFolders,{fullfile(repo,'Workflows','src'),here}];
+folders = [sourceFolders,{fullfile(repo,'Examples and Workflows','src'),here}];
 
 % Check all paths before modifying MATLAB's path; fail with a useful message.
 for k = 1:numel(folders)
@@ -69,7 +69,7 @@ c = struct('Experiment',experiment,'DatasetID',experiment.DatasetID, ...
     'Frames',unique(double(frames(:).'),'stable'),'RepositoryRoot',repo,'Spacing',spacing,'SpacingUnit',spacingUnit);
 
 % ---- OUTPUT LOCATION: each run creates a new subfolder here. ----
-c.OutputRoot = fullfile(repo,'test-data','workflow-results');
+c.OutputRoot = fullfile(repo,'tests', 'data','workflow-results');
 
 % Numbered intensity source names match current workflow roles, not filenames:
 % Intensity560 is the primary/density field; Intensity647 is the filament/secondary field.

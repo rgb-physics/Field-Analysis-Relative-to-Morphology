@@ -4,7 +4,7 @@
 
 
 %% WORKFLOW 2 -- editable setup and execution (run sections in order)
-% Standalone script. Original sources remain read-only; outputs use fresh test-data folders.
+% Standalone script. Original sources remain read-only; outputs use fresh tests/data folders.
 % Compatibility entry: public workflow wrappers supply workflowInput and skip setup.
 if exist('workflowInput','var') && isstruct(workflowInput)
     result = farmWorkflow2Filaments(workflowInput);
@@ -17,11 +17,11 @@ end
 repo = 'C:\Users\Remi Boros\OneDrive\Documents\ChatGPT\MATLAB - Split Repos\MeMo';
 addpath(repo);
 farmSetup('IncludeExamples', true);
-here = fullfile(repo,'Workflows','examples');
+here = fullfile(repo,'Examples and Workflows','examples');
 apis = {'ImageStackIO','SegmentationTools','ObjectGeometry',...
     'ObjectRelativeProfiles','SharedUtilities','ObjectTracking','FieldAnalysis','VisualizationTools'};
 sourceFolders = cellfun(@(api)fullfile(repo,'APIs',api,'src'),apis,'UniformOutput',false);
-folders = [sourceFolders,{fullfile(repo,'Workflows','src'),here}];
+folders = [sourceFolders,{fullfile(repo,'Examples and Workflows','src'),here}];
 
 % Check all paths before modifying MATLAB's path; fail with a useful message.
 for k = 1:numel(folders)
@@ -66,7 +66,7 @@ c = struct('Experiment',experiment,'DatasetID',experiment.DatasetID, ...
     'Frames',unique(double(frames(:).'),'stable'),'RepositoryRoot',repo,'Spacing',spacing,'SpacingUnit',spacingUnit);
 
 % ---- OUTPUT LOCATION: each run creates a new subfolder here. ----
-c.OutputRoot = fullfile(repo,'test-data','workflow-results');
+c.OutputRoot = fullfile(repo,'tests', 'data','workflow-results');
 
 % Numbered intensity source names match current workflow roles, not filenames:
 % Intensity560 is the primary/density field; Intensity647 is the filament/secondary field.
@@ -146,9 +146,15 @@ out = farmWorkflowNewRun(c,'workflow2'); tables = cell(numel(c.Frames),1);
 % ---- PROCESS ONE FRAME AT A TIME: load, calculate, save, then continue to the next frame. ----
 for k = 1:numel(c.Frames)
     frame = c.Frames(k); timer = tic;
+    if isfield(c, 'Verbose') && c.Verbose
+        fprintf('Workflow 2 frame %g: loading corrected 647 image.\n', frame);
+    end
 
     % Load one filament intensity volume; supplied masks bypass extraction.
     raw = farmWorkflowIntensity(c,frame,'647');
+    if isfield(c, 'Verbose') && c.Verbose
+        fprintf('Workflow 2 frame %g: loaded YXZ %s; detecting filaments.\n', frame, mat2str(size(raw)));
+    end
     if isempty(c.FilamentLoader)
         response = -farmLOG(double(raw),c.FilamentSigma);
         segmentation = farmSegmentIntensity(response, ...
@@ -158,6 +164,9 @@ for k = 1:numel(c.Frames)
     end
 
     % ---- MEASURE FILAMENTS: preserve frame/object identity and record current-grid voxel spacing. ----
+    if isfield(c, 'Verbose') && c.Verbose
+        fprintf('Workflow 2 frame %g: measuring foreground (%d voxels).\n', frame, nnz(mask));
+    end
     identity = struct('DatasetID',c.DatasetID,'Frame',frame,'Spacing',c.Spacing,'SpacingUnit',c.SpacingUnit);
     properties = farmMeasureFilaments(mask, ...
         {'Volume','Centroid','Directors','ExtentInVoxels','AspectRatios','ScaledDirectors','ProjectedExtent','ScaledAspectRatios'}, ...
@@ -167,6 +176,9 @@ for k = 1:numel(c.Frames)
 
     % ---- REFERENCE FIELDS: create boundary distance, its gradient and the segmented categories. ----
     [distance,g,valid,regions,referenceInfo] = farmWorkflowReference(c,frame,size(mask));
+    if isfield(c, 'Verbose') && c.Verbose
+        fprintf('Workflow 2 frame %g: reference complete; sampling %d centroids.\n', frame, height(properties));
+    end
 
     % ---- SAMPLE: convert centroid XYZ coordinates to MATLAB linear indices in the YXZ volume. ----
     xyz = round(properties.Centroid);

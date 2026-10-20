@@ -13,6 +13,9 @@ MathWorks/
 *.fig
 
 # Generated workflow/validation outputs remain local.
+tests/data/workflow-results/
+tests/data/imagestackio-validation/
+# Also exclude outputs created by older checkouts using the previous paths.
 test-data/workflow-results/
 test-data/imagestackio-validation/
 

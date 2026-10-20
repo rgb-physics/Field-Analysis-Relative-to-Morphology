@@ -1,6 +1,6 @@
 %% Real-data object measurements, shells and distance gradients
 % Edit the semantic channel order to match the HDF5 fixture; no files in
-% test-data are changed. Outputs are created in a fresh temporary directory.
+% tests/data are changed. Outputs are created in a fresh temporary directory.
 farmRoot = fileparts(mfilename('fullpath'));
 while ~isfile(fullfile(farmRoot, 'farmSetup.m'))
     farmParent = fileparts(farmRoot);

@@ -27,7 +27,7 @@ addpath(testSupportFolder);
 addpath(apiFolder);
 
 [h5Path, tiffPaths] = localFindInputs(farmTestDataRoot());
-outputRoot = fullfile(repositoryRoot,'test-data','imagestackio-validation');
+outputRoot = fullfile(repositoryRoot,'tests', 'data','imagestackio-validation');
 if ~isfolder(outputRoot), mkdir(outputRoot); end
 tempFolder = tempname(outputRoot);
 mkdir(tempFolder);

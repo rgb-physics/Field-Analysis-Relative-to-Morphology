@@ -49,7 +49,7 @@ ND2/mesh areas, the local dependency setup and the current farmMakeClasses entry
 - First full licensed MATLAB R2023a run: 178 passed, zero failed/incomplete.
 - Full run after the progress regression and approved historical help edits:
   179 passed, zero failed/incomplete. Report directory:
-  test-data/workflow-results/all-tests_tpf7c16015_8e39_4f0b_9e6b_a2e1becacfc5.
+  tests/data/workflow-results/all-tests_tpf7c16015_8e39_4f0b_9e6b_a2e1becacfc5.
 - After the approved skeleton cleanup correction: all 38 ObjectGeometry checks
   passed. The synthetic example's known field relation and display-point count,
   plus the local GaussDiff check, passed in the focused final run.
@@ -58,7 +58,7 @@ ND2/mesh areas, the local dependency setup and the current farmMakeClasses entry
 - Git whitespace checks passed. These runs are not real-data scientific or
   performance acceptance; those requirements remain outstanding.
 
-Progress logs are under test-data/workflow-results/refactor-validation, including
+Progress logs are under tests/data/workflow-results/refactor-validation, including
 final-validation.log, focused-final-checks.log and gaussdiff-installation.log.
 
 ## TIFF transform group completed after user agreement
@@ -78,7 +78,7 @@ operations, public signatures, save conditions, attribution and current I/O choi
 Executable expressions match HEAD after comments/layout/separators are removed.
 All 16 ImageStackIO validation checks passed, including synthetic transform and
 round-trip checks. The progress log is
-test-data/workflow-results/refactor-validation/tiff-transform-checks.log.
+tests/data/workflow-results/refactor-validation/tiff-transform-checks.log.
 Code Analyzer reports no syntax diagnostics; existing unassigned-output and
 exist-style messages in farmSplit3Dto2D are preserved. Git whitespace checks pass.
 Any behavioral correction still requires separate discussion.
@@ -99,7 +99,7 @@ All four executable bodies match HEAD after removing comments/layout/separators.
 All 25 SegmentationTools tests passed. The existing 2D transpose behavior of
 farmSidesHoleFill was also checked and documented, not corrected. Code Analyzer
 reports no diagnostics for these four files, and Git whitespace checks pass.
-Log: test-data/workflow-results/refactor-validation/segmentation-cleanup-checks.log.
+Log: tests/data/workflow-results/refactor-validation/segmentation-cleanup-checks.log.
 
 ## Segmentation wrappers and planar filling completed after user agreement
 
@@ -123,7 +123,7 @@ three functions and test file; Git whitespace checks passed.
 The old farmFlatFill3D help reversed the names of selectors 1 and 2. Tests confirm
 the code uses 0=XY, 1=XZ and 2=YZ with YXZ arrays. Corrected the help, matching
 example comment and historical-methods guide, without changing the calculation.
-Log: test-data/workflow-results/refactor-validation/segmentation-wrapper-checks.log.
+Log: tests/data/workflow-results/refactor-validation/segmentation-wrapper-checks.log.
 
 ## Remaining public-function formatting/help pass
 
@@ -137,7 +137,7 @@ This is a formatting/help review, not proof of scientific correctness or complet
 conformance to every example and documentation requirement.
 
 The full suite passed 180 checks before the subsequent helper import below.
-Log: test-data/workflow-results/refactor-validation/remaining-public-tests.log.
+Log: tests/data/workflow-results/refactor-validation/remaining-public-tests.log.
 PUBLIC-FUNCTION-REVIEW.csv records the reviewed functions separately from
 internal dependencies and deferred/excluded functions.
 
@@ -152,16 +152,16 @@ assignment at overlapping indices. No averaging or index reordering was added.
 Two new test procedures cover unequal sample counts, output dimensions/type,
 unchanged index/selection outputs, overlap, empty input and the endpoint caller.
 All 40 ObjectGeometry tests passed.
-Log: test-data/workflow-results/refactor-validation/field-on-objects-tests.log.
+Log: tests/data/workflow-results/refactor-validation/field-on-objects-tests.log.
 
 After the import and final statement-output preservation checks, the complete
 suite passed 182 checks, with zero failures, incomplete checks or suite errors.
-Log: test-data/workflow-results/refactor-validation/remaining-public-final-tests.log.
+Log: tests/data/workflow-results/refactor-validation/remaining-public-final-tests.log.
 MATLAB R2023a Code Analyzer found no syntax errors in the 133 reviewed functions,
 the imported helper and ObjectGeometry tests. Advisory messages remain, including
 array growth, unused values and old suppression comments. They were not treated
 as permission to change historical behavior.
-Analyzer log: test-data/workflow-results/refactor-validation/remaining-public-analyzer.log.
+Analyzer log: tests/data/workflow-results/refactor-validation/remaining-public-analyzer.log.
 Git whitespace checks passed. Full VisualizationTools/SurfaceFieldMapping suites,
 manual visual checks, real-data validation and performance benchmarks are not
 covered by this result.
@@ -204,7 +204,7 @@ tests, matched all 107 entry names/types/sections/groups against the generated
 entry map, and executed all 118 MATLAB blocks in the topic pages. The diagnostic
 example returned the stated mean, finite count, selected count and nonfinite
 counts. No analysis implementation or MATLAB glossary schema/display changed.
-Log: test-data/workflow-results/refactor-validation/reference-pages-matlab.log.
+Log: tests/data/workflow-results/refactor-validation/reference-pages-matlab.log.
 
 ## Documentation and empty-folder cleanup
 
@@ -226,8 +226,94 @@ were excluded. No MATLAB/Python implementation files were changed by this cleanu
 Active Markdown local-file links resolve; historical snapshots can retain stale
 source-evidence paths. The glossary generator's check passed for all 13 generated
 files and 107 entries. Git whitespace checks passed.
-Removed-folder log: test-data/workflow-results/refactor-validation/removed-empty-folders.txt.
+Removed-folder log: tests/data/workflow-results/refactor-validation/removed-empty-folders.txt.
 All four MATLAB layout/setup tests passed after cleanup. No empty folders remain
 in the inspected package trees; excluded local-data/dependency/support trees
 were not cleaned. Test log:
-test-data/workflow-results/refactor-validation/document-cleanup-layout.log.
+tests/data/workflow-results/refactor-validation/document-cleanup-layout.log.
+
+## Workflow 1 rebuilt as an inspectable staged example
+
+setupWorkflow1.m now separates source descriptions, current-frame loading,
+probability segmentation/object measurement, geometry definition, and field
+sampling. Its default is a small synthetic two-object example; the original
+Experiment 4 paths, axes, frame selection, thresholds and calibration remain
+available with useSynthetic=false. Figures are enabled by default, while saving
+and batch execution are disabled. Intermediate arrays, objects, geometry,
+supports, sampling tables and diagnostics remain in the workspace.
+
+Moved the previous local batch implementation into farmWorkflow1Objects.m,
+retaining existing named-source and older configuration paths. Added explicit
+SaveGeometry/SaveSupports choices, optional pooled signed-distance ProfileEdges,
+and per-frame progress with Verbose=true. Profile distances remain isotropic
+voxel distances against the combined foreground; this does not implement
+independent per-object profiles or choose population/ancestry reductions.
+
+docs/WORKFLOW-1-STAGES.md documents the four stages, result access paths,
+calibration/registration assumptions, rerun requirements and save/batch behavior.
+Updated the walkthrough and related guides to match. No original scientific
+implementation was edited as part of this workflow change.
+
+Validation includes a synthetic staged-versus-batch comparison of known masks,
+volumes, measurement/diagnostic values, units, per-frame metadata, saved geometry
+and distance profiles. The initial full run passed 182 checks and exposed a new
+test's incorrect expectation that combined-table metadata equals single-frame
+metadata. The test now verifies the existing FrameMetadata wrapper separately
+and compares saved frame tables exactly. The affected workflow/configuration
+suites passed all 22 tests after that correction; see workflow1-stages-confirmed-tests.log.
+The rest of the preceding full-suite run passed; the full suite was not repeated
+after the test-only metadata expectation correction and final display adjustment.
+Static analysis found no syntax errors; advisory messages concern editable
+constant switches and historical diagnostic-list growth. Local document links
+and Git whitespace checks passed. The synthetic display was also rendered to
+workflow1-staged-preview.png under the ignored refactor-validation folder.
+
+## Active Foam E5 alignment workflow — October 20, 2026
+
+Added setupActiveFoamE5, farmActiveFoamE5Config, farmProcessActiveFoamE5 and
+farmPlotActiveFoamAlignment under Examples and Workflows/examples. The setup
+explicitly passes workflow 2 output to the plotting function; plotting can reuse
+saved measurements without rereading microscopy sources. The guide is
+docs/ACTIVE-FOAM-E5-ALIGNMENT.md.
+
+Processed only E5 frames 25–30: six corrected 647 TIFFs and six segmentation
+HDF5 fields under read-only O:/Session 88. Confirmed YXZ spacings are
+[.55 .55 .7] um for images and [1.5 1.5 1.5] um for probabilities. Semantic
+[inside,on/wall,outside] channels are [3,2,1]. The acquisition interval is 30 s;
+elapsed plotting time is explicitly (Frame-25)*30 s, not absolute acquisition time.
+Workflow 2 uses its existing detection settings; they were not tuned to match
+the expected experimental narrative. Added optional stage progress messages only.
+
+The run returned 49,876 detections; 36,557 have selected finite alignment/distance
+values. Three lie outside plotted distance edges [-20,30] um. Rod-level means,
+counts, sample variances and empty-bin NaNs are retained. SD shading describes
+dispersion, not confidence in the mean. No structure-weighted or ancestry
+aggregation was inferred. Order3D has isotropic expectation zero.
+
+Count-qualified moving peaks are broad in all six frames. The fixed-window
+representative distance is -7.5 um; the computational boundary remains at zero.
+The initial interior band overlaps the fixed-peak band, explicitly documented.
+Structural stages were not assigned from these six frames. The four synthetic
+alignment tests passed and new files passed standalone R2023a syntax analysis.
+
+Actual results after the concurrent repository-folder migration are under
+tests/data/workflow-results/active-foam-E5-frames025-030/
+active-foam-E5_tp71912f48_fd21_4623_8afd_18cb2372ef62.
+Final plots and CSV/MAT summaries are in alignment-plots-final. Older saved
+directory metadata records the pre-migration test-data location; the plotting
+setup resolves its output path from the current saved-file location.
+Logs and per-frame checkpoints are retained. Source files on O: were not modified.
+
+Final regression verification in a fresh MATLAB session passed **188 checks**,
+with zero failed/incomplete checks or suite execution errors. An earlier run
+started during the folder migration had stale test-data paths on its MATLAB
+search path; its results were superseded by this clean-session run. The existing
+setup now excludes saved data/source snapshots from the test path.
+Log: tests/data/workflow-results/refactor-validation/active-foam-E5-clean-session-tests.log.
+Standalone analysis of all five new E5 MATLAB files reports no diagnostics.
+
+### Glossary wording guidance (2026-10-20)
+Updated Configuration using the user-approved wording. Future glossary edits should define the entry itself in everyday language, explain named settings with concrete examples, and distinguish a construct's contents from function inputs and generated results. Describe constructs as existing independently of their later use. Name the relevant function explicitly when directing readers to field requirements; avoid unexplained phrases such as receiving function. Review Experiment, Boundary, and Descendants with the user before extending this wording pass. The full glossary wording review remains pending.
+
+### Glossary and Data Dictionary wording pass (2026-10-20)
+Applied the agreed plain-language style to the 107 existing entries. Inputs now appears at the bottom of each entry in source, topic pages, and MATLAB display. Stored/generated field lists are retained under Contents rather than presented as user inputs. Concepts without fixed arguments say so; Data Dictionary inputs describe the sampled values or geometry used. Checked the boundary and lineage-selection signatures and documented that descendant selection requires Direction='descendants'. Updated the lookup guide and existing tests for descriptive input text. No scientific calculations or new inventory entries were added. This completes the wording pass noted above; a full function-specific input inventory remains deferred.

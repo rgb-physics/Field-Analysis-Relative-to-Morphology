@@ -1,10 +1,17 @@
 # Experiment 4 modular workflow examples
 
 All supplied O: datasets are read-only. Outputs are new, uniquely named
-directories under package test-data/workflow-results. Existing files are never
+directories under package tests/data/workflow-results. Existing files are never
 overwritten by the workflows. No output is written beside source data.
 
 ## Start here
+
+For Active Foam E5 alignment versus signed distance/time, see
+[setupActiveFoamE5.m](setupActiveFoamE5.m) and the
+[definition and plotting guide](../../docs/ACTIVE-FOAM-E5-ALIGNMENT.md).
+It explicitly passes workflow 2 output into the plotting function, processes
+only frames 25–30, and keeps O:\Session 88 read only. Existing measurements can
+be loaded to replot without rereading images.
 
 For a small example requiring no image files, run
 [exampleObjectInspection.m](exampleObjectInspection.m) from the repository root
@@ -27,12 +34,17 @@ For standalone manual input, open the numbered setup scripts:
 | [setupWorkflow4.m](setupWorkflow4.m) | Selected slices, projection, 3-D spectra and correlation |
 | [setupWorkflow5.m](setupWorkflow5.m) | Conditional intensity profiles and optional stored alignment |
 
-Each contains SETUP, DATA, ANALYSIS, PREVIEW and RUN sections, with the workflow
+Workflow 1 now has four visible processing stages: loading, object segmentation,
+geometry definition and field sampling. Its default synthetic example opens
+figures without saving files. Read the [four-stage document](../../docs/WORKFLOW-1-STAGES.md).
+Its batch implementation is in farmWorkflow1Objects.m.
+
+Workflows 2–5 contain SETUP, DATA, ANALYSIS, PREVIEW and RUN sections, with the workflow
 implementation at the bottom as a local function. Set the explicit repo path
 and run sections in order. Paths/calibration/semantic channels remain editable.
 None of the manual setup sections calls experiment4Config.
 
-The old farmWorkflow1Objects through farmWorkflow5Profiles files are compatibility
+The farmWorkflow2Filaments through farmWorkflow5Profiles files are compatibility
 entry points: they forward existing configurations to the local implementation
 without running manual setup or previews. Tests and older calls remain usable.
 The workflowInput/workflowExtra variables in those wrappers are internal dispatch
@@ -46,13 +58,13 @@ Workflow 3 requires all tracking/selected/seed frames in the experiment Frames.
 Workflow 5 currently pools intensity over the whole XYZ; per-object profiles
 are a separate user-directed sampling choice, not implied by this example.
 
-All outputs remain under package test-data. Inspect OUTPUT CHOICES and result
+All outputs remain under package tests/data. Inspect OUTPUT CHOICES and result
 assignments in each local helper to change retained results. Preparation remains
 the separate farmPreparationExample; it is not one of the numbered analysis pairs.
 
 From the repository root in MATLAB R2023a:
 ```matlab
-addpath(fullfile(pwd,'Workflows','examples'));
+addpath(fullfile(pwd,'Examples and Workflows','examples'));
 results = runWorkflowExampleTests; % synthetic only
 c = farmExperiment4Config;
 preview = farmPreviewExperiment4(c);  % inspect class meanings and registration
@@ -151,16 +163,16 @@ available in result.Diagnostics and each frame's saved result.Diagnostics.
 Set c.IncludeDiagnostics=true to include these columns in Measurements too.
 Direct FieldSampling calls retain their existing full diagnostic output.
 
-Workflow 1's ANALYSIS section declares ObjectProperties, MeasurementOptions,
+Workflow 1's segmentation, geometry and sampling stages declare ObjectProperties, MeasurementOptions,
 PhysicalVolume, per-support GeometryOptions, and complete Queries including
 statistics/output names/query Options. The helper passes these requests to
 the APIs. Queries=[] permits a properties-only run. Legacy callers lacking
 these fields retain their earlier defaults; custom requests replace rather
 than extend those defaults.
 
-Workflow 1's OUTPUT CHOICES blocks explicitly assemble saved payloads. Geometry
-indices are not saved by default; uncomment payload.Geometry or payload.Supports
-to retain them. Comment out payload.Diagnostics and manifest.Diagnostics to omit
+Workflow 1's SAVE CURRENT FRAME section and batch runner explicitly assemble saved payloads. Geometry
+indices are not saved by default; set c.SaveGeometry=true or c.SaveSupports=true
+in the save section to retain them. Comment out payload.Diagnostics and manifest.Diagnostics to omit
 diagnostic tables from both per-frame and combined outputs. Requested geometry
 is still generated temporarily for sampling. Regenerating supports later requires
 the original data and saved configuration when indices were not retained.

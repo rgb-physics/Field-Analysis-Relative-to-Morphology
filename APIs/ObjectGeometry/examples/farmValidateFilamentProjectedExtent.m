@@ -2,7 +2,7 @@ function report = farmValidateFilamentProjectedExtent
 
 %FARMVALIDATEFILAMENTPROJECTEDEXTENT Expected vs measured length over tilt/spacing.
 % Run from MATLAB with this examples folder on the path.
-% Returns all 42 cases; writes CSV/MAT/PNG under package test-data/workflow-results.
+% Returns all 42 cases; writes CSV/MAT/PNG under package tests/data/workflow-results.
 % No experimental data is loaded. Native ExtentInVoxels is voxel-unit ellipsoid-axis
 % length and is NOT expected to equal physical centerline length.
 farmRoot = fileparts(mfilename('fullpath'));
@@ -32,7 +32,7 @@ fprintf('Full report repeats each elevation at XY azimuths 0, 45 and 90 degrees.
 disp(report(report.AzimuthDegrees==0,{'ZSpacingUm','ElevationDegrees', ...
     'ExpectedLengthUm','RoundedEndpointSpanUm','ProjectedExtentUm','ErrorPercent', ...
     'ExtentInVoxels','DirectorErrorDegrees'}));
-base = fullfile(repo,'test-data','workflow-results');
+base = fullfile(repo,'tests', 'data','workflow-results');
 if ~isfolder(base), mkdir(base); end
 [~,tag] = fileparts(tempname(base)); out = fullfile(base,['filament-extent_' tag]); mkdir(out);
 writetable(report,fullfile(out,'expected-versus-reported.csv'));

@@ -13,6 +13,7 @@ parse(p, varargin{:});
 root = fileparts(mfilename('fullpath'));
 addpath(root);
 apis = dir(fullfile(root, 'APIs'));
+apis = apis([apis.isdir] & ~ismember({apis.name}, {'.', '..'}));
 
 % Add each API's source folders to this session.
 for apiInd = 1:numel(apis)
@@ -23,7 +24,7 @@ for apiInd = 1:numel(apis)
     end
 end
 
-addpath(genpath(fullfile(root, 'Workflows', 'src')));
+addpath(genpath(fullfile(root, 'Examples and Workflows', 'src')));
 
 % Add only the explicitly installed local Gaussian derivative dependency.
 gaussdiff = fullfile(root, 'local-dependencies', 'GaussDiff');
@@ -33,7 +34,7 @@ if isfolder(gaussdiff)
 end
 
 if p.Results.IncludeExamples || p.Results.IncludeTests
-    addpath(genpath(fullfile(root, 'Workflows', 'examples')));
+    addpath(genpath(fullfile(root, 'Examples and Workflows', 'examples')));
 
     for apiInd = 1:numel(apis)
         folder = fullfile(apis(apiInd).folder, apis(apiInd).name, 'examples');
@@ -45,7 +46,9 @@ if p.Results.IncludeExamples || p.Results.IncludeTests
 end
 
 if p.Results.IncludeTests
-    addpath(genpath(fullfile(root, 'tests')));
+    % Keep datasets and saved source snapshots off the MATLAB search path.
+    addpath(fullfile(root, 'tests'));
+    addpath(genpath(fullfile(root, 'tests', 'memotest')));
 
     for apiInd = 1:numel(apis)
         folder = fullfile(apis(apiInd).folder, apis(apiInd).name, 'tests');
@@ -55,7 +58,7 @@ if p.Results.IncludeTests
         end
     end
 
-    folder = fullfile(root, 'Workflows', 'tests');
+    folder = fullfile(root, 'Examples and Workflows', 'tests');
 
     if isfolder(folder)
         addpath(genpath(folder));

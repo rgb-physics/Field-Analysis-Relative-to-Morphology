@@ -20,7 +20,7 @@
 repo = 'C:\Users\Remi Boros\OneDrive\Documents\ChatGPT\MATLAB - Split Repos\MeMo';
 addpath(repo);
 farmSetup('IncludeExamples', true);
-here = fullfile(repo,'Workflows','examples');
+here = fullfile(repo,'Examples and Workflows','examples');
 apis = {'ImageStackIO','SegmentationTools','ObjectGeometry','SharedUtilities','VisualizationTools'};
 
 for k = 1:numel(apis)
@@ -30,7 +30,7 @@ for k = 1:numel(apis)
     end
     addpath(folder);
 end
-addpath(fullfile(repo,'Workflows','src'));
+addpath(fullfile(repo,'Examples and Workflows','src'));
 addpath(here);
 
 
@@ -269,7 +269,7 @@ viewFigure = plotWorkflow2Cut(viewConfig,c.Results.Filaments,c.Frame, ...
 % EDIT HERE: uncomment individual assignments to keep large matrices if needed.
 % Saving c itself would retain every current image; choose the payload explicitly.
 outputConfig = struct('RepositoryRoot',repo, ...
-    'OutputRoot',fullfile(repo,'test-data','workflow-results'), ...
+    'OutputRoot',fullfile(repo,'tests', 'data','workflow-results'), ...
     'Experiment',c.Experiment,'Frame',c.Frame,'Options',c.Options);
 c.OutputDirectory = farmWorkflowNewRun(outputConfig,'workflow2-staged');
 

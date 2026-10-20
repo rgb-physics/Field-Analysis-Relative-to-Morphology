@@ -12,7 +12,7 @@ Builders return editable structs without loading images or running analysis. Acc
 | farmMakeIntensityOptions | farmSegmentIntensity options, including Method/Threshold and cleanup/retention choices. Fixed thresholds use original units. |
 | farmMakeProbabilityOptions | farmClassifyProbabilities options for resolving overlap and retaining outputs. Not farmSmoothNChannelProbabilities morphology/precedence options. |
 
-Function help lists every option/default. Run `farmSetup` from the repository root to add API dependencies and Workflows/src. Use `farmSetup('IncludeExamples', true)` for farmExperiment4Config and the guided workflows.
+Function help lists every option/default. Run `farmSetup` from the repository root to add API dependencies and Examples and Workflows/src. Use `farmSetup('IncludeExamples', true)` for farmExperiment4Config and the guided workflows.
 
 ## Source defaults and loading
 
@@ -28,19 +28,26 @@ A custom loader returns a YXZ array or an image struct with Data and Axes='YXZCT
 
 ## Workflow 1
 
-[setupWorkflow1.m](Workflows/examples/setupWorkflow1.m) separates SETUP, DATA, ANALYSIS, PREVIEW and RUN. Set the explicit repo path in SETUP and execute that section first. It validates all package folders before adding paths, so editor-section execution does not depend on mfilename or the current directory. It builds an explicit experiment struct, validates it, and supplies only workflow 1 settings. It does not call farmExperiment4Config or require previous workspace variables. Your source folder/pattern choices remain in DATA.
+[setupWorkflow1.m](Examples%20and%20Workflows/examples/setupWorkflow1.m) exposes loading, segmentation,
+geometry and sampling as separate editor sections. Check the explicit repo path
+in SETUP and execute sections in order. The default synthetic example needs no
+image files; original source folders/patterns remain in DATA SOURCES for real data.
+It builds an editable experiment and supplies analysis settings next to the calls
+that use them. Optional batch execution calls farmWorkflow1Objects(c). See the
+[four-stage workflow document](docs/WORKFLOW-1-STAGES.md).
 
 Workflow 1 accepts optional c.Experiment, with named Intensity and Probabilities sources. Intensity must select one channel. Supplied c.ObjectLoader bypasses probabilities. c.Frames must be present in the experiment. Current intensity calibration determines object metadata/physical volume; probabilities retain their own spacing and must use matching units. Shared crop/origin must be verified: similar extents are insufficient.
 
 Existing callers without c.Experiment retain their original loading path. All
-five numbered setup scripts now use explicit experiment/source descriptions,
-with each workflow implementation at the bottom as a local helper.
+five numbered setup scripts use explicit experiment/source descriptions.
+Workflow 1 exposes four processing stages; its batch implementation is in
+farmWorkflow1Objects.m. Workflows 2–5 keep their implementation as local helpers.
 setupWorkflow2–5 use named Intensity560 (primary/density), Intensity647
 (filament/secondary) and Probabilities sources as needed. The old workflow
-function files remain compatibility entry points and skip setup/previews when
+function files for workflows 2–5 remain compatibility entry points and skip setup/previews when
 called with c. Analysis settings remain partly in c; general run, support and
-geometry builders are deferred. The public workflow namespace is Workflows/src;
-example helpers remain in Workflows/examples.
+geometry builders are deferred. The public workflow namespace is Examples and Workflows/src;
+example helpers remain in Examples and Workflows/examples.
 
 ## Queries
 
@@ -66,12 +73,12 @@ remaining package-namespace function. The category construction algorithm is
 preserved. Object preparation/intensity/classification consumers obtain default
 definitions from their corresponding builders to avoid default drift.
 
-Run from Workflows/examples:
+Run from Examples and Workflows/examples:
 
 ```matlab
 runConfigBuilderTests
 runWorkflowExampleTests
 ```
 
-Also rerun SegmentationTools and ObjectGeometry suites. New synthetic tests cover source/identity propagation, configuration errors, query consumer acceptance, class alias equivalence and workflow 1 with a different physical grid/unit. Workflow tests save fresh outputs under package test-data; original datasets are read-only. MATLAB execution remains to be confirmed in a licensed user session.
+Also rerun SegmentationTools and ObjectGeometry suites. New synthetic tests cover source/identity propagation, configuration errors, query consumer acceptance, class alias equivalence and workflow 1 with a different physical grid/unit. Workflow tests save fresh outputs under package tests/data; original datasets are read-only. MATLAB execution remains to be confirmed in a licensed user session.
 

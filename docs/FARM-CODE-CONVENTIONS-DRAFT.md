@@ -254,12 +254,12 @@ Checked against current repository files during this interview:
 - `README.md`, `docs/README.md`, `docs/FARM-NAMING-MIGRATION.md` and `farmSetup.m`:
   ordinary folders, descriptive names and path configuration.
 - `CONFIGURATION-BUILDERS.md` and
-  `Workflows/src/memoworkflow/config/farmMakeExperiment.m`: editable configuration,
+  `Examples and Workflows/src/memoworkflow/config/farmMakeExperiment.m`: editable configuration,
   timing defaults and configuration checks.
 - `APIs/ObjectGeometry/src/objectgeometry/objects/farmMeasureObjects.m`:
   preparation reuse, selected measurements, grid validation, table identity,
   coordinate conventions and empty-foreground schema handling.
-- `Workflows/examples/setupWorkflow1.m`, `farmWorkflow1Objects.m` in the same
+- `Examples and Workflows/examples/setupWorkflow1.m`, `farmWorkflow1Objects.m` in the same
   folder, and `setupWorkflow2Staged.m`: existing organization alternatives, not
   an agreement to reorganize workflows.
 - `GLOSSARY-CAPABILITIES-MOCKUP.md`: current terminology and representations;

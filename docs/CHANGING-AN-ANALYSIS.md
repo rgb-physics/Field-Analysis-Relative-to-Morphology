@@ -2,7 +2,11 @@
 
 [Guide home](README.md) · [Workflow 1 walkthrough](WORKFLOW-1-WALKTHROUGH.md) · [Reading package structures](READING-STRUCTURES.md)
 
-These examples apply to setupWorkflow1. Edit its ANALYSIS section, rerun that section, then execute RUN. DATA changes require rebuilding the source/experiment configuration too.
+These examples apply to setupWorkflow1. Its current sections separate loading,
+segmentation, geometry and sampling. Edit choices in the appropriate stage and
+rerun that stage plus downstream stages. DATA SOURCES changes require rebuilding
+the experiment and rerunning from stage 1. See the
+[four-stage document](WORKFLOW-1-STAGES.md) for the rerun table and saved outputs.
 
 A setup edit changes arguments or requests. A helper edit is needed when adding a new processing operation or input-loading step. None of the examples below modifies original source files.
 
@@ -180,7 +184,7 @@ The helper skips field sampling. The current example still loads intensity for i
 
 ## 10. Inspect selections and diagnostics
 
-Within the helper, after supports have been constructed:
+After stage 3 has constructed supports:
 
 ```matlab
 boundaryMask = farmGeometryToMatrix(supports.boundary);
@@ -195,7 +199,8 @@ boundaryMask = farmGeometryToMatrix( ...
     supports.boundary,'ObjectIDs',7);
 ```
 
-A breakpoint lets you inspect temporary variables without saving them.
+The staged setup retains these variables in the workspace. A breakpoint can
+also be used inside the batch runner.
 
 After the run:
 
@@ -204,20 +209,22 @@ result.Measurements
 result.Diagnostics
 ```
 
-Set c.IncludeDiagnostics=true before RUN to include the diagnostic columns in the main table too. Separate diagnostic tables remain saved by default.
+Set c.IncludeDiagnostics=true in stage 4 and rerun it to include diagnostic
+columns in measurements too. Separate diagnostic tables remain available.
 
 ## 11. Choose what to save
 
-Edit the helper's explicit OUTPUT CHOICES assignments:
+In SAVE CURRENT FRAME, select the retained geometry explicitly:
 
 ```matlab
-payload = struct('Measurements',properties,'Seconds',toc(timer));
-payload.Diagnostics = diagnostics;
-% payload.Geometry = geometry;
-% payload.Supports = supports;
+c.SaveGeometry = true;
+c.SaveSupports = false;
 ```
 
-Uncomment Geometry to retain generated features. Uncomment Supports to also retain whole-region membership. They can be large. Omitting them does not prevent their use for the current calculation.
+SaveGeometry retains generated features; SaveSupports also retains whole-region
+membership. They can be large. Omitting them does not prevent their use for the
+current calculation. Set savePreview=true in SETUP to write the inspected frame,
+or runBatch=true to save every selected frame in a new run.
 
 To omit diagnostic tables from disk, comment out both payload.Diagnostics and the separate manifest.Diagnostics assignment. IncludeDiagnostics controls whether diagnostic columns appear in Measurements; if true, those columns still save with that table.
 

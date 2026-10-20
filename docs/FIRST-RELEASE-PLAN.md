@@ -13,7 +13,7 @@ uncommitted work and user data settings. No commit, push or publication is impli
 ## 1. Establish supported operations
 
 RELEASE-FUNCTION-INVENTORY.csv lists every currently discovered MATLAB file under
-API source trees and Workflows/src, plus root setup/reference functions. Its 212 rows
+API source trees and Examples and Workflows/src, plus root setup/reference functions. Its 212 rows
 are a file inventory, not 212 approved public operations:
 
 - 165 possible public entries requiring confirmation against API references and
@@ -92,7 +92,7 @@ FIJI is not an identified runtime requirement, ND2 is deferred, and munkres is e
 RELEASE-VALIDATION-DATASETS.md is the accessible user-data checklist. Reuse existing
 fixtures where suitable; request only missing datasets/metadata after mapping checks.
 Generate controlled scientific inputs synthetically. Read originals without changes
-and save new outputs under fresh test-data locations.
+and save new outputs under fresh tests/data locations.
 
 ## 5. Validation and performance
 

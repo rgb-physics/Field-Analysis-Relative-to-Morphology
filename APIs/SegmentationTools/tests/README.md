@@ -7,7 +7,7 @@ top before running, especially `semanticChannels`: `[1 3 2]` is an assumption
 to confirm using the exported original-channel preview.
 
 The script reads the shared HDF5 fixture and every TIFF under
-`test-data/image-stacks/tiff`, using the first time point. It creates a fresh
+`tests/data/image-stacks/tiff`, using the first time point. It creates a fresh
 temporary folder containing threshold sweeps, disjoint class labels,
 historical opening comparisons, sum-versus-union masks, component filtering,
 directional hole filling, a voxel-count CSV, and settings/reports in a MAT file.

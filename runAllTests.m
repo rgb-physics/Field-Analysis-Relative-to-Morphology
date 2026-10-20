@@ -6,7 +6,7 @@ function report = runAllTests(varargin)
 % ImageStackIO validation requires local bundled TIFF/HDF5 fixtures; false
 % runs synthetic suites only. Missing fixtures are reported as errors, not passes.
 % Does not run manual visual validation or benchmarks. Sources remain read-only.
-% Results/summary saved in a fresh test-data/workflow-results/all-tests_* folder.
+% Results/summary saved in a fresh tests/data/workflow-results/all-tests_* folder.
 % Report fields: Summary, UnitResults, ImageStackIO, Passed, OutputDirectory.
 % Failed/Incomplete counts may overlap under matlab.unittest conventions.
 farmRoot = fileparts(mfilename('fullpath'));
@@ -22,8 +22,8 @@ root = fileparts(mfilename('fullpath'));
 apis = {'ImageStackIO','SegmentationTools','ObjectGeometry','ObjectRelativeProfiles', ...
     'ObjectTracking','FieldAnalysis','SharedUtilities','VisualizationTools'};
 for k = 1:numel(apis), addpath(fullfile(root,'APIs',apis{k},'src')); end
-addpath(fullfile(root,'Workflows','src'));
-addpath(fullfile(root,'Workflows','examples'));
+addpath(fullfile(root,'Examples and Workflows','src'));
+addpath(fullfile(root,'Examples and Workflows','examples'));
 addpath(fullfile(root,'tests'));
 addpath(fullfile(root,'APIs','ImageStackIO','tests'));
 options = farmParseOptions(struct('IncludeImageStackIO',true, ...
@@ -41,8 +41,9 @@ files = {
     'SharedUtilities','APIs/SharedUtilities/tests/testSharedUtilities.m'
     'CanonicalUtilities','APIs/SharedUtilities/tests/testCanonicalUtilities.m'
     'FARMLayout','APIs/SharedUtilities/tests/testFarmLayout.m'
-    'WorkflowExamples','Workflows/examples/testWorkflowExamples.m'
-    'ConfigBuilders','Workflows/examples/testConfigBuilders.m'
+    'WorkflowExamples','Examples and Workflows/examples/testWorkflowExamples.m'
+    'ConfigBuilders','Examples and Workflows/examples/testConfigBuilders.m'
+    'ActiveFoamAlignment','Examples and Workflows/examples/testActiveFoamAlignment.m'
     };
 % Invoke TestSuite directly: individual runners throw after failures and the
 % SharedUtilities runner includes regression files already listed above.
@@ -93,7 +94,7 @@ for k = 1:n
     else, unitResults = [unitResults,unitCells{k}]; end %#ok<AGROW>
 end
 allPassed = all(summary.Failed==0 & summary.Incomplete==0 & strlength(summary.Error)==0);
-outputRoot = fullfile(root,'test-data','workflow-results');
+outputRoot = fullfile(root,'tests', 'data','workflow-results');
 if ~isfolder(outputRoot), mkdir(outputRoot); end
 [~,suffix] = fileparts(tempname(outputRoot));
 outputDirectory = fullfile(outputRoot,['all-tests_' suffix]); mkdir(outputDirectory);

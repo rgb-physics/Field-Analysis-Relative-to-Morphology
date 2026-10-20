@@ -40,7 +40,7 @@ Use repository-relative paths below, resolved from the root above.
 3. `docs/FARM-FUNCTION-NAMES.json`, `docs/FARM-MIGRATION-MANIFEST.csv`, `docs/CURRENT_SOURCE_TREES.md`: exact function mapping and retained files.
 4. `GLOSSARY-CAPABILITIES-MOCKUP.md`, `docs/MATLAB-GLOSSARY.md`, `farmGlossary.m`: terminology and interactive reference. The filename “MOCKUP” is historical; this document is used by the implemented reference.
 5. `CONFIGURATION-BUILDERS.md`, `docs/READING-STRUCTURES.md`, `docs/CHANGING-AN-ANALYSIS.md`, `docs/WORKFLOW-1-WALKTHROUGH.md`: configuration and user experience.
-6. `Workflows/examples/setupWorkflow1.m` through `setupWorkflow5.m`, plus `setupWorkflow2Staged.m`: user-facing analysis choices and the alternate staged presentation.
+6. `Examples and Workflows/examples/setupWorkflow1.m` through `setupWorkflow5.m`, plus `setupWorkflow2Staged.m`: user-facing analysis choices and the alternate staged presentation.
 7. Relevant API README, function help, tests, and implementation for each question. `docs/history/OPTIONS-AND-BUILDERS-AUDIT.md` is useful background but must be checked against code.
 8. `docs/history/DATA-DICTIONARY-CANDIDATES.md` and `.csv`: candidate fields, not an approved requirement to document every implementation variable.
 
@@ -65,7 +65,7 @@ Read applicable AGENTS.md instructions before editing. Do not infer present beha
 - Join object measurements using `DatasetID + Frame + ObjectID`; add `ComponentID` when the representation requires it. Attach `TrajectoryID` as information rather than requiring it in the primary object key.
 - Load manageable XYZ fields/supports for one frame, reuse them, then advance. Several fields may coexist for the same frame; do not require loading entire XYZT experiments.
 - Prefer shared array operations, masks, linear indices and table grouping. Avoid unnecessary nested per-object loops, while measuring runtime and memory before optimizing.
-- Keep source datasets unchanged. Write new outputs under package `test-data` in fresh locations without overwriting existing results.
+- Keep source datasets unchanged. Write new outputs under package `tests/data` in fresh locations without overwriting existing results.
 
 ### Scientific meaning
 
@@ -106,7 +106,7 @@ Read applicable AGENTS.md instructions before editing. Do not infer present beha
 | Workflow 5 | Geometry-relative conditional profiles, including intensity/alignment versus distance and segmented category |
 
 Experiment 4 on drive O: was the real-data example. Its README is
-`test-data/image-stacks/tiff/Time Series/DATASETS-README.txt`; historical metadata location was
+`tests/data/image-stacks/tiff/Time Series/DATASETS-README.txt`; historical metadata location was
 `O:\Session 88\Exp 4 - Rmin Redo\1 Cropped MATLAB\metadata.mat`.
 Drive access has not been rechecked here. Do not assume all sources exist on another machine. Use synthetic inputs where possible and inspect current setup settings before running anything expensive.
 

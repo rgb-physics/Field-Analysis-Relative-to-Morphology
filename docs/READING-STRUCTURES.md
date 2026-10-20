@@ -68,7 +68,10 @@ An HDF5 source also identifies DatasetPath. It may use a custom Loader instead o
 
 A loaded image holds Data and metadata. Reading image.Data returns actual values; reading a source's NamePattern returns text describing filenames.
 
-In setupWorkflow1, the DATA variable intensity is initially a source struct. Inside its local helper, intensity is a numeric matrix. These are different workspaces, despite the reused name.
+In the current setupWorkflow1, `intSrc` describes the intensity source;
+`intensity` contains the loaded numeric matrix. The four visible stages retain
+their intermediate values in the same workspace for inspection. Batch processing
+uses a separate function workspace.
 
 ## experiment versus c
 

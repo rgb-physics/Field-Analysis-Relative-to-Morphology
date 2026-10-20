@@ -6,13 +6,16 @@ From the MeMo repository root in MATLAB:
 report = runAllTests;
 ```
 
-The runner adds source/support paths, executes each of the eleven current matlab.unittest test files once, and then runs ImageStackIO fixture validation. It continues after test failures or suite setup/execution errors.
+The runner adds source/support paths, executes each of the twelve current matlab.unittest test files once, and then runs ImageStackIO fixture validation. It continues after test failures or suite setup/execution errors.
+The ActiveFoamAlignment suite uses synthetic workflow 2 output tables to check
+bin counts/variance, missing values, peak flags and equal-time averaging. It
+does not require O: data or rerun filament extraction.
 
 Inspect report.Summary, report.UnitResults and report.ImageStackIO. report.Passed is false if a test failed, remained incomplete or a suite could not execute. Failed and Incomplete counts can overlap in MATLAB; they should not be added to infer the number of distinct unsuccessful tests.
 
-A fresh test-data/workflow-results/all-tests_* directory holds report.mat, summary.csv and, when available, imagestackio.csv. Existing files and source datasets are not overwritten. Synthetic workflow tests also create their own fresh output folders.
+A fresh tests/data/workflow-results/all-tests_* directory holds report.mat, summary.csv and, when available, imagestackio.csv. Existing files and source datasets are not overwritten. Synthetic workflow tests also create their own fresh output folders.
 
-ImageStackIO validation needs local test-data/image-stacks/hdf5/*.h5 and at least two test-data/image-stacks/tiff/xyz_chan*.tif files. Missing fixtures produce a suite execution error. To deliberately run only the synthetic/unit checks:
+ImageStackIO validation needs local tests/data/image-stacks/hdf5/*.h5 and at least two tests/data/image-stacks/tiff/xyz_chan*.tif files. Missing fixtures produce a suite execution error. To deliberately run only the synthetic/unit checks:
 
 ```matlab
 report = runAllTests('IncludeImageStackIO',false);

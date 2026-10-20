@@ -8,7 +8,7 @@ For the anisotropic filament-length check, add this API's examples folder and
 run `report = farmValidateFilamentProjectedExtent;`. It compares a known 40 um
 centerline against ProjectedExtent over elevations 0:15:90, azimuths 0/45/90,
 XY spacing 1 um and Z spacing 0.25 or 2 um. CSV/MAT/PNG reports go to a fresh
-test-data/workflow-results folder. Native ExtentInVoxels is listed separately in
+tests/data/workflow-results folder. Native ExtentInVoxels is listed separately in
 voxel units. Two angle-sweep regression tests are included in testObjectGeometry.
 Oblique lines allow voxel-rounding error; these thin synthetic fixtures do
 not establish robustness to noise, finite thickness, curvature or branching.
@@ -99,7 +99,7 @@ fractional anisotropy, eigenvalue ratios, grid metadata and optional tensors.
 This is separate from vector-field covariance and global principal axes.
 Skeleton generation/fallback is caller-owned. No geometry is generated here.
 Bounded matrix batches compute neighborhood moments; each small tensor then
-uses native eig. See Workflows/examples and runWorkflowExampleTests.
+uses native eig. See Examples and Workflows/examples and runWorkflowExampleTests.
 
 ## Independent optional geometry
 

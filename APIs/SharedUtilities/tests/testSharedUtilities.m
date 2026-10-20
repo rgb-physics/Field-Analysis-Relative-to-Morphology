@@ -191,7 +191,7 @@ verifyTrue(t, contains(entry.Notes, 'depend on Format'));
 end
 
 function testGlossaryAbsentInputsAndScopedNames(t)
-verifyEqual(t, farmGetGlossaryInputs("Matrix"), "Inputs: {''}");
+verifyTrue(t, contains(farmGetGlossaryInputs("Matrix"), "No fixed input list"));
 fields = farmGetGlossaryInputOptions("Matrix");
 verifySize(t, fields, [0 3]);
 verifyClass(t, fields.Name, 'string');
@@ -230,14 +230,14 @@ addpath(root);
 entries = farmGlossary();
 verifyEqual(t, farmGlossary("list"), entries.Term);
 verifyEqual(t, farmGlossary("Experiment", "DataType"), "scalar struct");
-verifyEqual(t, farmGlossary("Matrix", "Inputs"), "Inputs: {''}");
+verifyTrue(t, contains(farmGlossary("Matrix", "Inputs"), "No fixed input list"));
 verifyEqual(t, farmGlossary("Grid", "InputOptions"), ...
     farmGetGlossaryInputOptions("Grid"));
 verifyEqual(t, farmGlossary("search", "distance"), farmSearchGlossary("distance"));
 entry = farmGlossary("Experiment");
 verifyEqual(t, entry.Term, "Experiment");
 output = evalc('farmGlossary("Matrix");');
-verifyTrue(t, contains(output, "Inputs: {''}"));
+verifyTrue(t, contains(output, "Inputs: { No fixed input list"));
 verifyError(t, @() farmGlossary("Experiment", "NoSuchProperty"), 'sharedutilities:GlossaryProperty');
 end
 
@@ -267,8 +267,8 @@ matches = farmSearchGlossary("sampling", ...
 verifyEqual(t, matches, dictionary);
 entry = farmGetGlossaryEntry("SelectionEmpty", 'Section', "DataDictionary");
 verifyEqual(t, entry.DataType, "logical scalar per row; table column across rows");
-verifyEqual(t, farmGetGlossaryInputs("SelectedCount", ...
-    'Section', "DataDictionary"), "Inputs: {''}");
+verifyTrue(t, contains(farmGetGlossaryInputs("SelectedCount", ...
+    'Section', "DataDictionary"), "Sampled field values"));
 verifyError(t, @() farmGetGlossaryEntry("SelectedCount", 'Section', "Glossary"), ...
     'sharedutilities:UnknownGlossaryTerm');
 verifyError(t, @() farmSearchGlossary("geometry", 'SearchIn', "NotAColumn"), ...

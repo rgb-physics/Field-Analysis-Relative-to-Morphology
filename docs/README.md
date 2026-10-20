@@ -23,17 +23,21 @@ snapshots, not current coverage records.
 
 | Task | Guided script | Main inputs | Main result |
 |---|---|---|---|
-| Measure regions and fields within/on them | [setupWorkflow1](../Workflows/examples/setupWorkflow1.m) | Intensity plus probability fields, or supplied masks/labels | Per-frame and combined measurement tables |
-| Compare filament directions with a spatial reference | [setupWorkflow2](../Workflows/examples/setupWorkflow2.m) | Filament intensity/masks plus in/on/out probabilities | Filament directions, sampled references and alignment |
-| Follow region ancestry through splits/merges | [setupWorkflow3](../Workflows/examples/setupWorkflow3.m) | Intensity plus probability fields or supplied masks/labels | Tracking links/events, selected ancestry and measurements |
-| Examine spatial frequencies and correlations | [setupWorkflow4](../Workflows/examples/setupWorkflow4.m) | Primary intensity, optionally a secondary field | Slice/projection/3-D spectra and correlation profiles |
-| Measure values as a function of distance | [setupWorkflow5](../Workflows/examples/setupWorkflow5.m) | Intensity fields and a segmented reference; optional workflow 2 result | Binned intensity/alignment profiles |
+| Measure regions and fields within/on them | [setupWorkflow1](../Examples%20and%20Workflows/examples/setupWorkflow1.m) | Intensity plus probability fields, or supplied masks/labels | Per-frame and combined measurement tables |
+| Compare filament directions with a spatial reference | [setupWorkflow2](../Examples%20and%20Workflows/examples/setupWorkflow2.m) | Filament intensity/masks plus in/on/out probabilities | Filament directions, sampled references and alignment |
+| Follow region ancestry through splits/merges | [setupWorkflow3](../Examples%20and%20Workflows/examples/setupWorkflow3.m) | Intensity plus probability fields or supplied masks/labels | Tracking links/events, selected ancestry and measurements |
+| Examine spatial frequencies and correlations | [setupWorkflow4](../Examples%20and%20Workflows/examples/setupWorkflow4.m) | Primary intensity, optionally a secondary field | Slice/projection/3-D spectra and correlation profiles |
+| Measure values as a function of distance | [setupWorkflow5](../Examples%20and%20Workflows/examples/setupWorkflow5.m) | Intensity fields and a segmented reference; optional workflow 2 result | Binned intensity/alignment profiles |
 
 Workflow 5 currently pools intensity samples over the spatial volume; selecting per-ID profiles requires explicit selection/grouping. Workflow 1 assigns frame-local IDs; use workflow 3 for temporal relationships.
 
-The separate [preparation example](../Workflows/examples/farmPreparationExample.m) illustrates quantitative illumination correction and optional reduced 8-bit export. It still uses its own configuration; it has not been converted into a numbered standalone setup.
+The separate [preparation example](../Examples%20and%20Workflows/examples/farmPreparationExample.m) illustrates quantitative illumination correction and optional reduced 8-bit export. It still uses its own configuration; it has not been converted into a numbered standalone setup.
 
 ## Before the first run
+
+Workflow 1 now has [four visible stages](WORKFLOW-1-STAGES.md) and a synthetic
+default. Run SETUP and DATA SOURCES, then stages 1–4 and DISPLAY. Saving and batch
+execution are optional. The instructions below describe workflows 2–5.
 
 1. Open the chosen saved setup script in MATLAB.
 2. In SETUP, enter the MeMo repository root and execute that section.
@@ -42,7 +46,10 @@ The separate [preparation example](../Workflows/examples/farmPreparationExample.
 5. Run PREVIEW and check the data. Verify spatial registration as well as image dimensions.
 6. Execute RUN when those choices look appropriate.
 
-Use the sections in order in a fresh MATLAB workspace. The local workflow implementation is at the bottom of each script. Source files need not be on MATLAB's code path; the SETUP section adds the package code folders.
+Use the sections in order in a fresh MATLAB workspace. Workflows 2–5 keep their
+local implementation at the bottom of each script. Workflow 1 exposes the
+individual operations in its setup and keeps its batch runner in
+farmWorkflow1Objects.m. The SETUP section adds the package code folders.
 
 The supplied paths, channel numbers and thresholds are example choices for Experiment 4. They are not universal defaults. A filename pattern receives a frame number; DatasetPath selects the array inside an HDF5 file.
 
@@ -50,7 +57,7 @@ Quantitative intensity should already have the correction appropriate to your ex
 
 ## Where do outputs go?
 
-The examples create a fresh directory under package test-data/workflow-results. Source data is read-only. The returned result indicates the output location or file list, depending on the workflow.
+The examples create a fresh directory under package tests/data/workflow-results. Source data is read-only. The returned result indicates the output location or file list, depending on the workflow.
 
 Inspect the helper's OUTPUT CHOICES blocks to select retained fields. Calculation and saving are separate: geometry can be used to obtain statistics without saving its indices.
 

@@ -13,7 +13,7 @@ Start with `c = farmExperiment4Config;` and override the relevant fields. The de
 | Fields | Expected value and purpose |
 |---|---|
 | DatasetID | Text identifying an independent dataset; keep stable across geometry, sampling and tracking. |
-| RepositoryRoot | Explicit MeMo package root used to validate the allowed test-data output location; standalone setup records the SETUP repo path here. |
+| RepositoryRoot | Explicit MeMo package root used to validate the allowed tests/data output location; standalone setup records the SETUP repo path here. |
 | Frames | Numeric frame vector for object/filament/profile workflows; default 10:2:30. |
 | TrackingFrames | Numeric frame vector in desired processing order; default 10:30. Overlap tracking links successive supplied frames without filling omitted times. Duplicate frames are omitted, preserving first occurrence. |
 | Spacing, SpacingUnit | Current intensity-grid spacing in **YXZ** order and unit text; defaults [.55 .55 .7], 'um'. |
@@ -47,7 +47,7 @@ Start with `c = farmExperiment4Config;` and override the relevant fields. The de
 | CorrelationMode, CorrelationCrossChannel | '2d' (default) or '3d'; cross-channel correlation defaults false. |
 | ProfileEdges, ProfileReference | Conditional profile bin edges and distance reference; defaults -30:.5:30, 'boundary'; 'skeleton' is also available. |
 | ProfileChannels, ProfileSigma | Channel text list and profile smoothing; defaults {'560','647'}, 2. |
-| OutputRoot | Generated output directory under package test-data; default test-data/workflow-results. Each run creates a fresh directory. |
+| OutputRoot | Generated output directory under package tests/data; default tests/data/workflow-results. Each run creates a fresh directory. |
 
 ## Fields passed between APIs
 

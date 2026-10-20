@@ -37,6 +37,16 @@ for k = 1:numel(names)
 end
 end
 
+function testSharedDataStaysOffSearchPath(t)
+info = farmSetup('IncludeTests', true);
+verifyEqual(t, farmTestDataRoot(), fullfile(info.Root, 'tests', 'data'));
+entries = string(strsplit(path, pathsep));
+dataRoot = string(fullfile(info.Root, 'tests', 'data'));
+verifyFalse(t, any(strcmpi(entries, dataRoot) | ...
+    startsWith(entries, dataRoot + filesep, 'IgnoreCase', true)));
+verifyTrue(t, isfolder(fullfile(info.Root, 'Examples and Workflows', 'examples')));
+end
+
 function testConsistentOptionsOrder(t)
 defaults = struct('Alpha', 1, 'Beta', 2);
 user = struct('Alpha', 3);

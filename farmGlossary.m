@@ -60,11 +60,12 @@ end
 
 if nargout == 0
     if isstruct(value)
-        fprintf('%s [%s]\n%s / %s\n\n%s\n%s\n', ...
-                value.Term, value.DataType, value.Section, value.Group, value.Definition, value.Inputs);
+        fprintf('%s [%s]\n%s / %s\n\n%s\n', ...
+                value.Term, value.DataType, value.Section, value.Group, value.Definition);
         if strlength(value.Notes) > 0
             fprintf('\n%s\n', value.Notes);
         end
+        fprintf('\n%s\n', value.Inputs);
     elseif istable(value)
         if width(value) > 4
             disp(value(:, {'Term', 'DataType', 'Section', 'Group'}));
@@ -88,7 +89,7 @@ end
 % entries = farmGlossary;              Return the complete table of string columns.
 % entry = farmGlossary("Experiment");  Return one entry as a struct of strings.
 % type = farmGlossary("Experiment", "DataType");
-% inputs = farmGlossary("Matrix", "Inputs"); % "Inputs: {''}" when no layout exists
+% inputs = farmGlossary("Matrix", "Inputs"); % Explains that no fixed input list applies
 % options = farmGlossary("Experiment", "InputOptions"); % Name/Type/Required table
 % matches = farmGlossary("search", "geometry", "SearchIn", ["Term", "Definition"]);
 % matches = farmGlossary("search", "Count", "Section", "DataDictionary");

@@ -4,9 +4,22 @@ function results = farmQueryVectorField(fields, inputSupport, requested, options
 %   fields          Struct of named field arrays or Data/Grid structs.
 %   inputSupport    Sampling indices, mask, labels, index groups or prepared geometry/support.
 %   requested       Names of the properties or statistics to calculate.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   ComponentNames = cell array of character vectors or string array (required);
+%                   FieldName = character vector or string scalar;
+%                   Support = scalar struct;
+%                   Grid = scalar struct or [];
+%                   VarianceNormalization = numeric scalar (0 or 1);
 % Outputs:
 %   results         Requested component/vector statistics with validity and identity columns.
+%
+% ComponentNames gives component order explicitly, for example {'X','Y','Z'}.
+% MeanVector at one selected voxel returns its finite vector components.
+% Component means exclude nonfinite values independently. Zero vectors are
+% valid; interpretation as a direction is a separate calculation.
+% No spatial registration, unit conversion, or direction normalization is inferred.
+%
+% See also farmPrepareSupport, farmQueryField, farmAttachResults
 
 if nargin < 3 || isempty(requested)
     requested = {'MeanVector', 'MeanMagnitude'};
@@ -16,6 +29,8 @@ if nargin < 4
 end
 options = farmOGOptions(options, struct('ComponentNames', [], ...
                                        'FieldName', 'Vector', 'Support', struct(), 'Grid', [], 'VarianceNormalization', 0));
+% Vector Components %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Use the supplied component names and order for all returned vectors.
 names = cellstr(string(options.ComponentNames));
 names = names(:).';
 if ~ismember(numel(names), [2 3]) || numel(unique(names)) ~= numel(names)
@@ -41,6 +56,8 @@ for i = 1:numel(requested)
     requested{i} = validatestring(requested{i}, allowed);
 end
 requested = unique(requested, 'stable');
+% Field Arrays %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Select one spatial array per component on the same sampling grid.
 data = cell(size(names));
 for i = 1:numel(names)
     value = fields.(names{i});
@@ -57,6 +74,8 @@ for i = 1:numel(names)
     data{i} = value;
 end
 sz = [size(data{1}, 1) size(data{1}, 2) size(data{1}, 3)];
+% Sampling Locations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Use the same selected locations and identities for every component.
 support = farmPrepareSupport(inputSupport, sz, options.Support);
 count = numel(support.Records);
 dims = numel(names);
@@ -64,12 +83,14 @@ means = nan(count, dims);
 results = table();
 nativeStats = {'Mean', 'Variance', 'Std', 'Min', 'Max'};
 wantMeans = any(ismember(requested, {'MeanVector', 'MagnitudeOfMean', 'ComponentMean'}));
+% Component Sampling %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Calculate each component's requested statistics and validity counts.
 for component = 1:dims
     selected = {'Count'};
     for stat = nativeStats
         if ismember(['Component' stat{1}], requested)
-            selected{end + 1} = stat{1};
-        end %#ok<AGROW>
+            selected{end + 1} = stat{1}; %#ok<AGROW> % At most five requested component statistics.
+        end
     end
     if wantMeans
         selected = unique([selected {'Mean'}], 'stable');
@@ -106,12 +127,26 @@ completeCounts = zeros(count, 1);
 covariance = cell(count, 1);
 pairCounts = cell(count, 1);
 magnitudeStats = {'MeanMagnitude', 'MagnitudeStd', 'MinMagnitude', 'MaxMagnitude', 'RMSMagnitude'};
+wantMagnitudes = any(ismember(requested, magnitudeStats));
 for stat = magnitudeStats
     if ismember(stat{1}, requested)
         results.([prefix '_' stat{1}]) = nan(count, 1);
     end
 end
-for row = 1:count
+rowsToCalculate = 1:count;
+if count > 0 && ~wantMagnitudes && ~ismember('Covariance', requested) && ...
+        all(arrayfun(@(r) numel(r.Indices) == 1, support.Records))
+    % Count complete single-voxel vectors together, without calculating norms.
+    indices = vertcat(support.Records.Indices);
+    complete = true(count, 1);
+    for i = 1:dims
+        selected = data{i}(indices);
+        complete = complete & isfinite(selected(:));
+    end
+    completeCounts = double(complete);
+    rowsToCalculate = [];
+end
+for row = rowsToCalculate
     indices = support.Records(row).Indices;
     values = zeros(numel(indices), dims);
     for i = 1:dims
@@ -120,9 +155,12 @@ for row = 1:count
     valid = isfinite(values);
     complete = all(valid, 2);
     completeCounts(row) = nnz(complete);
-    magnitudes = zeros(nnz(complete), 1);
-    for i = 1:dims
-        magnitudes = hypot(magnitudes, values(complete, i));
+    magnitudes = [];
+    if wantMagnitudes
+        magnitudes = zeros(nnz(complete), 1);
+        for i = 1:dims
+            magnitudes = hypot(magnitudes, values(complete, i));
+        end
     end
     if ~isempty(magnitudes)
         if ismember('MeanMagnitude', requested)

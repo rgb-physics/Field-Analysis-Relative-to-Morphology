@@ -15,7 +15,7 @@ for api = {'ImageStackIO','SegmentationTools','ObjectGeometry','ObjectTracking',
     addpath(fullfile(repo,'APIs',api{1},'src'));
 end
 addpath(here);
-addpath(fullfile(repo,'Examples and Workflows','src'));
+addpath(fullfile(repo,'APIs','Workflows','src'));
 c = struct;
 c.IncludeDiagnostics = false; % workflow 1 also retains a separate Diagnostics table
 c.RepositoryRoot = repo;

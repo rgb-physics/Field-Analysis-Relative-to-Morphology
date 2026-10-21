@@ -30,7 +30,7 @@ for k = 1:numel(apis)
     end
     addpath(folder);
 end
-addpath(fullfile(repo,'Examples and Workflows','src'));
+addpath(fullfile(repo,'APIs','Workflows','src'));
 addpath(here);
 
 

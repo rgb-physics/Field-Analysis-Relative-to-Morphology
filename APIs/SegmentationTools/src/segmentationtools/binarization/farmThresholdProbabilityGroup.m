@@ -4,7 +4,9 @@ function [mask, info] = farmThresholdProbabilityGroup(probabilities, channels, t
 %   probabilities   Loaded probability array in YXZC order.
 %   channels        Selected probability channels or channel groups.
 %   thresholds      Thresholds corresponding to the selected channels or groups.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   CombineMethod = character vector or string scalar;
+%                   ReturnScore = logical scalar;
 % Outputs:
 %   mask            Logical selection for the requested channel group.
 %   info            Combination settings and optionally the aggregate score.

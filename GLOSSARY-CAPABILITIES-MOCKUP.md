@@ -125,6 +125,8 @@ Inputs: { `DatasetID`\* = text; `Frames`\* = numeric vector; `Sources`\* = struc
 **Data source** [scalar struct]
 A description of where and how to load data, including the file format, array axes, and spatial calibration.
 
+Create a data source with `farmMakeSource`. Look up this entry with `farmGlossary("Source")` or `farmGlossary("Data source")`; both names return the same entry. Use `help farmMakeSource` for supported options and defaults. Creating a source description does not load the data.
+
 Required markers depend on Format; file fields are not required for a custom loader.
 
 Inputs: { `Format` = text; `Folder`\* = text (file source); `NamePattern`\* = text (file source); `DatasetPath`\* = text (HDF5 source); `Loader`\* = function handle (custom source); `SourceAxes` = text; `Spacing` = numeric vector; `SpacingUnit` = text; `Channels` = numeric vector; `TimeIndex` = numeric scalar; }

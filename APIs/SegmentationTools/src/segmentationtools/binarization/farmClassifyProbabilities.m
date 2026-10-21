@@ -3,7 +3,17 @@ function result = farmClassifyProbabilities(probabilities, classes, options)
 % Inputs:
 %   probabilities   Loaded probability array in YXZC order.
 %   classes         Segmented-category definitions returned by farmMakeClasses.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   EnsureDisjoint = logical scalar;
+%                   AssignUnclassified = logical scalar;
+%                   ReturnLabelVolume = logical scalar;
+%                   ReturnMasks = logical scalar;
+%                   ReturnCandidateMasks = logical scalar;
+%                   ReturnOverlapMask = logical scalar;
+%                   ReturnUnclassifiedMask = logical scalar;
+%                   ReturnChangedVoxelMask = logical scalar;
+%                   CountComponents = logical scalar;
+%                   Connectivity = numeric scalar or [];
 % Outputs:
 %   result          Segmented-category metadata and requested label/mask diagnostics.
 

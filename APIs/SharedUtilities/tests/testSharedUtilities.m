@@ -190,6 +190,20 @@ entry = farmGetGlossaryEntry("Data source");
 verifyTrue(t, contains(entry.Notes, 'depend on Format'));
 end
 
+function testGlossarySourceAlternativeName(t)
+expected = farmGlossary("Data source");
+verifyEqual(t, farmGlossary("Source"), expected);
+verifyEqual(t, farmGetGlossaryEntry(" source "), expected);
+verifyEqual(t, farmGlossary("SOURCE", "Inputs"), expected.Inputs);
+verifyEqual(t, farmGlossary("Source", "InputOptions"), ...
+    farmGlossary("Data source", "InputOptions"));
+verifyEqual(t, farmGlossary("Source", "Section", "Glossary"), expected);
+verifyError(t, @() farmGlossary("Source", "Section", "DataDictionary"), ...
+    'sharedutilities:UnknownGlossaryTerm');
+matches = farmSearchGlossary("farmMakeSource");
+verifyTrue(t, ismember("Data source", matches.Term));
+end
+
 function testGlossaryAbsentInputsAndScopedNames(t)
 verifyTrue(t, contains(farmGetGlossaryInputs("Matrix"), "No fixed input list"));
 fields = farmGetGlossaryInputOptions("Matrix");

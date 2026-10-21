@@ -4,7 +4,13 @@ function combined = farmAttachByKeys(base, additional, keys, options)
 %   base            Destination table whose row order is retained.
 %   additional      Table containing incoming keyed values.
 %   keys            Names of table columns that jointly identify each row.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   MissingPolicy = character vector or string scalar;
+%                   Overwrite = logical scalar;
+%                   AllowRepeatedBase = logical scalar;
+%                   Columns = character vector, cell array of character vectors, or string array;
+%                   ErrorPrefix = character vector or string scalar;
+%                   ErrorNames = scalar struct;
 % Outputs:
 %   combined        Destination rows with the requested incoming columns attached.
 

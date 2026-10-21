@@ -2,7 +2,11 @@ function result = farmAutoCorrelation(data, options)
 %FARMAUTOCORRELATION Unnormalized linear self-correlation.
 % Inputs:
 %   data            Real numeric image or volume.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   MeanSubtract = logical scalar;
+%                   Window = logical scalar;
+%                   Spacing = positive numeric vector;
+%                   SpacingUnit = character vector or string scalar;
 % Outputs:
 %   result          Linear self-correlation array with lag and normalization metadata.
 

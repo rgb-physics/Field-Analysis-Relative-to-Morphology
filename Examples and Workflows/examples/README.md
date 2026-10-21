@@ -9,6 +9,9 @@ overwritten by the workflows. No output is written beside source data.
 For Active Foam E5 alignment versus signed distance/time, see
 [setupActiveFoamE5.m](setupActiveFoamE5.m) and the
 [definition and plotting guide](../../docs/ACTIVE-FOAM-E5-ALIGNMENT.md).
+For the same processing divided into eight individually inspectable functions,
+see [Active Foam E5 stages](activeFoamE5Stages/README.md). Every stage accepts
+and returns only `c`, with intermediate data stored in `c.Results`.
 It explicitly passes workflow 2 output into the plotting function, processes
 only frames 25–30, and keeps O:\Session 88 read only. Existing measurements can
 be loaded to replot without rereading images.

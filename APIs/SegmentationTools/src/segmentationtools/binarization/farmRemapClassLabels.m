@@ -4,7 +4,9 @@ function mapped = farmRemapClassLabels(labels, sourceIDs, outputValues, options)
 %   labels          Categorical label array.
 %   sourceIDs       IDs to replace in the input label array.
 %   outputValues    Replacement values corresponding to sourceIDs.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   UnmappedValue = nonnegative integer scalar;
+%                   OutputType = character vector or string scalar;
 % Outputs:
 %   mapped          Categorical labels replaced with the selected stored values.
 

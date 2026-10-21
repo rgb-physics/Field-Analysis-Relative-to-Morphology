@@ -11,7 +11,7 @@ addParameter(p, 'IncludeExamples', false, @(x) islogical(x) && isscalar(x));
 addParameter(p, 'IncludeTests', false, @(x) islogical(x) && isscalar(x));
 parse(p, varargin{:});
 root = fileparts(mfilename('fullpath'));
-addpath(root);
+folders = {root};
 apis = dir(fullfile(root, 'APIs'));
 apis = apis([apis.isdir] & ~ismember({apis.name}, {'.', '..'}));
 
@@ -20,50 +20,52 @@ for apiInd = 1:numel(apis)
     source = fullfile(apis(apiInd).folder, apis(apiInd).name, 'src');
 
     if apis(apiInd).isdir && isfolder(source)
-        addpath(genpath(source));
+        folders{end + 1} = genpath(source);
     end
 end
-
-addpath(genpath(fullfile(root, 'Examples and Workflows', 'src')));
 
 % Add only the explicitly installed local Gaussian derivative dependency.
 gaussdiff = fullfile(root, 'local-dependencies', 'GaussDiff');
 
 if isfolder(gaussdiff)
-    addpath(gaussdiff);
+    folders{end + 1} = gaussdiff;
 end
 
 if p.Results.IncludeExamples || p.Results.IncludeTests
-    addpath(genpath(fullfile(root, 'Examples and Workflows', 'examples')));
+    folders{end + 1} = genpath(fullfile(root, 'Examples and Workflows', 'examples'));
 
     for apiInd = 1:numel(apis)
         folder = fullfile(apis(apiInd).folder, apis(apiInd).name, 'examples');
 
         if apis(apiInd).isdir && isfolder(folder)
-            addpath(genpath(folder));
+            folders{end + 1} = genpath(folder);
         end
     end
 end
 
 if p.Results.IncludeTests
     % Keep datasets and saved source snapshots off the MATLAB search path.
-    addpath(fullfile(root, 'tests'));
-    addpath(genpath(fullfile(root, 'tests', 'memotest')));
+    folders{end + 1} = fullfile(root, 'tests');
+    folders{end + 1} = genpath(fullfile(root, 'tests', 'memotest'));
 
     for apiInd = 1:numel(apis)
         folder = fullfile(apis(apiInd).folder, apis(apiInd).name, 'tests');
 
         if apis(apiInd).isdir && isfolder(folder)
-            addpath(genpath(folder));
+            folders{end + 1} = genpath(folder);
         end
     end
 
     folder = fullfile(root, 'Examples and Workflows', 'tests');
 
     if isfolder(folder)
-        addpath(genpath(folder));
+        folders{end + 1} = genpath(folder);
     end
 end
+
+% Add folders together, preserving the precedence of successive addpath calls.
+folders = folders(~cellfun('isempty', folders));
+addpath(folders{end:-1:1});
 
 info = struct('Root', root, 'IncludeExamples', p.Results.IncludeExamples, ...
     'IncludeTests', p.Results.IncludeTests);

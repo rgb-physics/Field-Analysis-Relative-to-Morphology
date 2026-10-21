@@ -21,7 +21,7 @@ here = fullfile(repo,'Examples and Workflows','examples');
 apis = {'ImageStackIO','SegmentationTools','ObjectGeometry',...
     'ObjectRelativeProfiles','SharedUtilities','ObjectTracking','FieldAnalysis','VisualizationTools'};
 sourceFolders = cellfun(@(api)fullfile(repo,'APIs',api,'src'),apis,'UniformOutput',false);
-folders = [sourceFolders,{fullfile(repo,'Examples and Workflows','src'),here}];
+folders = [sourceFolders,{fullfile(repo,'APIs','Workflows','src'),here}];
 
 % Check all paths before modifying MATLAB's path; fail with a useful message.
 for k = 1:numel(folders)

@@ -31,7 +31,7 @@ entry = farmGlossary("experiment", "Section", "Glossary");
 
 Inputs: { `DatasetID`\* = text; `Frames`\* = numeric vector; `Sources`\* = struct of named source structs; `TimeStep` = positive numeric scalar (default 1); `TimeUnit` = text (default 'frame'); }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L557)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L559)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-c-objectproperties"></a>
 
@@ -56,7 +56,7 @@ entry = farmGlossary("c.ObjectProperties", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L562)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L564)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-c-geometryoptions"></a>
 
@@ -81,7 +81,7 @@ entry = farmGlossary("c.GeometryOptions", "Section", "Glossary");
 
 Inputs: { <geometry name> = scalar options struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L567)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L569)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-c-queries"></a>
 
@@ -115,7 +115,7 @@ entry = farmGlossary("c.Queries", "Section", "Glossary");
 
 Inputs: { `Name`\* = text; `Support`\* = text; `Field` = text (required for a scalar query without Operation); `Operation` = function handle (alternative to Field); `Kind` = text; `Fields` = text list (required for vector queries); `Statistics` = text list; `Mode` = text; `Options` = scalar struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L572)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L574)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-objects"></a>
 
@@ -151,7 +151,7 @@ entry = farmGlossary("objects", "Section", "Glossary");
 
 Inputs: { Object locations and preparation settings; see farmPrepareObjects. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L579)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L581)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-geometry"></a>
 
@@ -185,7 +185,7 @@ entry = farmGlossary("geometry", "Section", "Glossary");
 
 Inputs: { Object locations and the requested geometry types and settings. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L588)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L590)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-supports"></a>
 
@@ -219,7 +219,7 @@ entry = farmGlossary("supports", "Section", "Glossary");
 
 Inputs: { <support name>\* = prepared geometry/support struct, mask, labels or indices; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L595)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L597)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-fields"></a>
 
@@ -253,7 +253,7 @@ entry = farmGlossary("fields", "Section", "Glossary");
 
 Inputs: { <field name>\* = numeric/logical matrix or Data/Grid struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L602)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L604)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-properties"></a>
 
@@ -278,7 +278,7 @@ entry = farmGlossary("properties", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L609)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L611)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-diagnostics"></a>
 
@@ -304,7 +304,7 @@ entry = farmGlossary("diagnostics", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L614)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L616)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-payload"></a>
 
@@ -340,7 +340,7 @@ entry = farmGlossary("payload", "Section", "Glossary");
 
 Inputs: { Results explicitly chosen for saving in workflow 1. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L620)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L622)
 
 <a id="glossary-workflow-1-recognize-the-roles-in-code-manifest"></a>
 
@@ -376,7 +376,7 @@ entry = farmGlossary("manifest", "Section", "Glossary");
 
 Inputs: { Output locations and combined results collected by workflow 1. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L629)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L631)
 
 ## Related topics
 

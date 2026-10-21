@@ -4,7 +4,9 @@ function [inside, wall, outside, info] = farmSmoothInOnOutProbabilities(probabil
 %   probabilities   Loaded probability array in YXZC order.
 %   channels        Selected probability channels or channel groups.
 %   thresholds      Thresholds corresponding to the selected channels or groups.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   OpeningRadius = nonnegative integer scalar;
+%                   SpanSpace = logical scalar;
 % Outputs:
 %   inside          Cleaned inside mask.
 %   wall            Cleaned wall mask.

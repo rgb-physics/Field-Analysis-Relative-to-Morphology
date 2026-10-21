@@ -6,18 +6,10 @@ function [topLayer,botLayer,topLayerZs,botLayerZs,centerSlice,centerSliceZs,spli
 % calling this function. Numeric zeros/ones and logical arrays are accepted.
 %
 % OPTIONS is an optional scalar struct with these fields:
-%   SplitSlice       [] (default): detect a local occupancy minimum nearest
-%                    the volume's central Z slice. Otherwise, supply an
-%                    integer Z index to override automatic detection.
-%   SplitSearchRange [] (default): consider minima throughout the volume.
-%                    Otherwise, supply inclusive [firstZ lastZ] bounds.
-%                    Used only for automatic detection. Minima are detected
-%                    on the full occupancy profile, then filtered by range.
-%   GapHalfWidth     2 (default): remove SplitSlice +/- this many slices.
-%                    Zero removes only the split slice. Units are voxels.
-%   Connectivity     26 (default): 6, 18, or 26 for connected components.
-%                    6 joins face neighbors; 18 also joins edge neighbors;
-%                    26 additionally joins corner neighbors.
+%   SplitSlice = positive integer scalar or [];
+%   SplitSearchRange = numeric two-element vector or [];
+%   GapHalfWidth = nonnegative integer scalar;
+%   Connectivity = numeric scalar (6, 18, or 26).
 %
 % The two largest remaining components are selected, then ordered by mean
 % Z index. TOP means smaller mean Z index, not necessarily physical top.
@@ -161,3 +153,20 @@ centerPixels = find(centerSlice);
 centerSliceZs = zeros(size(mask));
 centerSliceZs(centerPixels) = centerZ;
 end
+
+% -------------------------------------------------------------------------
+% BEHAVIOR
+% -------------------------------------------------------------------------
+% OPTIONS is an optional scalar struct with these fields:
+%   SplitSlice       [] (default): detect a local occupancy minimum nearest
+%                    the volume's central Z slice. Otherwise, supply an
+%                    integer Z index to override automatic detection.
+%   SplitSearchRange [] (default): consider minima throughout the volume.
+%                    Otherwise, supply inclusive [firstZ lastZ] bounds.
+%                    Used only for automatic detection. Minima are detected
+%                    on the full occupancy profile, then filtered by range.
+%   GapHalfWidth     2 (default): remove SplitSlice +/- this many slices.
+%                    Zero removes only the split slice. Units are voxels.
+%   Connectivity     26 (default): 6, 18, or 26 for connected components.
+%                    6 joins face neighbors; 18 also joins edge neighbors;
+%                    26 additionally joins corner neighbors.

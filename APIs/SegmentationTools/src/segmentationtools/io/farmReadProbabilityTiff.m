@@ -2,7 +2,12 @@ function [probabilities, image] = farmReadProbabilityTiff(filePath, options)
 %FARMREADPROBABILITYTIFF Read a TIFF probability stack as [Y X Z C].
 % Inputs:
 %   filePath        Full input or output file path, including filename.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   SourceAxes = character vector or string scalar;
+%                   TimeIndex = positive integer scalar;
+%                   TimeAsChannels = logical scalar;
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
 % Outputs:
 %   probabilities   One selected probability field in YXZC order.
 %   image           Source image and selection metadata.

@@ -2,7 +2,17 @@ function result = farmSegmentIntensity(intensity, options)
 %FARMSEGMENTINTENSITY Generate a basic foreground morphology from intensity.
 % Inputs:
 %   intensity       One finite real 2D image or 3D intensity volume.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Method = character vector or string scalar;
+%                   Threshold = numeric scalar or [];
+%                   Foreground = character vector or string scalar;
+%                   IntensityRange = numeric two-element vector or [];
+%                   EstimationMask = logical array or [];
+%                   FillHoles = logical scalar;
+%                   MinObjectSize = nonnegative integer scalar;
+%                   KeepLargest = nonnegative integer scalar or [];
+%                   Connectivity = numeric scalar or [];
+%                   ReturnLabels = logical scalar;
 % Outputs:
 %   result          Foreground mask, threshold, counts and optionally connected-object labels.
 

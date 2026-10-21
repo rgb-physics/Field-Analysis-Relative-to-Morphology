@@ -3,7 +3,11 @@ function result = farmConditionalStatistics(measured, conditioning, options)
 % Inputs:
 %   measured        Measured values at the selected locations.
 %   conditioning    Corresponding values used to assign samples to bins.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Edges = numeric vector or [];
+%                   NumBins = positive integer scalar;
+%                   Statistics = character vector, cell array of character vectors, or string array;
+%                   GroupIDs = numeric array or [];
 % Outputs:
 %   result          Struct containing edges, binned statistics and excluded counts.
 

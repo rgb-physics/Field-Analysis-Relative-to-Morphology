@@ -7,10 +7,17 @@ function image = farmLoadSource(experiment, name, frame)
 % Outputs:
 %   image        Image data with YXZCT axes, calibration, source and identity.
 %
+% Spacing is supplied in YXZ order and is stored with SpacingUnit.
+% Channels and TimeIndex select stored array positions; frame identifies the
+% acquisition. Loading does not resample or register data with other sources.
+% Enter farmGlossary("Source") for the definition and documented source fields.
+%
 % See also farmMakeSource, farmMakeExperiment, farmReadTiff, farmReadH5
 
+% Source Selection %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Select a named source and acquisition frame from the Experiment.
 name = char(string(name));
-validateattributes(frame,{'numeric'},{'scalar','integer','finite','nonnegative'});
+validateattributes(frame, {'numeric'}, {'scalar', 'integer', 'finite', 'nonnegative'});
 
 if ~isfield(experiment.Sources, name)
     error('memoworkflow:MissingSource', ...
@@ -28,6 +35,7 @@ if ~isempty(source.SourceAxes)
     options.SourceAxes = source.SourceAxes;
 end
 
+% Data Loading %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Load only this acquisition frame. Stored channel/time selection follows.
 switch source.Format
     case 'tiff'
@@ -59,7 +67,9 @@ switch source.Format
         end
 end
 
-validateattributes(image.Spacing,{'numeric'},{'vector','numel',3,'real','positive','finite'});
+% Spatial Metadata %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Retain the supplied spacing and units without estimating calibration.
+validateattributes(image.Spacing, {'numeric'}, {'vector', 'numel', 3, 'real', 'positive', 'finite'});
 image.Spacing = double(image.Spacing(:).');
 unit = string(image.SpacingUnit);
 
@@ -69,6 +79,8 @@ end
 
 image.SpacingUnit = char(unit);
 
+% Stored Channel and Time Selection %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Select array positions and record which source/frame produced the image.
 if source.TimeIndex > size(image.Data, 5)
     error('memoworkflow:TimeIndex', 'TimeIndex exceeds stored time dimension.');
 end

@@ -38,6 +38,21 @@ verifyEqual(testCase,t.Vector_MeanMagnitude,sqrt(14),'AbsTol',1e-12);
 verifyEqual(testCase,t.Vector_CovariancePairCounts{1},[3 2 2;2 3 2;2 2 3]);
 verifyEqual(testCase,t.Vector_Covariance{1}(1,2),16);
 end
+function testBatchSingleVoxelVectorsMatchGeneralCounts(testCase)
+fields = struct('X', [0 1 NaN Inf -Inf], 'Y', [0 NaN 2 0 1], 'Z', [0 3 4 5 6]);
+groups = {1; 2; 3; 4; 5; 2};
+requested = {'MeanVector', 'ComponentVariance', 'ComponentStd', 'ComponentMin', 'ComponentMax'};
+options = struct('ComponentNames', {{'X', 'Y', 'Z'}});
+batch = farmQueryVectorField(fields, groups, requested, options);
+% Requesting a magnitude also exercises the general per-selection validity calculation.
+general = farmQueryVectorField(fields, groups, [requested {'MeanMagnitude'}], options);
+for name = batch.Properties.VariableNames
+    verifyEqual(testCase, batch.(name{1}), general.(name{1}));
+end
+verifyEqual(testCase, batch.Vector_CompleteVectorCount, [1; 0; 0; 0; 0; 0]);
+verifyEqual(testCase, batch.Vector_IncompleteVectorCount, [0; 1; 1; 1; 1; 1]);
+verifyEqual(testCase, batch.Vector_MeanVector(1, :), [0 0 0]);
+end
 function testKnownCovariance(testCase)
 f = struct('X',[1 2 3],'Y',[2 4 6]);
 t = farmQueryVectorField(f,1:3,{'Covariance'}, ...

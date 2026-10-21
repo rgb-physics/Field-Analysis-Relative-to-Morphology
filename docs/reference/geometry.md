@@ -31,7 +31,7 @@ entry = farmGlossary("Linear voxel indices", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L238)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L240)
 
 <a id="glossary-geometry-supports-and-references-indices"></a>
 
@@ -56,7 +56,7 @@ entry = farmGlossary("Indices", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L243)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L245)
 
 <a id="glossary-geometry-supports-and-references-coordinates"></a>
 
@@ -81,7 +81,7 @@ entry = farmGlossary("Coordinates", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L248)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L250)
 
 <a id="glossary-geometry-supports-and-references-geometry"></a>
 
@@ -117,7 +117,7 @@ entry = farmGlossary("Geometry", "Section", "Glossary");
 
 Inputs: { Object locations, requested geometry type, and method settings; see farmGenerateGeometry. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L253)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L255)
 
 <a id="glossary-geometry-supports-and-references-support"></a>
 
@@ -153,7 +153,7 @@ entry = farmGlossary("Support", "Section", "Glossary");
 
 Inputs: { input = selected locations or geometry; imageSize = array dimensions; options = sampling settings; see farmPrepareSupport. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L262)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L264)
 
 <a id="glossary-geometry-supports-and-references-reference"></a>
 
@@ -178,7 +178,7 @@ entry = farmGlossary("Reference", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L271)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L273)
 
 <a id="glossary-geometry-supports-and-references-boundary"></a>
 
@@ -212,7 +212,7 @@ entry = farmGlossary("Boundary", "Section", "Glossary");
 
 Inputs: { input = object locations; type = 'boundary'; options = method settings; see farmGenerateGeometry. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L276)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L278)
 
 <a id="glossary-geometry-supports-and-references-isosurface"></a>
 
@@ -237,7 +237,7 @@ entry = farmGlossary("Isosurface", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L283)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L285)
 
 <a id="glossary-geometry-supports-and-references-distance-defined-neighborhood"></a>
 
@@ -262,7 +262,7 @@ entry = farmGlossary("Distance-defined neighborhood", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L288)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L290)
 
 <a id="glossary-geometry-supports-and-references-layer"></a>
 
@@ -287,7 +287,7 @@ entry = farmGlossary("Layer", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L293)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L295)
 
 <a id="glossary-geometry-supports-and-references-shell"></a>
 
@@ -312,7 +312,7 @@ entry = farmGlossary("Shell", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L298)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L300)
 
 <a id="glossary-geometry-supports-and-references-skeleton"></a>
 
@@ -337,7 +337,7 @@ entry = farmGlossary("Skeleton", "Section", "Glossary");
 
 Inputs: { input = object locations; type = 'skeleton'; options = method settings; see farmGenerateGeometry. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L303)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L305)
 
 <a id="glossary-geometry-supports-and-references-sheet"></a>
 
@@ -364,7 +364,7 @@ entry = farmGlossary("Sheet", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L318)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L320)
 
 <a id="glossary-geometry-supports-and-references-centered-surface"></a>
 
@@ -391,7 +391,7 @@ entry = farmGlossary("Centered surface", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L323)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L325)
 
 <a id="glossary-geometry-supports-and-references-point-cloud"></a>
 
@@ -416,7 +416,7 @@ entry = farmGlossary("Point cloud", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L328)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L330)
 
 <a id="glossary-geometry-supports-and-references-rendered-geometry-matrix"></a>
 
@@ -441,7 +441,7 @@ entry = farmGlossary("Rendered geometry matrix", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L333)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L335)
 
 <a id="glossary-geometry-supports-and-references-mesh"></a>
 
@@ -468,7 +468,7 @@ entry = farmGlossary("Mesh", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L338)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L340)
 
 ## Related topics
 

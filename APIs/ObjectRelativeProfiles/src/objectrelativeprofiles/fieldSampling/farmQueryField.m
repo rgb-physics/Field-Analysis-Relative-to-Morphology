@@ -4,9 +4,29 @@ function results = farmQueryField(field, inputSupport, requested, options)
 %   field           Numeric field array or a struct containing Data and grid metadata.
 %   inputSupport    Sampling indices, mask, labels, index groups or prepared geometry/support.
 %   requested       Names of the properties or statistics to calculate.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   FieldName = character vector or string scalar;
+%                   Support = scalar struct;
+%                   Grid = scalar struct or [];
+%                   Quantiles = numeric vector in [0, 1];
+%                   BinEdges = numeric vector or [];
+%                   NumBins = positive integer scalar or [];
+%                   VarianceNormalization = numeric scalar (0 or 1);
+%                   SampleOperation = function handle or [];
+%                   CustomOperations = scalar struct of function handles;
 % Outputs:
 %   results         Identity columns, requested statistics and sampling diagnostics.
+%
+% Supply indices or a prepared Support to choose where values are read.
+% For one output row per index, supply num2cell(indices(:)) as inputSupport.
+% A numeric index vector instead defines one group for combined statistics.
+% Mean at one selected location returns that location's finite value; an
+% empty or nonfinite-only group returns NaN for Mean and zero for Count.
+% Values and their units come from the supplied field; no calibration is inferred.
+% Enter farmGlossary("Support") for selection types and the Data Dictionary
+% entries SelectedCount and FiniteCount for sampling diagnostics.
+%
+% See also farmPrepareSupport, farmQueryVectorField, farmAttachResults
 
 if nargin < 3 || isempty(requested)
     requested = {'Mean'};
@@ -17,6 +37,8 @@ end
 options = farmOGOptions(options, struct('FieldName', 'Field', 'Support', struct(), ...
                                        'Grid', [], 'Quantiles', [.25 .5 .75], 'BinEdges', [], 'NumBins', [], ...
                                        'VarianceNormalization', 0, 'SampleOperation', [], 'CustomOperations', struct()));
+% Output Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Name the requested statistics and diagnostic columns for this field.
 name = char(string(options.FieldName));
 if ~isvarname(name)
     error('objectrelativeprofiles:InvalidFieldName', 'FieldName must be a valid MATLAB identifier.');
@@ -64,6 +86,8 @@ for i = 1:numel(custom)
         error('objectrelativeprofiles:InvalidCustomOperation', 'Use function handles.');
     end
 end
+% Sampled Fields %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Read one scalar field, or combine named fields with a supplied operation.
 if isempty(options.SampleOperation)
     [data, fieldGrid] = localField(field);
     sources = {'value'};
@@ -99,6 +123,8 @@ sz = [size(data, 1) size(data, 2) size(data, 3)];
 if isfield(fieldGrid, 'Size')
     localMatch(fieldGrid.Size, sz);
 end
+% Sampling Locations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Prepare one set of selected indices for each identified object/component.
 support = farmPrepareSupport(inputSupport, sz, options.Support);
 n = numel(support.Records);
 results = table(repmat(string(support.DatasetID), n, 1), repmat(support.Frame, n, 1), ...
@@ -122,7 +148,49 @@ end
 for i = 1:numel(custom)
     results.([name '_' custom{i}]) = cell(n, 1);
 end
-for row = 1:n
+% Field Sampling and Statistics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Read each group's values and retain finite/nonfinite counts separately.
+% Read single-voxel selections together, retaining one output row per group.
+% Custom operations and histograms retain the general calculation below.
+rowsToCalculate = 1:n;
+if n > 0 && isempty(options.SampleOperation) && isempty(custom) && ...
+        ~ismember('Histogram', requested) && all(arrayfun(@(r) numel(r.Indices) == 1, support.Records))
+    indices = vertcat(support.Records.Indices);
+    values = double(data(indices));
+    values = values(:);
+    finite = isfinite(values);
+    results.([name '_SelectedCount']) = ones(n, 1);
+    results.([name '_FiniteCount']) = double(finite);
+    results.([name '_NaNCount']) = double(isnan(values));
+    results.([name '_PositiveInfCount']) = double(values == Inf);
+    results.([name '_NegativeInfCount']) = double(values == -Inf);
+    for j = 7:10
+        results.([name '_' flagNames{j}]) = double(reshape([support.Records.(flagNames{j})], [], 1));
+    end
+    finiteValues = values;
+    finiteValues(~finite) = NaN;
+    for j = 1:numel(requested)
+        stat = requested{j};
+        switch stat
+            case 'Count'
+                output = double(finite);
+            case 'Sum'
+                output = values;
+                output(~finite) = 0;
+            case {'Variance', 'Std'}
+                output = nan(n, 1);
+                output(finite) = 0;
+            case 'Quantiles'
+                output = repmat(finiteValues, 1, numel(options.Quantiles));
+            otherwise
+                % Mean, Median, Min and Max equal the single finite value.
+                output = finiteValues;
+        end
+        results.([name '_' stat]) = output;
+    end
+    rowsToCalculate = [];
+end
+for row = rowsToCalculate
     record = support.Records(row);
     indices = record.Indices;
     if isempty(options.SampleOperation)

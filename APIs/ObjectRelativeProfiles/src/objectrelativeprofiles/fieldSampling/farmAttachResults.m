@@ -3,7 +3,9 @@ function combined = farmAttachResults(base, additional, options)
 % Inputs:
 %   base            Destination table whose row order is retained.
 %   additional      Table containing incoming keyed values.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   MissingPolicy = character vector or string scalar;
+%                   Overwrite = logical scalar;
 % Outputs:
 %   combined        Sampling results joined by dataset/frame/object/component identity.
 

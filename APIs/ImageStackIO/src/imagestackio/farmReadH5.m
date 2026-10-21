@@ -3,7 +3,11 @@ function image = farmReadH5(filePath, datasetPath, options)
 % Inputs:
 %   filePath        Full input or output file path, including filename.
 %   datasetPath     HDF5 dataset path within the file.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   SourceAxes = character vector or string scalar;
+%                   Channels = positive integer vector or [];
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
 % Outputs:
 %   image           Image struct containing normalized Data, YXZCT axes and source metadata.
 

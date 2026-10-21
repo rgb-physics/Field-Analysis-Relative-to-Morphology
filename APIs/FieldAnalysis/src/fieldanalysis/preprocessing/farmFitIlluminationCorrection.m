@@ -3,7 +3,12 @@ function model = farmFitIlluminationCorrection(frames, loader, options)
 % Inputs:
 %   frames          Acquisition frame numbers in the requested processing order.
 %   loader          Function handle that loads one acquisition frame.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Spacing = positive numeric three-element vector;
+%                   FirstSigma = positive numeric scalar;
+%                   SecondSigma = positive numeric scalar;
+%                   OutlierPercentile = numeric scalar in [0, 100];
+%                   PercentileScope = character vector or string scalar;
 % Outputs:
 %   model           Illumination/focal correction model derived from the supplied frames.
 

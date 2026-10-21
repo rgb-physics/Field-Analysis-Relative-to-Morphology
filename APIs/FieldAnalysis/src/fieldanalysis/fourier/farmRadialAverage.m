@@ -2,7 +2,12 @@ function result = farmRadialAverage(values, options)
 %FARMRADIALAVERAGE Hard bins or historical Gaussian radial weighting.
 % Inputs:
 %   values          Numeric values to reduce.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Coordinates = cell array of numeric axis vectors;
+%                   Spacing = positive numeric vector or [];
+%                   Edges = numeric vector or [];
+%                   NumBins = positive integer scalar;
+%                   Sigma = nonnegative numeric scalar;
 % Outputs:
 %   result          Radial-bin results including means, counts and edges.
 

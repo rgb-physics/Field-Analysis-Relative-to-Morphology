@@ -2,7 +2,15 @@ function result = farmPowerSpectrum3D(data, options)
 %FARMPOWERSPECTRUM3D Unnormalized power and spherical spectrum of a YXZ volume.
 % Inputs:
 %   data            Real numeric image or volume.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Spacing = positive numeric vector;
+%                   SpacingUnit = character vector or string scalar;
+%                   MeanSubtract = logical scalar;
+%                   Window = logical scalar;
+%                   Edges = numeric vector or [];
+%                   NumBins = positive integer scalar;
+%                   Sigma = nonnegative numeric scalar;
+%                   ReturnPower = logical scalar;
 % Outputs:
 %   result          3D spectrum struct with radial results, frequency axes and normalization metadata.
 

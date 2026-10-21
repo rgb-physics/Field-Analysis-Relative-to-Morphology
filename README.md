@@ -39,6 +39,7 @@ Internal image arrays use `[Y X Z C T]`. Workflows combine the following APIs fo
 **SharedUtilities** - Functions used across the package<br>
 **SurfaceFieldMapping** - Retained mesh operations; mesh and sheet APIs are deferred pending rigorous study.<br>
 **VisualizationTools** - Visualize results at different stages of analysis<br>
+**Workflows** - Describe experiments and load named sources using public package functions<br>
 
 *Ilastik is an upstream source of pixel-classification probabilities; this codebase does not provide Ilastik's pixel classifier. https://www.ilastik.org/<br> 
 MeshLab and other mesh-specific dependencies are documented in

@@ -3,7 +3,10 @@ function selection = farmSelectLineage(tracking, seed, options)
 % Inputs:
 %   tracking        Tracking result containing detections and accepted links.
 %   seed            Explicit starting detection, object, trajectory or coordinate selection.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Direction = character vector or string scalar;
+%                   IncludeSeed = logical scalar;
+%                   Loader = function handle or [];
 % Outputs:
 %   selection       Explicitly selected detections and selection diagnostics.
 

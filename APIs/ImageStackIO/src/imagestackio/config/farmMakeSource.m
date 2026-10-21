@@ -7,6 +7,9 @@ function source = farmMakeSource(varargin)
 % Outputs:
 %   source     Data source construct accepted by farmMakeExperiment.
 %
+% For the definition and documented inputs, enter farmGlossary("Source").
+% Source and Data source return the same glossary entry.
+%
 % See also farmMakeExperiment, farmLoadSource, farmReadTiff, farmReadH5
 
 source = farmParseOptions(struct('Format','tiff','Folder','', ...

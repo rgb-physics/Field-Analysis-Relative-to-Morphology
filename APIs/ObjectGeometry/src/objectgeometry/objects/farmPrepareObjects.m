@@ -2,7 +2,19 @@ function objects = farmPrepareObjects(input, options)
 %FARMPREPAREOBJECTS Preserve supplied identities or compute connected components.
 % Inputs:
 %   input           Object input accepted by farmPrepareObjects.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   InputType = character vector or string scalar;
+%                   ImageSize = numeric vector or [];
+%                   ObjectIDs = numeric vector or [];
+%                   Connectivity = numeric scalar or [];
+%                   DatasetID = character vector or string scalar;
+%                   Frame = nonnegative integer scalar;
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
+%                   SourceGrid = any MATLAB value (metadata only);
+%                   Transform = any MATLAB value (metadata only);
+%                   Channel = positive integer scalar;
+%                   TimeIndex = positive integer scalar;
 % Outputs:
 %   objects         Prepared geometry collection preserving IDs and current-grid membership.
 

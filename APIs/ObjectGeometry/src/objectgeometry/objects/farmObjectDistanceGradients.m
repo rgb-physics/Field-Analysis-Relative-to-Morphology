@@ -2,7 +2,16 @@ function [gradients, distanceField, metadata, valid] = farmObjectDistanceGradien
 %FARMOBJECTDISTANCEGRADIENTS Build a distance field and use distanceGradients.
 % Inputs:
 %   mask            Binary foreground matrix or volume.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   DistanceType = character vector or string scalar;
+%                   Sigma = nonnegative numeric scalar or vector;
+%                   SmoothingOrder = character vector or string scalar;
+%                   Normalize = logical scalar;
+%                   FlipY = logical scalar;
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
+%                   DerivativeUnits = character vector or string scalar;
+%                   DistanceUnit = character vector or string scalar;
 % Outputs:
 %   gradients       XYZ gradient components on the current grid.
 %   distanceField   Requested signed/interior/exterior voxel-distance field.

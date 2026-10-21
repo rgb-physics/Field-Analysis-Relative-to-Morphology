@@ -2,7 +2,10 @@ function image = farmReadTiff(filePath, options)
 %FARMREADTIFF Read a TIFF file and normalize it to [Y X Z C T] array order.
 % Inputs:
 %   filePath        Full input or output file path, including filename.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   SourceAxes = character vector or string scalar;
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
 % Outputs:
 %   image           Image struct containing normalized Data, YXZCT axes and source metadata.
 

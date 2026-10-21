@@ -3,7 +3,15 @@ function results = farmSelectSlicesAnalysis(volume, slices, options)
 % Inputs:
 %   volume          Numeric volume in YXZ order.
 %   slices          Selected one-based Z indices.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Spacing = positive numeric vector;
+%                   SpacingUnit = character vector or string scalar;
+%                   MeanSubtract = logical scalar;
+%                   Window = logical scalar;
+%                   Edges = numeric vector or [];
+%                   NumBins = positive integer scalar;
+%                   Sigma = nonnegative numeric scalar;
+%                   ReturnPower = logical scalar;
 % Outputs:
 %   results         Separate spectrum results for the selected Z slices.
 

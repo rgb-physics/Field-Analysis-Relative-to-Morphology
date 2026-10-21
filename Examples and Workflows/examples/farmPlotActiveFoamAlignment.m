@@ -3,7 +3,21 @@ function report = farmPlotActiveFoamAlignment(workflow2, options)
 % Inputs:
 %   workflow2   Explicit output of farmWorkflow2Filaments/farmProcessActiveFoamE5.
 %               Filaments supplies Frame, BoundaryDistance, Order3D and validity.
-%   options     Editable plotting/binning settings; see farmActiveFoamE5Config.
+%   options         Optional plotting/binning settings struct with the fields:
+%                   Frames = numeric vector;
+%                   TimeStep = positive numeric scalar;
+%                   TimeReferenceFrame = numeric scalar;
+%                   DistanceEdges = numeric vector;
+%                   SelectedFrames = numeric vector;
+%                   AverageTimeWindow = numeric two-element vector;
+%                   InteriorBand = numeric two-element vector;
+%                   ExteriorBand = numeric two-element vector;
+%                   FixedBandHalfWidth = positive numeric scalar;
+%                   MinPeakCount = positive integer scalar;
+%                   FlatTolerance = nonnegative numeric scalar;
+%                   BroadPeakFraction = numeric scalar in (0, 1];
+%                   MakeFigures = logical scalar;
+%                   OutputDirectory = character vector or string scalar;
 % Outputs:
 %   report      Binned means/counts/sample variances, peaks, bands and figures.
 % Equal weight per selected finite rod observation. Empty means are NaN.

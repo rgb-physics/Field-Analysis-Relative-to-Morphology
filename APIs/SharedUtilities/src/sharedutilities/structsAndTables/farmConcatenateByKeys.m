@@ -3,7 +3,9 @@ function combined = farmConcatenateByKeys(tables, keys, options)
 % Inputs:
 %   tables          Nonempty cell array of tables with matching schemas.
 %   keys            Names of table columns that jointly identify each row.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   ErrorPrefix = character vector or string scalar;
+%                   ErrorNames = scalar struct;
 % Outputs:
 %   combined        Appended table preserving schemas, explicit identities and metadata.
 

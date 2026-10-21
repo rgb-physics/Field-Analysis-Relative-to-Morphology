@@ -3,7 +3,9 @@ function [properties, objects] = farmMeasureFilaments(input, requested, options)
 % Inputs:
 %   input           Object input accepted by farmPrepareObjects.
 %   requested       Names of the properties or statistics to calculate.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Identity = scalar struct;
+%                   ExtentWidthFloor = positive numeric scalar;
 % Outputs:
 %   properties      Requested native and derived filament measurements.
 %   objects         Prepared objects used for the measurements.

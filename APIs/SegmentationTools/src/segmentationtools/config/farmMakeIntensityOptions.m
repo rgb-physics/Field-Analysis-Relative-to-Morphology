@@ -1,8 +1,17 @@
 function options = farmMakeIntensityOptions(varargin)
 %FARMMAKEINTENSITYOPTIONS Describe intensity segmentation settings.
 % Inputs:
-%   varargin   Scalar options struct or name/value pairs. Method defaults
-%              to 'otsu'; Foreground defaults to 'bright'.
+%   varargin        Optional scalar struct or name/value pairs with the fields:
+%                   Method = character vector or string scalar;
+%                   Threshold = numeric scalar or [];
+%                   Foreground = character vector or string scalar;
+%                   IntensityRange = numeric two-element vector or [];
+%                   EstimationMask = logical array or [];
+%                   FillHoles = logical scalar;
+%                   MinObjectSize = nonnegative integer scalar;
+%                   KeepLargest = nonnegative integer scalar or [];
+%                   Connectivity = numeric scalar or [];
+%                   ReturnLabels = logical scalar;
 % Outputs:
 %   options    Editable settings accepted by farmSegmentIntensity.
 %

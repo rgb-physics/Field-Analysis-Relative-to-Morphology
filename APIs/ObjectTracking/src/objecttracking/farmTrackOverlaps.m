@@ -3,7 +3,14 @@ function tracking = farmTrackOverlaps(frames, loader, options)
 % Inputs:
 %   frames          Acquisition frame numbers in the requested processing order.
 %   loader          Function handle that loads one acquisition frame.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   DatasetID = character vector or string scalar;
+%                   Identity = scalar struct;
+%                   Ranking = character vector or string scalar;
+%                   MergePolicy = character vector or string scalar;
+%                   SplitPolicy = character vector or string scalar;
+%                   ExportDirectory = character vector or string scalar;
+%                   Overwrite = logical scalar;
 % Outputs:
 %   tracking        Detections, all accepted links, trajectory inheritance and event metadata.
 

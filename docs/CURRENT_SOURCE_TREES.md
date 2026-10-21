@@ -15,8 +15,8 @@ MeMo/
       tools/                 # reference-page builder
     SurfaceFieldMapping/     # mesh/sheet work deferred
     VisualizationTools/
+    Workflows/               # experiment configuration and named source loading
   Examples and Workflows/
-    src/memoworkflow/
     examples/
   docs/
     reference/               # current glossary/Data Dictionary topic pages
@@ -32,6 +32,9 @@ API source folders use ordinary names such as `APIs/ObjectGeometry/src/objectgeo
 `test-data`. API-specific test suites stay beside their APIs. The reference-page
 builder now lives under `APIs/SharedUtilities/tools`. MATLAB's generated
 `MathWorks` preferences folder is ignored and is not part of the package.
+
+The Workflows API now owns `farmMakeExperiment` and `farmLoadSource`. Their
+former locations under `Examples and Workflows/src` are no longer used.
 
 Use the [user guide](README.md), [reference topics](reference/README.md), [testing guide](../TESTING.md) and [naming migration guide](FARM-NAMING-MIGRATION.md) for current instructions. Earlier source-tree listings are retained in [historical documentation](history/README.md).
 

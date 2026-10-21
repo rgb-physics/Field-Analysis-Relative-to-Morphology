@@ -3,7 +3,10 @@ function [labels, map] = farmRenderTrackingFrame(objects, membership, options)
 % Inputs:
 %   objects         Prepared object membership and current-grid metadata.
 %   membership      Detection/trajectory membership table.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   FilePath = character vector or string scalar;
+%                   Overwrite = logical scalar;
+%                   CompactIDs = logical scalar;
 % Outputs:
 %   labels          Optional trajectory-ID label volume.
 %   map             StoredID-to-TrajectoryID mapping table.

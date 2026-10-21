@@ -2,7 +2,10 @@ function info = farmInspectImage(filePath, options)
 %FARMINSPECTIMAGE Inspect TIFF or HDF5 image metadata without loading pixels.
 % Inputs:
 %   filePath        Full input or output file path, including filename.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   DatasetPath = character vector or string scalar (required for HDF5);
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
 % Outputs:
 %   info            Image format, dimensions, axes, calibration and source metadata.
 

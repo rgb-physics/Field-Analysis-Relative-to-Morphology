@@ -3,7 +3,14 @@ function result = farmLocalInertia(occupancy, indices, options)
 % Inputs:
 %   occupancy       Foreground occupancy array used for neighborhood calculations.
 %   indices         Linear voxel locations at which descriptors are requested.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Radius = positive integer scalar;
+%                   Sigma = nonnegative numeric scalar;
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
+%                   SampleLimit = positive integer scalar or Inf;
+%                   ReturnTensors = logical scalar;
+%                   BatchSize = positive integer scalar;
 % Outputs:
 %   result          Requested-index neighborhood-inertia descriptors and calculation metadata.
 

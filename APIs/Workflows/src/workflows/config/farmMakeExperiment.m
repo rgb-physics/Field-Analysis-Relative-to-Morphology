@@ -7,11 +7,24 @@ function experiment = farmMakeExperiment(varargin)
 % Outputs:
 %   experiment   Experiment construct with validated named Data sources.
 %
+% No images are loaded here. Supply calibration through each Data source;
+% no calibration or registration is estimated from the files.
+% Enter farmGlossary("Experiment") for the definition and documented inputs.
+%
 % See also farmMakeSource, farmLoadSource
 
-experiment = farmParseOptions(struct('DatasetID','', ...
-    'Sources',struct(),'Frames',[],'TimeStep',[],'TimeUnit','', ...
-    'TimeStepSeconds',[]),varargin{:});
+% Experiment Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Collect dataset identity, named sources, frame selections, and timing.
+experiment = farmParseOptions(struct( ...
+    'DatasetID', '', ...
+    'Sources', struct(), ...
+    'Frames', [], ...
+    'TimeStep', [], ...
+    'TimeUnit', '', ...
+    'TimeStepSeconds', []), varargin{:});
+
+% Dataset Identity and Frames %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Retain the first occurrence of each supplied acquisition frame.
 id = string(experiment.DatasetID);
 if ~isscalar(id) || ismissing(id) || strlength(id) == 0
     error('memoworkflow:ExperimentConfig', ...
@@ -19,23 +32,26 @@ if ~isscalar(id) || ismissing(id) || strlength(id) == 0
 end
 
 experiment.DatasetID = char(id);
-validateattributes(experiment.Frames,{'numeric'},{'vector','nonempty','integer','nonnegative','finite'});
-experiment.Frames = unique(double(experiment.Frames(:).'),'stable');
+validateattributes(experiment.Frames, {'numeric'}, {'vector', 'nonempty', 'integer', 'nonnegative', 'finite'});
+experiment.Frames = unique(double(experiment.Frames(:).'), 'stable');
+% Acquisition Timing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Resolve the optional seconds alias, then apply independent timing defaults.
 unit = string(experiment.TimeUnit);
 if ~isscalar(unit) || ismissing(unit)
-    error('memoworkflow:ExperimentConfig','TimeUnit must be scalar text.');
+    error('memoworkflow:ExperimentConfig', 'TimeUnit must be scalar text.');
 end
+
 experiment.TimeUnit = char(unit);
 if ~isempty(experiment.TimeStepSeconds)
-    validateattributes(experiment.TimeStepSeconds,{'numeric'},{'scalar','positive','finite','real'});
-    if (~isempty(experiment.TimeStep)&&~isequal(double(experiment.TimeStep),double(experiment.TimeStepSeconds))) ...
-            ||(~isempty(experiment.TimeUnit)&&~strcmp(experiment.TimeUnit,'s'))
-        error('memoworkflow:ExperimentConfig','TimeStepSeconds conflicts with TimeStep/TimeUnit.');
+    validateattributes(experiment.TimeStepSeconds, {'numeric'}, {'scalar', 'positive', 'finite', 'real'});
+    if (~isempty(experiment.TimeStep) && ~isequal(double(experiment.TimeStep), double(experiment.TimeStepSeconds))) ...
+            || (~isempty(experiment.TimeUnit) && ~strcmp(experiment.TimeUnit, 's'))
+        error('memoworkflow:ExperimentConfig', 'TimeStepSeconds conflicts with TimeStep/TimeUnit.');
     end
     experiment.TimeStep = experiment.TimeStepSeconds;
     experiment.TimeUnit = 's';
 end
-experiment = rmfield(experiment,'TimeStepSeconds');
+experiment = rmfield(experiment, 'TimeStepSeconds');
 % Empty sentinels above distinguish omitted values from explicit legacy-alias
 % conflicts; resolved output always contains the independent defaults.
 if isempty(experiment.TimeStep)
@@ -46,8 +62,11 @@ if isempty(strtrim(experiment.TimeUnit))
     experiment.TimeUnit = 'frame';
 end
 
-validateattributes(experiment.TimeStep,{'numeric'},{'scalar','positive','finite','real'});
-if ~isstruct(experiment.Sources)||~isscalar(experiment.Sources)||isempty(fieldnames(experiment.Sources))
+validateattributes(experiment.TimeStep, {'numeric'}, {'scalar', 'positive', 'finite', 'real'});
+
+% Named Data Sources %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check each source description without opening its files.
+if ~isstruct(experiment.Sources) || ~isscalar(experiment.Sources) || isempty(fieldnames(experiment.Sources))
     error('memoworkflow:ExperimentConfig', ...
         'Provide named Sources built with farmMakeSource. See glossary entry Experiment.');
 end

@@ -2,7 +2,9 @@ function [matrix, map] = farmExportDetections(detections, options)
 %FARMEXPORTDETECTIONS Explicit original-row identity map for position tracking.
 % Inputs:
 %   detections      Detection table with identity and centroid coordinates.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   MassProperty = character vector or string scalar;
+%                   CoordinateScale = numeric vector or [];
 % Outputs:
 %   matrix          Numeric coordinates, mass and frame columns for the linker.
 %   map             Original-row identities, including one-based RowID.

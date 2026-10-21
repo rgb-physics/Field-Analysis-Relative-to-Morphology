@@ -47,6 +47,16 @@ verifyFalse(t, any(strcmpi(entries, dataRoot) | ...
 verifyTrue(t, isfolder(fullfile(info.Root, 'Examples and Workflows', 'examples')));
 end
 
+function testWorkflowFunctionsBelongToAPI(t)
+info = farmSetup();
+apiRoot = fullfile(info.Root, 'APIs', 'Workflows', 'src');
+for name = {'farmMakeExperiment', 'farmLoadSource'}
+    locations = which(name{1}, '-all');
+    verifyEqual(t, numel(locations), 1);
+    verifyTrue(t, startsWith(which(name{1}), [apiRoot filesep], 'IgnoreCase', true));
+end
+end
+
 function testConsistentOptionsOrder(t)
 defaults = struct('Alpha', 1, 'Beta', 2);
 user = struct('Alpha', 3);

@@ -12,6 +12,10 @@ if ~isscalar(term) || ismissing(term) || strlength(strtrim(term)) == 0
     error('sharedutilities:GlossaryTerm', 'Supply one nonempty glossary term.');
 end
 term = strtrim(term);
+% Source is an alternative name for the existing Data source entry.
+if strcmpi(term, 'Source')
+    term = "Data source";
+end
 entries = farmGlossaryEntries(varargin{:});
 rows = find(entries.Term == term);
 if isempty(rows)
@@ -33,4 +37,5 @@ end
 % -------------------------------------------------------------------------
 % FARMGETGLOSSARYENTRY Return one farmGlossary entry as a scalar struct of strings.
 % Prefer exact spelling; otherwise allow an unambiguous case-insensitive match.
+% Source is an alternative lookup name for Data source; no duplicate entry is added.
 % Optional Section accepts one name or a string vector; default is all sections.

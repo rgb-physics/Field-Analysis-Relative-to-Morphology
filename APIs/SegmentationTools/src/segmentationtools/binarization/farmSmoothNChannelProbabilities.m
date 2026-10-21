@@ -1,13 +1,22 @@
 function [masks, info] = farmSmoothNChannelProbabilities(probabilities, channels, thresholds, options)
-%FARMSMOOTHNCHANNELPROBABILITIES Threshold, open, and resolve N channel masks.
+%FARMSMOOTHNCHANNELPROBABILITIES Segment probability channels into separate masks.
 % Inputs:
-%   probabilities   Loaded probability array in YXZC order.
-%   channels        Selected probability channels or channel groups.
-%   thresholds      Thresholds corresponding to the selected channels or groups.
-%   options         Operation settings struct.
+%   probabilities   Finite real numeric array in [Y X Z C] order.
+%   channels        Numeric vector of input channel numbers, such as [3 2 1].
+%                   Use [] to select all channels in their stored order.
+%   thresholds      One number for all selected channels, or one per channel
+%                   in channels order. A value must be strictly greater than
+%                   its threshold to be selected. Probabilities are not rescaled.
+%   options         Optional scalar struct with the fields:
+%                   OpeningRadius = nonnegative integer scalar;
+%                   ChannelPrecedence = numeric vector of channel numbers;
+%                   ReturnOpenedMasks = logical scalar;
+%                   FillMethod = text ('none', 'nearest', or 'fill').
 % Outputs:
-%   masks           Disjoint masks in selected-channel order.
-%   info            Threshold, precedence, opening and count diagnostics.
+%   masks           Logical [Y X Z N] array, one mask per selected channel,
+%                   in channels order. No voxel belongs to more than one mask.
+%   info            Settings, per-channel counts, overlap count before overlap
+%                   removal, and the number of unclassified voxels.
 
 if nargin < 4 || isempty(options)
     options = struct();
@@ -20,7 +29,8 @@ end
 if ~(isstruct(options) && isscalar(options))
     error('segmentationtools:InvalidOptions', 'Options must be a scalar struct.');
 end
-defaults = struct('OpeningRadius', 2, 'ChannelPrecedence', [], 'ReturnOpenedMasks', false);
+defaults = struct('OpeningRadius', 2, 'ChannelPrecedence', [], ...
+    'ReturnOpenedMasks', false, 'FillMethod', 'none');
 unknown = setdiff(fieldnames(options), fieldnames(defaults));
 if ~isempty(unknown)
     error('segmentationtools:UnknownOption', 'Unknown option: %s', unknown{1});
@@ -63,6 +73,7 @@ end
 radius = options.OpeningRadius;
 validateattributes(radius, {'numeric'}, {'real', 'finite', 'scalar', 'integer', 'nonnegative'});
 validateattributes(options.ReturnOpenedMasks, {'logical'}, {'scalar'});
+fillMethod = validatestring(options.FillMethod, {'none', 'nearest', 'fill'});
 spatialSize = [size(probabilities, 1) size(probabilities, 2) size(probabilities, 3)];
 opened = false([spatialSize numel(channels)]);
 if radius > 0
@@ -87,10 +98,39 @@ for channel = precedence
     masks(:, :, :, i) = opened(:, :, :, i) & ~claimed;
     claimed = claimed | masks(:, :, :, i);
 end
+
+% Fill Unclassified Locations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fill only after opening and overlap resolution; retain existing assignments.
+unclassified = ~claimed;
+unclassifiedBeforeFill = nnz(unclassified);
+if unclassifiedBeforeFill > 0
+    switch fillMethod
+        case 'nearest'
+            % One Euclidean transform identifies the nearest classified voxel.
+            % Use voxel distances and MATLAB's nearest-voxel choice for ties.
+            [~, nearestIndex] = bwdist(claimed, 'euclidean');
+            nearestIndex = nearestIndex(unclassified);
+            for i = 1:numel(channels)
+                channelMask = masks(:, :, :, i);
+                channelMask(unclassified) = channelMask(nearestIndex);
+                masks(:, :, :, i) = channelMask;
+            end
+            claimed(:) = true;
+        case 'fill'
+            % Precedence lists input channel numbers, not output positions.
+            i = find(channels == precedence(1));
+            masks(:, :, :, i) = masks(:, :, :, i) | unclassified;
+            claimed(:) = true;
+    end
+end
+
 info = struct('Channels', channels, 'ChannelPrecedence', precedence, ...
               'ThresholdsUsed', thresholds, 'OpeningRadius', radius, ...
+              'FillMethod', fillMethod, ...
               'VoxelCounts', reshape(sum(masks, [1 2 3]), 1, []), ...
               'OverlapVoxelCountBeforeResolution', nnz(sum(opened, 4) > 1), ...
+              'UnclassifiedVoxelCountBeforeFill', unclassifiedBeforeFill, ...
+              'FilledVoxelCount', unclassifiedBeforeFill - nnz(~claimed), ...
               'UnclassifiedVoxelCount', nnz(~claimed));
 if options.ReturnOpenedMasks
     info.OpenedMasks = opened;
@@ -105,7 +145,7 @@ end
 % THRESHOLDS is one shared value or one per selected channel, aligned with
 % CHANNELS (not precedence). Comparisons are strict; no normalization occurs.
 % MASKS is logical [Y X Z N], in CHANNELS order, and is always disjoint.
-% Voxels not retained by any opened mask stay unclassified.
+% Voxels not retained by any opened mask are handled by FillMethod.
 %
 % OPTIONS.OpeningRadius: nonnegative integer, default 2 voxels; 0 disables
 % opening. Each candidate is eroded then dilated independently before overlap
@@ -116,12 +156,30 @@ end
 % to CHANNELS order. Earlier channels win regardless of probability magnitude.
 % Output channel order does not change when precedence changes.
 % OPTIONS.ReturnOpenedMasks: logical, default false; retain opened masks in
-% INFO.OpenedMasks for comparison before conflict resolution.
+% INFO.OpenedMasks after thresholding/opening, before overlap resolution or
+% filling. A voxel can be true in multiple channels of this diagnostic array.
+% This option does not change MASKS or control whether opening is performed.
+% OPTIONS.FillMethod: text, default 'none'. Applied after opening and overlap
+% resolution. Existing classified voxels keep their channel assignments.
+%   'none'    Leave unclassified voxels false in all output masks.
+%   'nearest' Copy the channel of the nearest classified voxel, using a single
+%             Euclidean bwdist transform and its nearest-index output.
+%             Distance is in voxel coordinates; no spatial calibration is
+%             inferred. MATLAB chooses between equally near voxels.
+%             This fills in 3-D for volumes and in 2-D for single-plane data.
+%   'fill'    Assign every unclassified voxel to the highest-precedence channel.
+% No distance transform is run for 'none', 'fill', or an already classified volume.
 %
 % INFO reports channels, precedence, thresholds, radius, per-channel voxel
 % counts, overlap voxel count after opening/before resolution, and unclassified
-% voxel count. No complement class is inferred (unlike historical SpanSpace).
+% voxel count. VoxelCounts and UnclassifiedVoxelCount describe final masks.
+% UnclassifiedVoxelCountBeforeFill records the number before filling, and
+% FilledVoxelCount records how many were assigned by FillMethod.
+% No additional background category is created.
 %
 % [m,info] = farmSmoothNChannelProbabilities( ...
 %     p,[1 3 2],[0.2 0.5 0.5], ...
 %     struct('OpeningRadius',1,'ChannelPrecedence',[3 1 2]));
+%
+% opts = struct('OpeningRadius', 1, 'FillMethod', 'nearest');
+% [m, info] = farmSmoothNChannelProbabilities(p, [3 2 1], 0.6, opts);

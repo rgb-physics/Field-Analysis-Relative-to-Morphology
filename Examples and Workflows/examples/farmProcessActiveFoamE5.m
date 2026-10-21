@@ -11,7 +11,6 @@ logFile = fullfile(out, 'processing.log');
 diary(logFile);
 diaryCleanup = onCleanup(@() diary('off'));
 fprintf('Active Foam E5 output directory: %s\n', out);
-fprintf('Read-only source root: %s\n', c.ReadOnlySourceRoot);
 fprintf('Frames: %s; YXZ image spacing %s um; probability spacing [1.5 1.5 1.5] um.\n', ...
     mat2str(c.Frames), mat2str(c.Spacing));
 fprintf('Elapsed seconds = (Frame - %g) * %g.\n', c.TimeReferenceFrame, c.TimeStep);

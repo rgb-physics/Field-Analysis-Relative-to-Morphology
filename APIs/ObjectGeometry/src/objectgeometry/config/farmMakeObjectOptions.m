@@ -1,8 +1,19 @@
 function options = farmMakeObjectOptions(varargin)
 %FARMMAKEOBJECTOPTIONS Describe object preparation without loading data.
 % Inputs:
-%   varargin   Scalar options struct or name/value pairs. InputType defaults
-%              to 'auto'; DatasetID to 'default'; Frame to 1.
+%   varargin        Optional scalar struct or name/value pairs with the fields:
+%                   InputType = character vector or string scalar;
+%                   ImageSize = numeric vector or [];
+%                   ObjectIDs = numeric vector or [];
+%                   Connectivity = numeric scalar or [];
+%                   DatasetID = character vector or string scalar;
+%                   Frame = nonnegative integer scalar;
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
+%                   SourceGrid = any MATLAB value (metadata only);
+%                   Transform = any MATLAB value (metadata only);
+%                   Channel = positive integer scalar;
+%                   TimeIndex = positive integer scalar;
 % Outputs:
 %   options    Editable options accepted by farmPrepareObjects.
 %

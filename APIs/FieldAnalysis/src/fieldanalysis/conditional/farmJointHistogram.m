@@ -3,7 +3,10 @@ function result = farmJointHistogram(a, b, options)
 % Inputs:
 %   a               First numeric field or sample vector.
 %   b               Corresponding second numeric field or sample vector.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   EdgesA = numeric vector or [];
+%                   EdgesB = numeric vector or [];
+%                   NumBins = positive integer scalar or two-element vector;
 % Outputs:
 %   result          Struct containing joint counts, bin edges and input diagnostics.
 

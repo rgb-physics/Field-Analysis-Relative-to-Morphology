@@ -3,7 +3,9 @@ function result = farmNematicAlignment(directors, reference, options)
 % Inputs:
 %   directors       N-by-2 or N-by-3 director rows.
 %   reference       Reference directions in the same component convention.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Plane = numeric two-element vector or [];
+%                   MaxNormalComponent = numeric scalar or [];
 % Outputs:
 %   result          Axial alignment values, angles and validity selections.
 

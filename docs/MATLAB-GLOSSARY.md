@@ -10,6 +10,7 @@ From the MeMo repository root, run:
 ```matlab
 farmGlossary
 farmGlossary("Experiment")
+farmGlossary("Source") % Same entry as Data source; created with farmMakeSource.
 farmGlossary("Support")
 ```
 

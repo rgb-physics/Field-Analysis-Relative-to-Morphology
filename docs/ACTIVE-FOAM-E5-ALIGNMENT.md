@@ -36,23 +36,77 @@ Frames 25–30 therefore appear at **0, 30, 60, 90, 120, 150 seconds**.
 E5's crop metadata contains `cropCorner = [5 15 1]`, `winSize = [750 735 94]`;
 it does not supply timing or voxel spacing. Calibration above was confirmed by
 the user. Loaded corrected volumes have size **[735 750 94] in YXZ order**.
-Similar extents alone do not establish registration; inspect the saved semantic previews.
+Similar extents alone do not establish registration. The setup assumes the supplied
+sources describe the same physical field of view. Previews are optional and are
+not run automatically.
+
+## Editable stages using public APIs
+
+For separate teaching functions corresponding to these stages, see the
+[individual-stage guide](../Examples%20and%20Workflows/examples/activeFoamE5Stages/README.md).
+Each function accepts and returns only `c`; its help lists the settings and
+earlier `c.Results` data it reads. The combined script remains available for comparison.
+
+`setupActiveFoamE5.m` now contains the settings and processing steps in one script.
+The separate `farmActiveFoamE5Config` function remains an optional way to store
+settings; the setup does not require it. All source data remains read only.
+
+Editable processing choices are defined before the frame loop in both forms of
+configuration. These include `FilamentProperties`, `ExtentWidthFloor`,
+`BoundaryWorkingSpacing`, `BoundaryDilationRadius`, interpolation methods,
+`GradientDerivativeUnits`, sampling statistics, and `AlignmentPlane`. The loop
+calculates frame-dependent arrays and assembles API arguments from these settings.
+Retain the measurement properties and sampling statistics identified in the
+comments as required by subsequent stages.
+
+| Task | Functions shown in the setup | Available results |
+| --- | --- | --- |
+| Describe/load data | `farmMakeSource`, `farmMakeExperiment`, `farmLoadSource` | Source descriptions and loaded images |
+| Segment regions | `farmSmoothNChannelProbabilities` | Category masks and labels |
+| Detect/measure filaments | `farmLOG`, `farmSegmentIntensity`, `farmMeasureFilaments` | Filament mask, object memberships, measurement table |
+| Define boundary geometry | `farmDistTransFromBoundary` | Boundary selections, signed distance, valid region |
+| Calculate normal directions | `farmDistanceGradients` | Gradient components and direction validity |
+| Define sampling locations | `farmPrepareSupport` | One rounded centroid voxel per filament |
+| Sample fields | `farmQueryField`, `farmQueryVectorField`, `farmAttachResults` | Sampled distances/directions and separate diagnostic tables |
+| Calculate alignment | `farmNematicAlignment` | 3-D and projected 2-D alignment columns |
+| Combine frames | `farmConcatenateMeasurements` | `workflow2.Filaments` |
+
+`farmMakeExperiment` and `farmLoadSource` belong to the Workflows API and are
+available through `farmSetup` without adding the example folder. The setup uses
+ordinary MATLAB commands for explicit label assignment, nearest-neighbor grid
+resampling, saving, and logging. Resampling uses supplied spacing; no calibration
+is estimated. No historical calculation function was changed for these stages.
+
+The loop processes one frame at a time. To inspect a stage, use one frame and
+place an editor breakpoint before the next stage. Variables from the final frame
+remain available after processing; large arrays from earlier frames are not kept.
+The comments inside the loop identify stages, but are not independently runnable
+editor sections. Separate stages can be selected and executed once their inputs
+are in the workspace.
+
+Missing source files are reported and the frame is skipped. Completed frames
+are recorded separately from requested frames. No previews run automatically.
+
+The default stops after measured observations have been generated and saved.
+`runAlignmentAnalysis = false` leaves peak analysis and figures disabled. Set it
+to true to use the existing example analysis. General analysis and visualization
+interfaces remain under discussion; this change does not introduce new ones.
 
 ## Stage 1: workflow 2 measurements
 
-The existing extraction settings are explicit in `farmActiveFoamE5Config`:
+The existing extraction settings are explicit in the setup and optional `farmActiveFoamE5Config`:
 LoG sigma 1 intensity-grid voxel; strict threshold 20 on `-LoG`; probability
 thresholds `[.33 .33 .33]`; probability opening radius 1 voxel; reference-gradient
 smoothing sigma 2 intensity-grid voxels. Minimum filament length/aspect filters
 remain 0, matching the existing workflow. No detection parameters were fitted
 to the expected alignment pattern. Detections are not independently verified rods.
 
-`farmProcessActiveFoamE5(c)` executes workflow 2 one frame at a time, saves each
-frame independently, and logs loading, detection, reference construction and
-centroid sampling. It returns a combined `workflow2.Filaments` table. Each run
-has its own configuration, input-file manifest and processing log.
+The setup executes the public API calls one frame at a time and saves a combined
+`workflow2.Filaments` table. Each run has its own configuration, input-file list,
+per-frame tables, and processing log. `farmProcessActiveFoamE5(c)` remains an
+earlier convenience function; the explicit setup does not call it.
 
-Distance and normal fields are produced by the existing `farmWorkflowReference`:
+Distance and normal fields use `farmDistTransFromBoundary` and `farmDistanceGradients` directly:
 semantic labels are placed on the intensity grid, resampled to an isotropic
 working grid with spacing `min(c.Spacing) = 0.55 um`, and passed to the existing
 boundary-distance calculation. Distance is scaled to micrometers and sampled
@@ -173,13 +227,17 @@ independence assumption among repeated rods/structures is used to claim precisio
 
 ## Outputs and rerunning
 
-Outputs are under `tests/data/workflow-results/active-foam-E5-frames025-030`,
-outside the read-only O: data tree. A fresh `active-foam-E5_*` folder contains:
+Outputs from the explicit setup are under `tests/data/workflow-results/active-foam-E5-frames025-030`,
+outside the read-only O: data tree. A fresh run folder contains:
 
 - `input-files.csv`, `configuration.mat`, `processing.log`;
-- one workflow 2 directory per frame, with measured tables and a semantic preview;
-- `completed-through-frameNNN.mat` checkpoints, `workflow2-output.mat`, `workflow2-filaments.csv`;
-- `alignment-plots`: three PNG/FIG figures and CSV/MAT numerical results, including
+- `frameNNN.mat` files containing measurements, sampling diagnostics, and method metadata;
+- `workflow2-output.mat` and `workflow2-filaments.csv` containing combined measurements;
+- `stage-timings.csv` and `stage-timings.mat`, one row per requested frame with
+  `TotalSeconds` first, then the frame number, eight stage-time columns, and a
+  `Completed` flag. The total sums recorded stage times and excludes work outside
+  those stages. Unrun stages are NaN; a skipped frame has a partial total;
+- optionally `alignment-plots`: three PNG/FIG figures and CSV/MAT numerical results, including
   bin counts/variance, moving peak location/value/flags, fixed-window profile,
   fixed-band traces and observation counts. `alignment-analysis.mat` retains all definitions.
 

@@ -1,8 +1,17 @@
 function options = farmMakeProbabilityOptions(varargin)
 %FARMMAKEPROBABILITYOPTIONS Describe probability-category resolution settings.
 % Inputs:
-%   varargin   Scalar options struct or name/value pairs. EnsureDisjoint
-%              and ReturnLabelVolume default to true; other flags to false.
+%   varargin        Optional scalar struct or name/value pairs with the fields:
+%                   EnsureDisjoint = logical scalar;
+%                   AssignUnclassified = logical scalar;
+%                   ReturnLabelVolume = logical scalar;
+%                   ReturnMasks = logical scalar;
+%                   ReturnCandidateMasks = logical scalar;
+%                   ReturnOverlapMask = logical scalar;
+%                   ReturnUnclassifiedMask = logical scalar;
+%                   ReturnChangedVoxelMask = logical scalar;
+%                   CountComponents = logical scalar;
+%                   Connectivity = numeric scalar or [];
 % Outputs:
 %   options    Editable settings accepted by farmClassifyProbabilities.
 %

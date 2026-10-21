@@ -5,8 +5,12 @@ function manifest = farmRunFieldBatch(frames, fieldSpecs, supportLoader, queries
 %   fieldSpecs      Struct array with Name and Loader=@(frame).
 %   supportLoader   Handle @(frame,fields) returning named sampling supports.
 %   queries         Query struct array accepted by farmQueryFrame.
-%   options         OutputDirectory required; DatasetID='default',
-%                   Overwrite=false, RetainTables=false, Verbose=false.
+%   options         Scalar struct with the fields (OutputDirectory is required):
+%                   OutputDirectory = character vector or string scalar (required);
+%                   DatasetID = character vector or string scalar;
+%                   Overwrite = logical scalar;
+%                   RetainTables = logical scalar;
+%                   Verbose = logical scalar;
 % Outputs:
 %   manifest        Frames, Files, RowCounts and optionally small Tables.
 %

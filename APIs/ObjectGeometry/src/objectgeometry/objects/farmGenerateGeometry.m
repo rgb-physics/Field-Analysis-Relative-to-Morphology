@@ -3,7 +3,17 @@ function geometry = farmGenerateGeometry(input, type, options)
 % Inputs:
 %   input           Object input accepted by farmPrepareObjects.
 %   type            Requested geometry type: 'boundary' or 'skeleton'.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Identity = scalar struct;
+%                   Method = character vector or string scalar;
+%                   Sigma = positive numeric scalar;
+%                   GradientCutoff = numeric scalar;
+%                   Hessian = logical scalar;
+%                   SheetCombination = character vector or string scalar;
+%                   SampleFraction = numeric scalar;
+%                   DistanceCutoff = numeric scalar;
+%                   LayerMean = numeric scalar;
+%                   LayerWidth = numeric scalar;
 % Outputs:
 %   geometry        Geometry construct containing component records, indices and grid metadata.
 

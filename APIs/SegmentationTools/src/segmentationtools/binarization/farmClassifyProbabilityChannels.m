@@ -4,7 +4,10 @@ function result = farmClassifyProbabilityChannels(probabilities, channels, thres
 %   probabilities   Loaded probability array in YXZC order.
 %   channels        Selected probability channels or channel groups.
 %   thresholds      Thresholds corresponding to the selected channels or groups.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Names = cell array of character vectors or string array;
+%                   IDs = positive integer vector;
+%                   ClassifyOptions = scalar struct;
 % Outputs:
 %   result          Classification results for the selected stored channels.
 

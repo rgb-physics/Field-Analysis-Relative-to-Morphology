@@ -1,18 +1,47 @@
 function support = farmPrepareSupport(input, imageSize, options)
-%FARMPREPARESUPPORT Sampling groups without implicit connected-component analysis.
+%FARMPREPARESUPPORT Describe the locations to sample for each object or group.
 % Inputs:
-%   input           Object input accepted by farmPrepareObjects.
-%   imageSize       Spatial array dimensions in YX or YXZ order.
-%   options         Operation settings struct.
+%   input       Indices, mask, labels, cell array of index groups, prepared
+%               objects, generated geometry, or an existing prepared support.
+%   imageSize   Size of the field to sample, in YX or YXZ array order.
+%   options         Optional scalar struct with the fields:
+%                   Type = character vector or string scalar;
+%                   ObjectIDs = positive integer vector or [];
+%                   DatasetID = character vector or string scalar;
+%                   Frame = nonnegative integer scalar;
+%                   Name = character vector or string scalar;
+%                   Grid = scalar struct or [];
+%                   ComponentResults = logical scalar;
+%                   CentroidFallback = logical scalar;
 % Outputs:
-%   support         Support construct containing deduplicated groups and diagnostics.
+%   support     Support construct containing selected indices, object IDs,
+%               grid metadata, and flags recording empty/substituted geometry.
+%
+% A mask is one selection; separate objects are not detected automatically.
+% Use a cell array with one scalar index per cell to sample individual sites.
+% Repeated indices within one group are removed. Indices refer to imageSize;
+% this function does not convert coordinates or estimate spatial calibration.
+% Enter farmGlossary("Support") for the definition and documented inputs.
+%
+% See also farmQueryField, farmQueryVectorField, farmPrepareObjects
 
 if nargin < 3
     options = struct();
 end
-options = farmOGOptions(options, struct('Type', 'auto', 'ObjectIDs', [], ...
-                                       'DatasetID', 'default', 'Frame', 1, 'Name', 'selection', 'Grid', [], ...
-                                       'ComponentResults', false, 'CentroidFallback', true));
+% Selection Settings %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Identify the input representation, groups, and dataset/frame.
+options = farmOGOptions(options, struct( ...
+    'Type', 'auto', ...
+    'ObjectIDs', [], ...
+    'DatasetID', 'default', ...
+    'Frame', 1, ...
+    'Name', 'selection', ...
+    'Grid', [], ...
+    'ComponentResults', false, ...
+    'CentroidFallback', true));
+
+% Sampling Grid %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Express a 2-D grid with one Z plane and check existing grid dimensions.
 validateattributes(imageSize, {'numeric'}, {'vector', 'integer', 'positive', 'finite'});
 sz = double(imageSize(:).');
 if numel(sz) == 2
@@ -38,6 +67,8 @@ record = struct('ObjectID', 0, 'ComponentID', 0, 'Indices', [], 'GeometryEmpty',
 records = repmat(record, 0, 1);
 dataset = string(options.DatasetID);
 frame = options.Frame;
+% Sampling Groups %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Use existing geometry records, prepared objects, or explicit raw selections.
 if isstruct(input) && isfield(input, 'Records') && isfield(input, 'Grid')
     grid = input.Grid;
     localMatch(grid.Size, sz);
@@ -126,8 +157,8 @@ else
             end
             ids = double(unique(input(input > 0)));
             for i = 1:numel(ids)
-                lists{i} = find(input == ids(i));
-            end %#ok<AGROW>
+                lists{i} = find(input == ids(i)); %#ok<AGROW> % One index group per observed label.
+            end
     end
     if isempty(ids)
         ids = 1:numel(lists);
@@ -146,6 +177,8 @@ validateattributes(frame, {'numeric'}, {'scalar', 'finite', 'integer', 'nonnegat
 if ~isscalar(dataset) || ismissing(dataset) || strlength(dataset) == 0
     error('objectrelativeprofiles:InvalidDataset', 'DatasetID must be nonempty scalar text.');
 end
+% Group Identity and Indices %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check each group and remove repeated indices within it.
 for i = 1:numel(records)
     indices = records(i).Indices;
     if ~isempty(indices)
@@ -170,7 +203,7 @@ support = struct('SamplingVersion', 1, 'DatasetID', dataset, 'Frame', double(fra
 end
 
 function localMatch(actual, expected)
-% Internal helper.
+% Check that the selection and field use the same array dimensions.
 actual = double(actual(:).');
 if numel(actual) == 2
     actual(3) = 1;
@@ -183,6 +216,10 @@ end
 % -------------------------------------------------------------------------
 % BEHAVIOR
 % -------------------------------------------------------------------------
+% Scalar struct of settings. Type selects 'auto' (default),
+% 'indices', 'mask', or 'labels'. ObjectIDs assigns one ID per
+% index group. DatasetID, Frame, and Name identify the selection.
+%
 % FARMPREPARESUPPORT Sampling groups without implicit connected-component analysis.
 % INPUT: indices, logical mask, label matrix, cell index groups, prepared
 % ObjectGeometry objects, generated geometry, or an already prepared support.

@@ -12,7 +12,7 @@ Builders return editable structs without loading images or running analysis. Acc
 | farmMakeIntensityOptions | farmSegmentIntensity options, including Method/Threshold and cleanup/retention choices. Fixed thresholds use original units. |
 | farmMakeProbabilityOptions | farmClassifyProbabilities options for resolving overlap and retaining outputs. Not farmSmoothNChannelProbabilities morphology/precedence options. |
 
-Function help lists every option/default. Run `farmSetup` from the repository root to add API dependencies and Examples and Workflows/src. Use `farmSetup('IncludeExamples', true)` for farmExperiment4Config and the guided workflows.
+Function help lists every option/default. Run `farmSetup` from the repository root to add API dependencies, including the Workflows API. Use `farmSetup('IncludeExamples', true)` for farmExperiment4Config and the guided workflows.
 
 ## Source defaults and loading
 
@@ -46,7 +46,7 @@ setupWorkflow2–5 use named Intensity560 (primary/density), Intensity647
 (filament/secondary) and Probabilities sources as needed. The old workflow
 function files for workflows 2–5 remain compatibility entry points and skip setup/previews when
 called with c. Analysis settings remain partly in c; general run, support and
-geometry builders are deferred. The public workflow namespace is Examples and Workflows/src;
+geometry builders are deferred. Experiment creation and source loading are in APIs/Workflows/src;
 example helpers remain in Examples and Workflows/examples.
 
 ## Queries

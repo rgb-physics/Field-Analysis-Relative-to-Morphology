@@ -67,3 +67,31 @@ SegmentationTools converts pixel-classification probabilities into masks and lab
 Reusable algorithms and example workflows are separated in the proposed structure. Implementations are preserved without refactoring in this first-pass copy.
 
 Probability arrays use `[Y X Z C]`; complete image structs use the project-wide `[Y X Z C T]` convention. The public in/on/out semantic order is `[inside wall outside]`. See `docs/SEGMENTATION_HISTORICAL_METHODS.md` for current behavior, historical alternatives, anisotropy notes, compatibility wrappers, and deferred work.
+
+## Fill unclassified locations after opening
+
+`farmSmoothNChannelProbabilities` accepts `FillMethod` in its options struct:
+
+| Value | Assignment after opening and overlap resolution |
+| --- | --- |
+| `'none'` (default) | Leave locations unclassified, preserving the previous behavior. |
+| `'nearest'` | Copy the channel of the nearest classified voxel using one Euclidean `bwdist` transform and its nearest-index output. MATLAB decides ties. |
+| `'fill'` | Assign unclassified locations to the highest-precedence selected channel. |
+
+Existing classified voxels keep their assignments. Nearest uses voxel distances
+on the supplied probability grid, including the Z dimension for 3-D data; it
+does not estimate calibration or account for anisotropic spacing.
+
+With probability data already loaded:
+
+```matlab
+options = struct('OpeningRadius', 1, 'FillMethod', 'nearest');
+[masks, info] = farmSmoothNChannelProbabilities(probabilities, [3 2 1], 0.6, options);
+```
+
+`info.UnclassifiedVoxelCountBeforeFill` records how many locations needed filling.
+`info.FilledVoxelCount` counts assignments made by this option. `VoxelCounts` and
+`UnclassifiedVoxelCount` describe the final masks. With `ReturnOpenedMasks=true`,
+`info.OpenedMasks` remains the intermediate array before overlap resolution and
+filling. No distance transform is calculated for `'none'` or `'fill'`, or when
+there are no unclassified locations.

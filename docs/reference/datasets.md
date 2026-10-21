@@ -81,6 +81,8 @@ A description of where and how to load data, including the file format, array ax
 <summary>Interpretation and scope</summary>
 
 
+Create a data source with `farmMakeSource`. Look up this entry with `farmGlossary("Source")` or `farmGlossary("Data source")`; both names return the same entry. Use `help farmMakeSource` for supported options and defaults. Creating a source description does not load the data.
+
 Required markers depend on Format; file fields are not required for a custom loader.
 
 
@@ -124,7 +126,7 @@ entry = farmGlossary("Channel", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L132)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L134)
 
 <a id="glossary-dataset-organization-frame"></a>
 
@@ -149,7 +151,7 @@ entry = farmGlossary("Frame", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L137)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L139)
 
 <a id="glossary-dataset-organization-time-index"></a>
 
@@ -174,7 +176,7 @@ entry = farmGlossary("Time index", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L142)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L144)
 
 <a id="glossary-dataset-organization-time-step"></a>
 
@@ -199,7 +201,7 @@ entry = farmGlossary("Time step", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L147)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L149)
 
 <a id="glossary-dataset-organization-time-unit"></a>
 
@@ -224,7 +226,7 @@ entry = farmGlossary("Time unit", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L152)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L154)
 
 <a id="glossary-dataset-organization-axes"></a>
 
@@ -249,7 +251,7 @@ entry = farmGlossary("Axes", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L157)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L159)
 
 <a id="glossary-dataset-organization-coordinate-order"></a>
 
@@ -274,7 +276,7 @@ entry = farmGlossary("Coordinate order", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L162)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L164)
 
 <a id="glossary-dataset-organization-grid"></a>
 
@@ -308,7 +310,7 @@ entry = farmGlossary("Grid", "Section", "Glossary");
 
 Inputs: { `Size`\* = numeric vector; `Axes` = text; `Spacing` = numeric vector; `SpacingUnit` = text; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L167)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L169)
 
 <a id="glossary-dataset-organization-voxel-spacing"></a>
 
@@ -333,7 +335,7 @@ entry = farmGlossary("Voxel spacing", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L174)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L176)
 
 <a id="glossary-dataset-organization-units"></a>
 
@@ -358,7 +360,7 @@ entry = farmGlossary("Units", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L179)
+[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L181)
 
 ## Related topics
 

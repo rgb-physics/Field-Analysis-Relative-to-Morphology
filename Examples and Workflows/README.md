@@ -12,5 +12,6 @@ edit setupWorkflow1
 ```
 
 `examples/` holds editable setups, workflow functions and their tests.
-`src/` holds reusable workflow configuration and source-loading functions.
+Reusable experiment configuration and source loading are in the
+[Workflows API](../APIs/Workflows/README.md), available through `farmSetup`.
 Local input fixtures and generated outputs live under `tests/data/`.

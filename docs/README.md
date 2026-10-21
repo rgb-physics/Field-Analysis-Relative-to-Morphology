@@ -73,6 +73,7 @@ frameResult = saved.result;
 | API | Responsibility |
 |---|---|
 | ImageStackIO | Read/write images and describe their axes/calibration |
+| Workflows | Describe experiments and load named sources at acquisition frames |
 | SegmentationTools | Turn intensity/probability inputs into selected categories or foreground |
 | ObjectGeometry | Prepare identified memberships, measure properties, generate/render geometry |
 | ObjectRelativeProfiles | Sample fields at selected locations and calculate statistics |

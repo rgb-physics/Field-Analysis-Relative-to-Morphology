@@ -3,7 +3,8 @@ function [corrected, info] = farmApplyIlluminationCorrection(field, model, optio
 % Inputs:
 %   field           Numeric field array or a struct containing Data and grid metadata.
 %   model           Correction model returned by farmFitIlluminationCorrection.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   BleachScale = logical scalar;
 % Outputs:
 %   corrected       Double corrected field without range stretching.
 %   info            Correction and optional scaling metadata.

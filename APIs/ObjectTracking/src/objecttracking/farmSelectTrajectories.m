@@ -2,7 +2,9 @@ function [selected, summary] = farmSelectTrajectories(membership, options)
 %FARMSELECTTRAJECTORIES Post-tracking selection without renumbering identities.
 % Inputs:
 %   membership      Detection/trajectory membership table.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   MinDetections = nonnegative integer scalar;
+%                   MinFrameSpan = nonnegative integer scalar;
 % Outputs:
 %   selected        Membership rows passing the requested selection.
 %   summary         Per-trajectory observation/span summary.

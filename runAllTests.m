@@ -2,7 +2,9 @@ function report = runAllTests(varargin)
 
 %RUNALLTESTS Run all available automated FARM checks, once per test file.
 % From repository root: report=runAllTests;
-% Options (struct or name/value): IncludeImageStackIO=true, ThrowOnFailure=false.
+% Options (optional scalar struct or name/value pairs):
+%   IncludeImageStackIO = logical scalar (default true);
+%   ThrowOnFailure = logical scalar (default false).
 % ImageStackIO validation requires local bundled TIFF/HDF5 fixtures; false
 % runs synthetic suites only. Missing fixtures are reported as errors, not passes.
 % Does not run manual visual validation or benchmarks. Sources remain read-only.
@@ -22,7 +24,6 @@ root = fileparts(mfilename('fullpath'));
 apis = {'ImageStackIO','SegmentationTools','ObjectGeometry','ObjectRelativeProfiles', ...
     'ObjectTracking','FieldAnalysis','SharedUtilities','VisualizationTools'};
 for k = 1:numel(apis), addpath(fullfile(root,'APIs',apis{k},'src')); end
-addpath(fullfile(root,'Examples and Workflows','src'));
 addpath(fullfile(root,'Examples and Workflows','examples'));
 addpath(fullfile(root,'tests'));
 addpath(fullfile(root,'APIs','ImageStackIO','tests'));

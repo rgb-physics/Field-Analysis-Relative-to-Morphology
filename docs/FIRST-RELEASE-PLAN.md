@@ -13,7 +13,7 @@ uncommitted work and user data settings. No commit, push or publication is impli
 ## 1. Establish supported operations
 
 RELEASE-FUNCTION-INVENTORY.csv lists every currently discovered MATLAB file under
-API source trees and Examples and Workflows/src, plus root setup/reference functions. Its 212 rows
+API source trees (including Workflows), plus root setup/reference functions. Its 212 rows
 are a file inventory, not 212 approved public operations:
 
 - 165 possible public entries requiring confirmation against API references and

@@ -37,6 +37,28 @@ verifyEqual(testCase,t.Field_NaNCount,1); verifyEqual(testCase,t.Field_PositiveI
 verifyEqual(testCase,t.Field_NegativeInfCount,1); verifyEqual(testCase,t.Field_Mean,1);
 verifyEqual(testCase,t.Field_Variance,2);
 end
+function testBatchSingleVoxelSelectionsMatchGeneralQuery(testCase)
+% Batch reads must retain independent rows, nonfinite counts and statistics.
+field = single([0 2 NaN Inf -Inf]);
+groups = {5; 2; 1; 4; 3; 2};
+requested = {'Count', 'Sum', 'Mean', 'Median', 'Variance', 'Std', 'Min', 'Max', 'Quantiles'};
+options = struct('Quantiles', [0 .5 1], ...
+    'Support', struct('ObjectIDs', [9 4 7 3 8 2], 'DatasetID', 'batch', 'Frame', 12));
+for normalization = [0 1]
+    options.VarianceNormalization = normalization;
+    batch = farmQueryField(field, groups, requested, options);
+    generalOptions = options;
+    generalOptions.SampleOperation = @(s) s.A;
+    general = farmQueryField(struct('A', field), groups, requested, generalOptions);
+    verifyEqual(testCase, batch.Properties.VariableNames, general.Properties.VariableNames);
+    for name = batch.Properties.VariableNames
+        verifyEqual(testCase, batch.(name{1}), general.(name{1}));
+    end
+    verifyEqual(testCase, batch.Field_Mean, [NaN; 2; 0; NaN; NaN; 2]);
+    verifyEqual(testCase, batch.Field_Count, [0; 1; 1; 0; 0; 1]);
+    verifyEqual(testCase, batch.Field_SelectedCount, ones(6, 1));
+end
+end
 function testEmptyAndAllInvalidDiffer(testCase)
 field = [NaN Inf];
 a = farmQueryField(field,[],{'Mean','Count','Sum'});

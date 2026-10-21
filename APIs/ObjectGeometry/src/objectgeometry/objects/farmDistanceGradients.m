@@ -2,7 +2,15 @@ function [gradients, metadata, valid] = farmDistanceGradients(distanceField, opt
 %FARMDISTANCEGRADIENTS Reusable smoothed derivatives of signed/unsigned distance.
 % Inputs:
 %   distanceField   Finite scalar distance field on the current spatial grid.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Sigma = nonnegative numeric scalar or vector;
+%                   SmoothingOrder = character vector or string scalar;
+%                   Normalize = logical scalar;
+%                   FlipY = logical scalar;
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
+%                   DerivativeUnits = character vector or string scalar;
+%                   DistanceUnit = character vector or string scalar;
 % Outputs:
 %   gradients       XYZ components stored along the last dimension of a YXZ grid.
 %   metadata        Smoothing, derivative and coordinate metadata.

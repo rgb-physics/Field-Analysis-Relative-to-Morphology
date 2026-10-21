@@ -3,7 +3,10 @@ function farmValidateTableKeys(t, keys, options)
 % Inputs:
 %   t               Table whose identity columns are to be validated.
 %   keys            Names of table columns that jointly identify each row.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   AllowRepeated = logical scalar;
+%                   ErrorPrefix = character vector or string scalar;
+%                   ErrorNames = scalar struct;
 % Outputs:
 %   None. Invalid keys raise an error.
 

@@ -3,7 +3,11 @@ function farmWriteMaskTiff(mask, filePath, options)
 % Inputs:
 %   mask            Binary foreground matrix or volume.
 %   filePath        Full input or output file path, including filename.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   Overwrite = logical scalar;
+%                   Compression = character vector or string scalar;
+%                   Spacing = positive numeric three-element vector;
+%                   SpacingUnit = character vector or string scalar;
 % Outputs:
 %   None. Requested file or graphics side effects occur during the call.
 

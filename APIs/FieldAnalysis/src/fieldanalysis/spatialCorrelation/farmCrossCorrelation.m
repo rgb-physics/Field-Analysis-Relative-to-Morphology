@@ -3,7 +3,11 @@ function result = farmCrossCorrelation(a, b, options)
 % Inputs:
 %   a               First numeric field or sample vector.
 %   b               Corresponding second numeric field or sample vector.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   MeanSubtract = logical scalar;
+%                   Window = logical scalar;
+%                   Spacing = positive numeric vector;
+%                   SpacingUnit = character vector or string scalar;
 % Outputs:
 %   result          Linear cross-correlation array with lag and normalization metadata.
 

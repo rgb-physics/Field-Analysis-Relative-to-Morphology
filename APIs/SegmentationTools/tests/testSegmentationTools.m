@@ -134,6 +134,80 @@ verifyEqual(testCase,info.UnclassifiedVoxelCount,nnz(~(first|second)));
 verifyFalse(testCase,any(sum(m,4)>1,'all'));
 end
 
+function testNChannelNearestFill3D(testCase)
+% Different channel numbers/output order must not change nearest assignment.
+p = zeros(3, 7, 3, 4);
+p(:, 2, :, 4) = 0.9;
+p(:, 6, :, 2) = 0.9;
+options = struct('OpeningRadius', 0, 'FillMethod', 'nearest');
+[m, info] = farmSmoothNChannelProbabilities(p, [4 2], 0.6, options);
+verifyTrue(testCase, all(m(:, 1:3, :, 1), 'all'));
+verifyTrue(testCase, all(m(:, 5:7, :, 2), 'all'));
+verifyEqual(testCase, sum(m, 4), ones(3, 7, 3));
+verifyEqual(testCase, info.UnclassifiedVoxelCountBeforeFill, 45);
+verifyEqual(testCase, info.FilledVoxelCount, 45);
+verifyEqual(testCase, info.UnclassifiedVoxelCount, 0);
+verifyEqual(testCase, info.FillMethod, 'nearest');
+verifyFalse(testCase, isfield(info, 'OpenedMasks'));
+% The middle plane is tied; verify that MATLAB's nearest-index choice is used.
+seeds = false(3, 7, 3);
+seeds(:, [2 6], :) = true;
+[~, nearest] = bwdist(seeds);
+seedLabels = zeros(3, 7, 3);
+seedLabels(:, 2, :) = 1;
+seedLabels(:, 6, :) = 2;
+expectedLabels = seedLabels(nearest);
+verifyEqual(testCase, m(:, :, :, 1), expectedLabels == 1);
+verifyEqual(testCase, m(:, :, :, 2), expectedLabels == 2);
+end
+
+function testNChannelNearestFill2D(testCase)
+p = zeros(3, 5, 1, 2);
+p(2, 1, 1, 1) = 0.9;
+p(2, 5, 1, 2) = 0.9;
+m = farmSmoothNChannelProbabilities(p, [1 2], 0.6, ...
+    struct('OpeningRadius', 0, 'FillMethod', "nearest"));
+verifyTrue(testCase, all(m(:, 1:2, 1, 1), 'all'));
+verifyTrue(testCase, all(m(:, 4:5, 1, 2), 'all'));
+verifyEqual(testCase, sum(m, 4), ones(3, 5));
+end
+
+function testNChannelFillUsesHighestPrecedence(testCase)
+p = zeros(3, 7, 2, 4);
+p(:, 1, :, 4) = 0.9;
+p(:, 7, :, 2) = 0.9;
+[m, info] = farmSmoothNChannelProbabilities(p, [4 2], 0.6, ...
+    struct('OpeningRadius', 0, 'ChannelPrecedence', [2 4], 'FillMethod', 'fill'));
+verifyTrue(testCase, all(m(:, 1, :, 1), 'all'));
+verifyTrue(testCase, all(m(:, 2:7, :, 2), 'all'));
+verifyEqual(testCase, info.VoxelCounts, [6 36]);
+verifyEqual(testCase, info.FilledVoxelCount, 30);
+verifyEqual(testCase, info.UnclassifiedVoxelCount, 0);
+end
+
+function testNChannelFillAfterOpeningPreservesDiagnostics(testCase)
+p = zeros(11, 11, 7, 2);
+p(3:9, 3:9, 2:6, 1) = 0.8;
+p(1, 1, 1, 1) = 0.9; % Opening removes this isolated voxel.
+p(4:8, 4:8, 3:5, 2) = 0.9;
+options = struct('OpeningRadius', 1, 'ReturnOpenedMasks', true);
+[original, originalInfo] = farmSmoothNChannelProbabilities(p, [2 1], 0.6, options);
+options.FillMethod = 'none';
+[none, noneInfo] = farmSmoothNChannelProbabilities(p, [2 1], 0.6, options);
+verifyEqual(testCase, none, original);
+verifyEqual(testCase, noneInfo, originalInfo);
+verifyEqual(testCase, noneInfo.FilledVoxelCount, 0);
+options.FillMethod = 'nearest';
+[filled, filledInfo] = farmSmoothNChannelProbabilities(p, [2 1], 0.6, options);
+verifyEqual(testCase, filledInfo.OpenedMasks, originalInfo.OpenedMasks);
+verifyEqual(testCase, sum(filled, 4), ones(11, 11, 7));
+verifyEqual(testCase, filled(original), original(original));
+verifyFalse(testCase, original(1, 1, 1, 2));
+verifyTrue(testCase, filled(1, 1, 1, 2));
+verifyEqual(testCase, filledInfo.FilledVoxelCount, originalInfo.UnclassifiedVoxelCount);
+verifyEqual(testCase, filledInfo.UnclassifiedVoxelCount, 0);
+end
+
 function testMakeClassConfig(testCase)
 options = struct('Names', ["inside" "wall" "outside"], ...
     'CombineMethods', ["sum" "union" "sum"], 'IDs', [10 20 30]);

@@ -2,7 +2,12 @@ function membership = farmTrackPositions(detections, options)
 %FARMTRACKPOSITIONS Optional Python Trackpy backend; no merge/split inference.
 % Inputs:
 %   detections      Detection table with identity and centroid coordinates.
-%   options         Operation settings struct.
+%   options         Optional scalar struct with the fields:
+%                   SearchRange = positive numeric scalar;
+%                   Memory = nonnegative integer scalar;
+%                   MassProperty = character vector or string scalar;
+%                   CoordinateScale = numeric vector or [];
+%                   Linker = function handle or [];
 % Outputs:
 %   membership      Detection/trajectory membership returned by the selected linker.
 

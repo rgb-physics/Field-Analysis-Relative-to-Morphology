@@ -6,7 +6,7 @@ remain the reference for the existing flat Experiment 4 example configuration.
 
 An experiment configuration is currently a scalar MATLAB struct, not a class or a centrally validated schema. `farmExperiment4Config` supplies the complete example configuration. Properties below are case-sensitive. Adding an arbitrary property does not make an API consume it: workflows explicitly translate configuration into API options.
 
-Start with `c = farmExperiment4Config;` and override the relevant fields. The defaults are specific to Session 88 Experiment 4; paths, channels, thresholds and crop metadata must be reviewed for another experiment. Workflow-specific fields can remain present even when that workflow is not run.
+Start with `c = farmExperiment4Config;` and override the relevant fields. The defaults are specific to Session 88 Experiment 4; paths, channels, thresholds and crop metadata must be reviewed for another experiment. The configuration can retain unused settings; this guide covers the released object and filament workflows.
 
 ## Configuration reference
 
@@ -29,24 +29,12 @@ Start with `c = farmExperiment4Config;` and override the relevant fields. The de
 | Thresholds, OpeningRadius | Semantic segmentation thresholds and cleanup radius; defaults [.33 .33 .33], 1. |
 | ForegroundChannels, ForegroundThreshold, ObjectSmoothSigma | Channels summed for object foreground, threshold on that sum, and object smoothing; defaults [3 2], .6, 2. |
 | ObjectLoader, ObjectInputType | Optional @(frame) supplying a mask or labels on the intensity grid; empty uses probability segmentation. InputType defaults 'auto'; use 'labels' to preserve supplied binary-valued IDs. |
-| ReferenceFrames, PreparationFrame | Illumination reference frames and raw frame to correct; defaults 1:3 and 22. |
-| BleachScale | Preparation reference-total correction switch; default true. This is explicit temporal renormalization, not automatic intensity stretching. |
-| ExportIlastik, IlastikRange, IlastikSpacing | Optional 8-bit export, fixed intensity range, target spacing; defaults false, [1 5000], [1.5 1.5 1.5]. Quantitative export remains a separate stage. |
 | Supports, GeometrySigma | Requested sampling geometry names and geometry smoothing; defaults {'objects','boundary'}, 1. Skeleton support requires its dependencies. |
 | IncludeDiagnostics | Workflow 1: false by default keeps counts/flags out of Measurements; true includes them. Diagnostics are always retained in a separate keyed Diagnostics table in frame files and the returned manifest. |
 | LocalInertia, InertiaOptions | Optional local inertia calculation; default false. Options default Radius=18, Sigma=3, SampleLimit=10000; see farmLocalInertia help for additional options. |
 | FilamentLoader | Optional @(frame) binary filament mask; empty uses intensity segmentation. |
 | FilamentSigma, FilamentThreshold | Filament preprocessing parameters; defaults 1, 20. Threshold is in native intensity units for this example. |
 | MinFilamentLength, MinAspectRatio, MaxZComponent | Filament selection controls; defaults 0, 0, [] (no Z-component restriction). |
-| SeedFrame, SeedObjectID | Lineage selection; defaults 20, []. Empty ObjectID selects the largest detection at the seed frame and records the choice. |
-| ExportTrackingTiffs, RetainMasks, ExportMaskedIntensity | Optional tracking outputs; all default false. Heavy masks are opt-in. |
-| TrackingLabelMode | Export labels by 'trajectory' (default) or 'object'. |
-| SpectrumFrames, SelectedSlices | Spectrum frames and Z indices; defaults [10 20 30], [20 40 60]. |
-| NumBins, MeanSubtract, Window | Spectrum settings; defaults 50, false, true. |
-| Projection | 2D projection reduction: 'mean' (default) or 'max'. |
-| CorrelationMode, CorrelationCrossChannel | '2d' (default) or '3d'; cross-channel correlation defaults false. |
-| ProfileEdges, ProfileReference | Conditional profile bin edges and distance reference; defaults -30:.5:30, 'boundary'; 'skeleton' is also available. |
-| ProfileChannels, ProfileSigma | Channel text list and profile smoothing; defaults {'560','647'}, 2. |
 | OutputRoot | Generated output directory under package tests/data; default tests/data/workflow-results. Each run creates a fresh directory. |
 
 ## Fields passed between APIs

@@ -219,4 +219,4 @@ In workflow 1, returned result is the run manifest. It is not the same container
 
 The helper's temporary arrays are in its own workspace. To inspect them while running, use a breakpoint or insert a display inside the helper; they do not automatically appear in the script workspace.
 
-For term definitions and field layouts, consult the [glossary](../GLOSSARY-CAPABILITIES-MOCKUP.md).
+For term definitions and field layouts, consult the [glossary](../GLOSSARY-CAPABILITIES.md).

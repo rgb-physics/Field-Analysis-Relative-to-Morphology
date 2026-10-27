@@ -42,15 +42,16 @@ Internal image arrays use `[Y X Z C T]`. Workflows combine the following APIs fo
 **Workflows** - Describe experiments and load named sources using public package functions<br>
 
 *Ilastik is an upstream source of pixel-classification probabilities; this codebase does not provide Ilastik's pixel classifier. https://www.ilastik.org/<br> 
-MeshLab and other mesh-specific dependencies are documented in
-[the dependency review](docs/EXTERNAL-DEPENDENCIES-REVIEW.md). They are not
-requirements for the supported object-boundary and field-query examples.
+Mesh-specific dependencies are not requirements for the supported
+object-boundary and field-query examples. Mesh functionality remains deferred;
+its external dependencies and provider compatibility have not been fully verified.
+For optional Python tracking, see [Python integration](APIs/ObjectTracking/PYTHON_INTEGRATION.md).
 
 For blob skeleton generation, install a local GaussDiff copy using the readable
 [dependency setup instructions](docs/LOCAL-DEPENDENCY-SETUP.md). `farmSetup`
 adds that local installation to the current MATLAB session without saving paths.
 
-Segmentation behavior and preserved historical methods are recorded in `docs/SEGMENTATION_HISTORICAL_METHODS.md`. The current compatibility target is MATLAB R2023a. No native function used by the new SegmentationTools entry points is known here to be deprecated in R2023a; future compatibility issues will be recorded with the affected MATLAB function and FARM script path in that document.
+The current compatibility target is MATLAB R2023a. See the SegmentationTools API documentation for supported segmentation operations.
 
 Historical workflows, legacy I/O and redundant compatibility interfaces are
 preserved outside this release in the sibling `MeMo-Archive` directory.

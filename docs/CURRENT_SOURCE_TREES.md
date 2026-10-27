@@ -20,7 +20,6 @@ MeMo/
     examples/
   docs/
     reference/               # current glossary/Data Dictionary topic pages
-    history/                 # superseded reviews, handoffs and snapshots
   tests/
     memotest/                # shared MATLAB test helpers
     data/                    # local fixtures and generated results
@@ -36,6 +35,6 @@ builder now lives under `APIs/SharedUtilities/tools`. MATLAB's generated
 The Workflows API now owns `farmMakeExperiment` and `farmLoadSource`. Their
 former locations under `Examples and Workflows/src` are no longer used.
 
-Use the [user guide](README.md), [reference topics](reference/README.md), [testing guide](../TESTING.md) and [naming migration guide](FARM-NAMING-MIGRATION.md) for current instructions. Earlier source-tree listings are retained in [historical documentation](history/README.md).
+Use the [user guide](README.md), [reference topics](reference/README.md), [testing guide](../TESTING.md) and [naming migration guide](FARM-NAMING-MIGRATION.md) for current instructions.
 
 The sibling MeMo-Archive contains preserved historical source. Local datasets, dependency installations, MATLAB support files and Git metadata are outside this cleanup.

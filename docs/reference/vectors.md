@@ -31,7 +31,7 @@ entry = farmGlossary("Filament", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L310)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L310)
 
 <a id="glossary-geometry-supports-and-references-backbone"></a>
 
@@ -56,7 +56,7 @@ entry = farmGlossary("Backbone", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L315)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L315)
 
 <a id="glossary-sampling-and-measurements-vector-field"></a>
 
@@ -81,7 +81,7 @@ entry = farmGlossary("Vector field", "Section", "Glossary");
 
 Inputs: { <component name>\* = numeric matrix or Data/Grid struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L378)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L378)
 
 <a id="glossary-sampling-and-measurements-vector-component"></a>
 
@@ -115,7 +115,7 @@ entry = farmGlossary("Vector component", "Section", "Glossary");
 
 Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L383)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L383)
 
 <a id="glossary-sampling-and-measurements-length"></a>
 
@@ -140,7 +140,7 @@ entry = farmGlossary("Length", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L421)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L421)
 
 <a id="glossary-sampling-and-measurements-width"></a>
 
@@ -165,7 +165,7 @@ entry = farmGlossary("Width", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L426)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L426)
 
 <a id="glossary-sampling-and-measurements-principal-axes"></a>
 
@@ -190,7 +190,7 @@ entry = farmGlossary("Principal axes", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L431)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L431)
 
 <a id="glossary-sampling-and-measurements-projected-extent"></a>
 
@@ -215,7 +215,7 @@ entry = farmGlossary("Projected extent", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L436)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L436)
 
 <a id="glossary-sampling-and-measurements-axial-alignment"></a>
 
@@ -251,7 +251,7 @@ entry = farmGlossary("Axial alignment", "Section", "Glossary");
 
 Inputs: { Directions to compare and alignment settings; exact arguments depend on the selected alignment function. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L441)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L441)
 
 ## Related topics
 

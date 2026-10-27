@@ -66,7 +66,7 @@ SegmentationTools converts pixel-classification probabilities into masks and lab
 
 Reusable algorithms and example workflows are separated in the proposed structure. Implementations are preserved without refactoring in this first-pass copy.
 
-Probability arrays use `[Y X Z C]`; complete image structs use the project-wide `[Y X Z C T]` convention. The public in/on/out semantic order is `[inside wall outside]`. See `docs/SEGMENTATION_HISTORICAL_METHODS.md` for current behavior, historical alternatives, anisotropy notes, compatibility wrappers, and deferred work.
+Probability arrays use `[Y X Z C]`; complete image structs use the project-wide `[Y X Z C T]` convention. The public in/on/out semantic order is `[inside wall outside]`.
 
 ## Fill unclassified locations after opening
 

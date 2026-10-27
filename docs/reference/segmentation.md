@@ -40,7 +40,7 @@ entry = farmGlossary("Intensity field", "Section", "Glossary");
 
 Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L188)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L188)
 
 <a id="glossary-segmentation-and-identity-probability-field"></a>
 
@@ -65,7 +65,7 @@ entry = farmGlossary("Probability field", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L195)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L195)
 
 <a id="glossary-segmentation-and-identity-segmented-category"></a>
 
@@ -90,7 +90,7 @@ entry = farmGlossary("Segmented category", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L200)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L200)
 
 <a id="glossary-segmentation-and-identity-foreground-mask"></a>
 
@@ -115,7 +115,7 @@ entry = farmGlossary("Foreground mask", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L205)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L205)
 
 <a id="glossary-segmentation-and-identity-connected-component"></a>
 
@@ -151,7 +151,7 @@ entry = farmGlossary("Connected component", "Section", "Glossary");
 
 Inputs: { Foreground mask and a neighbor rule for identifying connected locations. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L210)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L210)
 
 <a id="glossary-segmentation-and-identity-label-matrix"></a>
 
@@ -176,7 +176,7 @@ entry = farmGlossary("Label matrix", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L219)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L219)
 
 <a id="glossary-segmentation-and-identity-id-group"></a>
 
@@ -201,7 +201,7 @@ entry = farmGlossary("ID group", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L224)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L224)
 
 <a id="glossary-segmentation-and-identity-prepared-geometry-collection"></a>
 
@@ -237,7 +237,7 @@ entry = farmGlossary("Prepared geometry collection", "Section", "Glossary");
 
 Inputs: { Object locations and identity/grid settings; see farmPrepareObjects. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L229)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L229)
 
 ## Related topics
 

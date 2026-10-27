@@ -38,16 +38,14 @@ that use them. Optional batch execution calls farmWorkflow1Objects(c). See the
 
 Workflow 1 accepts optional c.Experiment, with named Intensity and Probabilities sources. Intensity must select one channel. Supplied c.ObjectLoader bypasses probabilities. c.Frames must be present in the experiment. Current intensity calibration determines object metadata/physical volume; probabilities retain their own spacing and must use matching units. Shared crop/origin must be verified: similar extents are insufficient.
 
-Existing callers without c.Experiment retain their original loading path. All
-five numbered setup scripts use explicit experiment/source descriptions.
-Workflow 1 exposes four processing stages; its batch implementation is in
-farmWorkflow1Objects.m. Workflows 2–5 keep their implementation as local helpers.
-setupWorkflow2–5 use named Intensity560 (primary/density), Intensity647
-(filament/secondary) and Probabilities sources as needed. The old workflow
-function files for workflows 2–5 remain compatibility entry points and skip setup/previews when
-called with c. Analysis settings remain partly in c; general run, support and
-geometry builders are deferred. Experiment creation and source loading are in APIs/Workflows/src;
-example helpers remain in Examples and Workflows/examples.
+Existing callers without c.Experiment retain their original loading path.
+Workflow 1 exposes four processing stages; batching uses farmWorkflow1Objects.m.
+Workflow 2 keeps its implementation in the setup script; farmWorkflow2Filaments
+forwards existing configurations without running setup or previews. Its named
+sources are Intensity560 (density), Intensity647 (filaments) and Probabilities.
+Active Foam E5 provides a combined setup and separate stage functions.
+Experiment creation and source loading are in APIs/Workflows/src; example helpers
+remain in Examples and Workflows/examples. Only workflows 1, 2 and E5 are released.
 
 ## Queries
 

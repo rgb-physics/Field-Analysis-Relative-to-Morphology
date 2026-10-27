@@ -146,7 +146,7 @@ end
 function testGlossaryCoversWrittenEntries(t)
 folder = fileparts(mfilename('fullpath'));
 root = fullfile(folder, '..', '..', '..');
-document = fileread(fullfile(root, 'GLOSSARY-CAPABILITIES-MOCKUP.md'));
+document = fileread(fullfile(root, 'GLOSSARY-CAPABILITIES.md'));
 headings = regexp(document, '(?m)^\*\*(.+?)\*\*[^\S\r\n]+\[(.*)\][^\S\r\n]*\r?$', ...
     'tokens', 'dotexceptnewline');
 expected = strings(numel(headings), 1);

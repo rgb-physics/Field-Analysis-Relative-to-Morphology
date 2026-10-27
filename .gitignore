@@ -50,3 +50,32 @@ __pycache__/
 
 # Local external installations are not redistributed with FARM.
 local-dependencies/
+
+# Internal planning, handoffs, reviews and migration bookkeeping (local only).
+# Keep public guides, API documentation and glossary sources tracked.
+/docs/history/
+/docs/HANDOFF-*.md
+/docs/FIRST-RELEASE-PLAN.md
+/docs/FIRST-RELEASE-SCOPE.md
+/docs/FARM-CODE-CONVENTIONS-DRAFT.md
+/docs/REFACTOR-PROGRESS.md
+/docs/REMAINING-PUBLIC-REFACTOR.md
+/docs/PUBLIC-FUNCTION-REVIEW.csv
+/docs/RELEASE-FUNCTION-INVENTORY.csv
+/docs/RELEASE-VALIDATION-DATASETS.md
+/docs/EXTERNAL-DEPENDENCIES-REVIEW.md
+/docs/FARM-MIGRATION-MANIFEST.csv
+
+# Local dataset notes and internal segmentation history.
+/tests/data/README-rboros.md
+/tests/data/image-stacks/tiff/Time Series/DATASETS-README.txt
+/docs/SEGMENTATION_HISTORICAL_METHODS.md
+
+# Unreleased workflows remain local; release includes workflows 1, 2 and E5.
+/Examples and Workflows/examples/setupWorkflow3.m
+/Examples and Workflows/examples/setupWorkflow4.m
+/Examples and Workflows/examples/setupWorkflow5.m
+/Examples and Workflows/examples/farmWorkflow3Lineage.m
+/Examples and Workflows/examples/farmWorkflow4Spectra.m
+/Examples and Workflows/examples/farmWorkflow5Profiles.m
+/Examples and Workflows/examples/farmPreparationExample.m

@@ -104,7 +104,7 @@ end
 % Direct lookups prefer exact spelling: Geometry and geometry remain distinct.
 % A Section filter is applied before lookup. Omit it to include both sections.
 %
-% The document GLOSSARY-CAPABILITIES-MOCKUP.md is the single source of entries.
+% The document GLOSSARY-CAPABILITIES.md is the single source of entries.
 % Some layouts describe generated fields rather than constructor arguments;
 % read Notes for scope/conditions. With no output argument, display the result.
 % Explicit getters include farmGetGlossaryEntry and farmGetGlossaryInputOptions.

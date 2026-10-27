@@ -178,8 +178,8 @@ preprocessing.applyIlluminationCorrection returns double corrected values
 without thresholding, range stretching, or implicit export. BleachScale is
 explicit and defaults false. preprocessing.scaleToReferenceTotal accepts a
 reference total supplied by the workflow and returns the applied factor.
-See Examples and Workflows/examples/farmPreparationExample.m for optional 16-bit quantitative
-and separate fixed-range 8-bit Ilastik export, plus explicit crop conversion.
+Use the correction functions directly with explicitly chosen reference frames and intensity ranges.
+
 
 ## Invalid data and batching
 

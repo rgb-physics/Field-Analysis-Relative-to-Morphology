@@ -20,7 +20,7 @@ can describe supplied data or list named settings. Concepts without a fixed
 input list say so explicitly. An unknown term produces an
 error, so a misspelled term cannot be mistaken for one without input fields.
 
-All entries come directly from the [written glossary and data dictionary](../GLOSSARY-CAPABILITIES-MOCKUP.md).
+All entries come directly from the [written glossary and data dictionary](../GLOSSARY-CAPABILITIES.md).
 Edits to that document are available on the next call; no generated copy
 needs updating. Keep the document with the package when distributing it.
 
@@ -122,16 +122,14 @@ fields listed under `diagnostics`. Their Inputs describe the sampled values
 or geometry records used to calculate them. In tables they normally appear with a
 field, query or vector-component prefix rather than as bare names.
 
-An [older candidate scan](history/DATA-DICTIONARY-CANDIDATES.md) and its
-[CSV evidence](history/DATA-DICTIONARY-CANDIDATES.csv) are retained as historical
-material. They include removed source trees and are not a current inventory.
-The full inventory remains deferred. An occurrence in code does not establish
-a shared meaning or a supported public contract.
+The dictionary is not an exhaustive inventory of implementation variables.
+An occurrence in code does not establish a shared meaning or a supported public
+contract.
 
 ## Maintain the topic pages
 
 Edit definitions, representations and input layouts in
-[GLOSSARY-CAPABILITIES-MOCKUP.md](../GLOSSARY-CAPABILITIES-MOCKUP.md).
+[GLOSSARY-CAPABILITIES.md](../GLOSSARY-CAPABILITIES.md).
 Keep interpretation notes there as well. The topic pages are generated views,
 so do not edit their copies independently. Topic assignments and construct labels
 are maintained in [APIs/SharedUtilities/tools/build_reference.py](../APIs/SharedUtilities/tools/build_reference.py).

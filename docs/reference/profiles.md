@@ -44,7 +44,7 @@ entry = farmGlossary("Conditional profile", "Section", "Glossary");
 
 Inputs: { Measured values, conditioning values, bin edges, and calculation settings; see farmConditionalStatistics. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L543)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L543)
 
 <a id="glossary-tracking-and-field-analysis-bins"></a>
 
@@ -69,7 +69,7 @@ entry = farmGlossary("Bins", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L552)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L552)
 
 ## Related topics
 

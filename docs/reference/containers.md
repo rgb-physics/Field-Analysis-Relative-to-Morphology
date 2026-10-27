@@ -31,7 +31,7 @@ entry = farmGlossary("Array", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L27)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L27)
 
 <a id="glossary-containers-and-structure-roles-matrix"></a>
 
@@ -56,7 +56,7 @@ entry = farmGlossary("Matrix", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L32)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L32)
 
 <a id="glossary-containers-and-structure-roles-struct"></a>
 
@@ -81,7 +81,7 @@ entry = farmGlossary("Struct", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L37)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L37)
 
 <a id="glossary-containers-and-structure-roles-table"></a>
 
@@ -106,7 +106,7 @@ entry = farmGlossary("Table", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L42)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L42)
 
 <a id="glossary-containers-and-structure-roles-cell-array"></a>
 
@@ -131,7 +131,7 @@ entry = farmGlossary("Cell array", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L47)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L47)
 
 <a id="glossary-containers-and-structure-roles-data"></a>
 
@@ -156,7 +156,7 @@ entry = farmGlossary("Data", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L52)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L52)
 
 <a id="glossary-containers-and-structure-roles-metadata"></a>
 
@@ -181,7 +181,7 @@ entry = farmGlossary("Metadata", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L57)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L57)
 
 <a id="glossary-containers-and-structure-roles-options"></a>
 
@@ -206,7 +206,7 @@ entry = farmGlossary("Options", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L62)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L62)
 
 <a id="glossary-containers-and-structure-roles-request-specification"></a>
 
@@ -231,7 +231,7 @@ entry = farmGlossary("Request / specification", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L67)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L67)
 
 <a id="glossary-containers-and-structure-roles-configuration"></a>
 
@@ -274,7 +274,7 @@ entry = farmGlossary("Configuration", "Section", "Glossary");
 
 Inputs: { Named settings and their values; required settings depend on where the configuration is used. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L72)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L72)
 
 <a id="glossary-containers-and-structure-roles-result"></a>
 
@@ -299,7 +299,7 @@ entry = farmGlossary("Result", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L88)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L88)
 
 <a id="glossary-containers-and-structure-roles-payload"></a>
 
@@ -335,7 +335,7 @@ entry = farmGlossary("Payload", "Section", "Glossary");
 
 Inputs: { Results chosen for saving; field names depend on the workflow. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L93)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L93)
 
 <a id="glossary-containers-and-structure-roles-manifest"></a>
 
@@ -371,7 +371,7 @@ entry = farmGlossary("Manifest", "Section", "Glossary");
 
 Inputs: { Saved-result locations and summaries chosen by the workflow. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES-MOCKUP.md?plain=1#L102)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L102)
 
 ## Related topics
 

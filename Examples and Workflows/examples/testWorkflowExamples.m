@@ -152,41 +152,6 @@ saved = load(fullfile(r.Directory,'frame001.mat'));
 verifyTrue(t,isfield(saved.result,'ReferenceInfo'));
 verifyFalse(t,isfield(saved.result,'FilamentMask'));
 end
-function testSyntheticWorkflow3CombinedScript(t)
-c = localNamedWorkflowFixture;
-c.TrackingFrames = 1; c.SeedFrame = 1; c.SeedObjectID = [];
-c.ExportTrackingTiffs = false; c.RetainMasks = false;
-c.ExportMaskedIntensity = false; c.TrackingLabelMode = 'trajectory';
-r = farmWorkflow3Lineage(c);
-verifyEqual(t,height(r.Tracking.Detections),1);
-verifyEqual(t,r.Measurements.Intensity_Mean,17);
-verifyEqual(t,r.Measurements.Frame,1);
-verifyFalse(t,isfield(r,'HeavyMasks'));
-end
-function testSyntheticWorkflow4CombinedScript(t)
-c = localNamedWorkflowFixture;
-c.SpectrumFrames = 1; c.SelectedSlices = [2 4]; c.NumBins = 4;
-c.MeanSubtract = false; c.Window = true; c.Projection = 'max';
-c.CorrelationMode = '2d'; c.CorrelationCrossChannel = true;
-r = farmWorkflow4Spectra(c); saved = load(r.Files{1}); data = saved.result;
-verifyEqual(t,numel(data.Slices),2);
-verifyEqual(t,data.Projection.Method,'max');
-verifyEqual(t,data.Volume.SpacingUnit,'um');
-verifyTrue(t,isfield(data,'CrossCorrelation'));
-end
-function testSyntheticWorkflow5CombinedScript(t)
-c = localNamedWorkflowFixture;
-c.ProfileReference = 'boundary'; c.ProfileEdges = -20:2:20;
-c.ProfileChannels = {'560','647'}; c.GeometrySigma = 1;
-r = farmWorkflow5Profiles(c); saved = load(r.Files{1});
-stats = saved.result.Channel560.Statistics;
-verifyEqual(t,stats.Mean(isfinite(stats.Mean)),17*ones(nnz(isfinite(stats.Mean)),1));
-verifyTrue(t,isfield(saved.result,'Channel647'));
-% Optional second argument must also be forwarded through compatibility entry.
-filaments = farmWorkflow2Filaments(c);
-r = farmWorkflow5Profiles(c,filaments); saved = load(r.Files{1});
-verifyTrue(t,isfield(saved.result,'Alignment'));
-end
 function c = localNamedWorkflowFixture
 c = farmExperiment4Config; c.Frames = 1; c.Spacing = [1 1 1]; c.SpacingUnit = 'um';
 inside = false(14,15,10); inside(4:10,5:11,4:7) = true;

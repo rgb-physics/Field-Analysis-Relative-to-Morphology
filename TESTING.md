@@ -35,9 +35,8 @@ Not covered: manual visual validation scripts, real-data scientific comparisons,
 
 MATLAB with the toolboxes/dependencies required by the individual suites is needed.
 The most recent recorded full-suite run on October 20, 2026 passed 191 checks,
-with no failures, incomplete checks or suite execution errors. See
-[refactor progress](docs/REFACTOR-PROGRESS.md) for saved log locations and later
-focused checks. The E5 staged-script comparison uses synthetic inputs with
+with no failures, incomplete checks or suite execution errors.
+The E5 staged-script comparison uses synthetic inputs with
 anisotropic image spacing and a coarser probability grid, checks measurement
 values and types against Workflow 2, and checks missing-frame handling.
 This is recorded evidence for that revision, not a guarantee

@@ -6,7 +6,7 @@ function entries = farmGlossaryEntries(varargin)
 %   entries         Table of glossary and Data Dictionary entries in source order.
 
 folder = fileparts(mfilename('fullpath'));
-source = fullfile(folder, '..', '..', '..', '..', '..', 'GLOSSARY-CAPABILITIES-MOCKUP.md');
+source = fullfile(folder, '..', '..', '..', '..', '..', 'GLOSSARY-CAPABILITIES.md');
 if ~isfile(source)
     error('sharedutilities:GlossarySource', 'Written glossary not found: %s', source);
 end

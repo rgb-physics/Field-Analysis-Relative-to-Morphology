@@ -6,7 +6,7 @@ Choose a topic below. Concepts and named quantities are kept together, with thei
 
 These pages present the **current documented entries**. They do not claim to cover every public function or returned quantity. The full function/test inventory is deferred until the remaining functionality has been evaluated.
 
-Definitions have one editable source: the [shared glossary](../../GLOSSARY-CAPABILITIES-MOCKUP.md). Each entry has one topic-page location; related pages link to it. Rebuild these views after editing the source. MATLAB reads that same source directly.
+Definitions have one editable source: the [shared glossary](../../GLOSSARY-CAPABILITIES.md). Each entry has one topic-page location; related pages link to it. Rebuild these views after editing the source. MATLAB reads that same source directly.
 
 | Topic | Entries | Contents |
 | --- | ---: | --- |

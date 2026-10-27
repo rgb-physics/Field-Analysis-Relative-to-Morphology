@@ -1,8 +1,12 @@
 # Examples and Workflows
 
 Start with the [editable examples and setup guide](examples/README.md).
-The numbered `setupWorkflow1.m` through `setupWorkflow5.m` scripts configure
-object measurements, filament alignment, lineage, spectra, and distance profiles.
+
+The release includes:
+
+- Workflow 1: object segmentation, geometry and field measurements.
+- Workflow 2: filament measurements and alignment, including its staged example.
+- Active Foam E5: combined processing and individually inspectable stages.
 
 From the repository root in MATLAB:
 

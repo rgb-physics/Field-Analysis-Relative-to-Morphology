@@ -29,9 +29,7 @@ their historical names and dependencies.
 | glossary | farmGlossary |
 
 The exact map is [FARM-FUNCTION-NAMES.json](FARM-FUNCTION-NAMES.json).
-The [file manifest](FARM-MIGRATION-MANIFEST.csv) records original locations,
-archive decisions and retained destinations. `setupWorkflow1` through
-`setupWorkflow5`, `setupWorkflow2Staged`, and test runners retain familiar entry
+`setupWorkflow1`, `setupWorkflow2`, `setupWorkflow2Staged`, and test runners retain familiar entry
 names. Numbered workflow functions are now `farmWorkflow1Objects`, etc.
 Internal options helpers are `farmFAOptions`, `farmOGOptions` and `farmSUOptions`,
 all accepting `(userOptions, defaults)`. The general configurable builders keep

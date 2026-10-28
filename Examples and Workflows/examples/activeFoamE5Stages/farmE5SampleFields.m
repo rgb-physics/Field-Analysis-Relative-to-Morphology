@@ -10,11 +10,13 @@ function c = farmE5SampleFields(c)
 %   c.Results.Properties: filament measurements, including XYZ Centroid, from farmE5MeasureFilaments.
 %   c.Results.TargetSize: YXZ field dimensions from farmE5LoadData.
 %   c.Results.Regions: semantic labels from farmE5SegmentObjects.
-%   c.Results.Distance, DistanceValid: fields from farmE5DefineGeometry.
+%   c.Results.Distance, DistanceValid: fields from geometry/normal calculation.
+%   c.Results.DistanceFilled: optional logical mask identifying assigned distances.
 %   c.Results.DistanceGradient, DirectionValid: fields from farmE5CalculateNormals.
 % Outputs:
 %   c   The same configuration, with these results added or updated:
 %   c.Results.Properties: table extended with centroid indices, distance, region, validity, and gradient.
+%   c.Results.Properties.BoundaryDistanceFilled: true where the centroid distance was assigned by filling.
 %   c.Results.CentroidSupport: prepared single-voxel selections with object IDs.
 %   c.Results.SamplingDiagnostics: keyed field-query statistics and validity counts.
 %
@@ -60,6 +62,10 @@ properties.RegionClass = uint8(regionSamples.RegionClass_Mean);
 properties.ReferenceValid = logical(referenceSamples.ReferenceValid_Mean);
 properties.ReferenceDirectionValid = logical(directionSamples.DirectionValid_Mean);
 properties.DistanceGradient = gradientSamples.Gradient_MeanVector;
+properties.BoundaryDistanceFilled = false(height(properties), 1);
+if isfield(c.Results, 'DistanceFilled')
+    properties.BoundaryDistanceFilled = c.Results.DistanceFilled(centroidIndices);
+end
 
 % Retained Results %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Keep these values available to inspect or pass to later stages.

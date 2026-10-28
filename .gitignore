@@ -12,6 +12,9 @@ MathWorks/
 *.mat
 *.fig
 
+# Personal testing and analysis stay local.
+/Personal Calculations/
+
 # Generated workflow/validation outputs remain local.
 tests/data/workflow-results/
 tests/data/imagestackio-validation/
@@ -57,7 +60,6 @@ local-dependencies/
 /docs/HANDOFF-*.md
 /docs/FIRST-RELEASE-PLAN.md
 /docs/FIRST-RELEASE-SCOPE.md
-/docs/FARM-CODE-CONVENTIONS-DRAFT.md
 /docs/REFACTOR-PROGRESS.md
 /docs/REMAINING-PUBLIC-REFACTOR.md
 /docs/PUBLIC-FUNCTION-REVIEW.csv

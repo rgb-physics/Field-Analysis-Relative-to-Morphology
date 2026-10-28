@@ -105,6 +105,7 @@ c.DistanceInterpolation = 'nearest';      % Return distances to the intensity gr
 % the boundary geometry and distance field explicitly.
 c.ProfileSigma = 2; % Distance-gradient smoothing, in intensity-grid voxels.
 c.GradientDerivativeUnits = 'physical'; % Differentiate using supplied spatial spacing.
+c.DistanceFillMethod = 'none'; % 'nearest' assigns missing distances and flags them for measurement.
 
 % Field Sampling %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Request statistics at each single-voxel centroid selection. Mean and
@@ -251,13 +252,15 @@ if isempty(savedWorkflow2File)
             if isempty(c.FilamentLoader)
                 response = -farmLOG(double(raw), c.FilamentSigma);
                 filamentSegmentation = farmSegmentIntensity(response, ...
-                    struct('Method', c.FilamentSegmentationMethod, 'Threshold', c.FilamentThreshold));
+                    struct('Method', c.FilamentSegmentationMethod, 'Threshold', c.FilamentThreshold, 'ReturnComponents', true));
                 filamentMask = filamentSegmentation.Mask;
+                measurementInput = filamentSegmentation.Components;
             else
                 filamentMask = c.FilamentLoader(frame);
+                measurementInput = filamentMask;
             end
             identity = struct('DatasetID', c.DatasetID, 'Frame', frame, 'Spacing', c.Spacing, 'SpacingUnit', c.SpacingUnit);
-            [properties, objects] = farmMeasureFilaments(filamentMask, c.FilamentProperties, ...
+            [properties, objects] = farmMeasureFilaments(measurementInput, c.FilamentProperties, ...
                 struct('Identity', identity, 'ExtentWidthFloor', c.ExtentWidthFloor));
             fprintf('Measured %d filament detections.\n', height(properties));
             stageTimings.MeasureFilamentsSeconds(frameIndex) = toc(stageStarted);
@@ -282,8 +285,11 @@ if isempty(savedWorkflow2File)
             % uses intensity-grid voxels. Components are ordered X, Y, Z.
             stageStarted = tic;
             gradientOptions = struct('Sigma', c.ProfileSigma, 'Spacing', c.Spacing, ...
-                'SpacingUnit', c.SpacingUnit, 'DerivativeUnits', c.GradientDerivativeUnits, 'DistanceUnit', c.SpacingUnit);
-            [distanceGradient, gradientInfo, directionValid] = farmDistanceGradients(distance, gradientOptions);
+                'SpacingUnit', c.SpacingUnit, 'DerivativeUnits', c.GradientDerivativeUnits, 'DistanceUnit', c.SpacingUnit, 'FillMethod', c.DistanceFillMethod);
+            distanceValid = distanceValid & isfinite(distance);
+            [distanceGradient, gradientInfo, directionValid, distance, distanceFilled] = farmDistanceGradients(distance, gradientOptions);
+            distanceValid = distanceValid | distanceFilled;
+            directionValid = directionValid & distanceValid;
             fprintf('Boundary distance and surface-normal directions prepared.\n');
             stageTimings.CalculateNormalsSeconds(frameIndex) = toc(stageStarted);
 
@@ -318,6 +324,7 @@ if isempty(savedWorkflow2File)
             properties.ReferenceValid = logical(referenceSamples.ReferenceValid_Mean);
             properties.ReferenceDirectionValid = logical(directionSamples.DirectionValid_Mean);
             properties.DistanceGradient = gradientSamples.Gradient_MeanVector;
+            properties.BoundaryDistanceFilled = distanceFilled(centroidIndices);
             stageTimings.SampleFieldsSeconds(frameIndex) = toc(stageStarted);
 
             % Alignment Measurement %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

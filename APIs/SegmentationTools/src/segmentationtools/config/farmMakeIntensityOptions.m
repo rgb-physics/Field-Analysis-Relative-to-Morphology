@@ -12,6 +12,7 @@ function options = farmMakeIntensityOptions(varargin)
 %                   KeepLargest = nonnegative integer scalar or [];
 %                   Connectivity = numeric scalar or [];
 %                   ReturnLabels = logical scalar;
+%                   ReturnComponents = logical scalar;
 % Outputs:
 %   options    Editable settings accepted by farmSegmentIntensity.
 %
@@ -20,13 +21,13 @@ function options = farmMakeIntensityOptions(varargin)
 options = farmParseOptions(struct('Method','otsu','Threshold',[], ...
     'Foreground','bright','IntensityRange',[],'EstimationMask',[], ...
     'FillHoles',false,'MinObjectSize',0,'KeepLargest',[], ...
-    'Connectivity',[],'ReturnLabels',false),varargin{:});
+    'Connectivity',[],'ReturnLabels',false,'ReturnComponents',false),varargin{:});
 options.Method = validatestring(options.Method,{'fixed','otsu'});
 options.Foreground = validatestring(options.Foreground,{'bright','dark'});
 if strcmp(options.Method,'fixed')||~isempty(options.Threshold)
     validateattributes(options.Threshold,{'numeric'},{'scalar','real','finite'});
 end
-for name = {'FillHoles', 'ReturnLabels'}
+for name = {'FillHoles', 'ReturnLabels', 'ReturnComponents'}
     validateattributes(options.(name{1}), {'logical'}, {'scalar'});
 end
 

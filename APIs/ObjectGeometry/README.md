@@ -19,6 +19,14 @@ outside the release in the sibling MeMo-Archive and should stay off the path.
 
 ## Identity and selected measurements
 
+For radius/radii, branch thickness or neck-width questions, consider composing
+`farmObjectDistanceGradients` with `DistanceType='interior'` and explicit sampling
+at selected centers or skeleton/core locations. This supplies center-point
+clearance radii to background voxel centers, not every geometric definition of
+radius. Selecting locations and summarizing their distances are separate steps.
+Distances remain in voxel units; scalar physical conversion requires isotropic
+spacing. The `Spacing` option does not correct anisotropic distances.
+
 ```matlab
 opts = struct('DatasetID','experiment-1','Frame',12, ...
     'Spacing',[0.4 0.4 0.4],'SpacingUnit','um');
@@ -233,3 +241,12 @@ length or a correction for optical blur or segmentation error.
 For a single voxel only, it uses `ExtentInVoxels` multiplied by spacing along
 the arbitrary native director. This finite fallback is recorded in table
 `Properties.UserData.PointExtentFallbackObjectIDs`; `ScaledDirectors` stays NaN.
+
+## Surface-skeleton point clouds (initial implementation)
+
+The [surface-skeleton workflow](SURFACE-SKELETON-WORKFLOW.md) documents the
+retained fast method with a preferred axis, P-6-SI-2 medial-surface thinning,
+calibrated point preparation, optional sampled normals, separate spatial and
+temporal orientation, and vertex-only PLY export for MeshLab. Focused synthetic
+checks and a runnable example are included. Scientific real-data validation and
+retirement of historical two-sheet helpers remain separate.

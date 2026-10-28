@@ -196,6 +196,8 @@ The edge of a region in 2D, or its surface in 3D, separating the region from its
 
 A boundary can be used to measure distances or compare directions relative to an object's surface.
 
+For radius/radii or local thickness questions, interior distance can supply a center-point clearance radius: `farmObjectDistanceGradients(mask, struct('DistanceType','interior'))` returns distance to the nearest background voxel center. Select the measurement locations explicitly, for example manual centers or skeleton/core locations. This is not an equivalent-sphere radius or a complete local-thickness transform. Distances are in voxel units; scalar physical conversion requires isotropic spacing. The `Spacing` option does not correct anisotropic distances.
+
 
 </details>
 
@@ -237,7 +239,7 @@ entry = farmGlossary("Isosurface", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L285)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L287)
 
 <a id="glossary-geometry-supports-and-references-distance-defined-neighborhood"></a>
 
@@ -262,7 +264,7 @@ entry = farmGlossary("Distance-defined neighborhood", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L290)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L292)
 
 <a id="glossary-geometry-supports-and-references-layer"></a>
 
@@ -287,7 +289,7 @@ entry = farmGlossary("Layer", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L295)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L297)
 
 <a id="glossary-geometry-supports-and-references-shell"></a>
 
@@ -312,7 +314,7 @@ entry = farmGlossary("Shell", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L300)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L302)
 
 <a id="glossary-geometry-supports-and-references-skeleton"></a>
 
@@ -323,6 +325,15 @@ Inputs: { No fixed input list; this entry defines a concept or representation. S
 [index vector or logical matrix; generated representation in a struct]
 
 An internal representation of a structure that reduces its thickness while describing its shape. The result depends on the selected method.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Interior distances sampled at skeleton/core locations can provide local clearance radii for branch or neck measurements. See Boundary for the distance operation and interpretation. Blob cores are not guaranteed to be ordered centerlines; the location selection and radius summary are separate choices.
+
+
+</details>
 
 <details>
 <summary>MATLAB lookup</summary>
@@ -337,7 +348,7 @@ entry = farmGlossary("Skeleton", "Section", "Glossary");
 
 Inputs: { input = object locations; type = 'skeleton'; options = method settings; see farmGenerateGeometry. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L305)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L307)
 
 <a id="glossary-geometry-supports-and-references-sheet"></a>
 
@@ -364,7 +375,7 @@ entry = farmGlossary("Sheet", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L320)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L324)
 
 <a id="glossary-geometry-supports-and-references-centered-surface"></a>
 
@@ -391,7 +402,7 @@ entry = farmGlossary("Centered surface", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L325)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L329)
 
 <a id="glossary-geometry-supports-and-references-point-cloud"></a>
 
@@ -416,7 +427,7 @@ entry = farmGlossary("Point cloud", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L330)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L334)
 
 <a id="glossary-geometry-supports-and-references-rendered-geometry-matrix"></a>
 
@@ -441,7 +452,7 @@ entry = farmGlossary("Rendered geometry matrix", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L335)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L339)
 
 <a id="glossary-geometry-supports-and-references-mesh"></a>
 
@@ -468,7 +479,7 @@ entry = farmGlossary("Mesh", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L340)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L344)
 
 ## Related topics
 

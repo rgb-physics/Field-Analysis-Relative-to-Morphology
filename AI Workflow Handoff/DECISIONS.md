@@ -22,6 +22,13 @@
 
 ## Open review items
 
+Confirmed follow-up: keep the conventions document beside the onboarding handoff
+in this folder and include it in the package download. Improve measurement-term
+discovery (including radii to interior distance) and visible composition of FARM
+operations so fresh agents can produce scripts users can understand and extend.
+These changes concern onboarding and package documentation, not repairs to the
+simulated scripts.
+
 - Review the first draft against the scope corrections above.
 - Proposal: probe preferred working style early with the actual user, then refine it.
 - Proposal: offer an optional WORKFLOW-NOTES.md beside user scripts, with a chat recap as an alternative.

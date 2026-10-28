@@ -32,13 +32,16 @@ filamentSegmentation = [];
 if isempty(c.FilamentLoader)
     response = -farmLOG(double(raw), c.FilamentSigma);
     filamentSegmentation = farmSegmentIntensity(response, ...
-        struct('Method', c.FilamentSegmentationMethod, 'Threshold', c.FilamentThreshold));
+        struct('Method', c.FilamentSegmentationMethod, 'Threshold', c.FilamentThreshold, 'ReturnComponents', true));
     filamentMask = filamentSegmentation.Mask;
+    measurementInput = filamentSegmentation.Components;
 else
     filamentMask = c.FilamentLoader(frame);
+    measurementInput = filamentMask;
 end
 identity = struct('DatasetID', c.DatasetID, 'Frame', frame, 'Spacing', c.Spacing, 'SpacingUnit', c.SpacingUnit);
-[properties, objects] = farmMeasureFilaments(filamentMask, c.FilamentProperties, ...
+% Reuse segmentation components; a user-supplied mask still needs preparation.
+[properties, objects] = farmMeasureFilaments(measurementInput, c.FilamentProperties, ...
     struct('Identity', identity, 'ExtentWidthFloor', c.ExtentWidthFloor));
 fprintf('Measured %d filament detections.\n', height(properties));
 

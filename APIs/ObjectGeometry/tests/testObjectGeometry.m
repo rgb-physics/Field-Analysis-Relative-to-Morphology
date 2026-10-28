@@ -453,3 +453,25 @@ verifyEmpty(testCase,t.Properties.UserData.PointExtentFallbackObjectIDs);
 verifyTrue(testCase,all(isnan(t.ScaledDirectors),'all'));
 verifyEqual(testCase,t.ProjectedExtent,2,'AbsTol',1e-12);
 end
+
+function testBlobHessianCandidateIndexContract(t)
+assumeEqual(t, exist('gfilter', 'file'), 2, 'Requires the installed GaussDiff dependency.');
+mask = false(19, 21, 23); mask(4:16, 4:18, 4:20) = true;
+[candidates, initial] = farmSkel3DBlobs(mask, 100, 1, 0);
+[refined, cores] = farmSkel3DBlobs(mask, 100, 1, 1);
+verifyNotEmpty(t, candidates);
+verifySize(t, cores, size(mask));
+verifyEqual(t, refined, find(cores));
+verifyTrue(t, all(ismember(refined, candidates)));
+verifyFalse(t, any(cores(~mask)));
+verifyFalse(t, any(cores(~initial)));
+fprintf('Hessian contract fixture: %d candidates, %d retained voxel indices.\n', numel(candidates), numel(refined));
+end
+
+function testBlobHessianEmptyGeometry(t)
+assumeEqual(t, exist('gfilter', 'file'), 2, 'Requires the installed GaussDiff dependency.');
+[indices, cores] = farmSkel3DBlobs(false(13, 15, 17), .2, 1, 1);
+verifyEmpty(t, indices);
+verifyFalse(t, any(cores(:)));
+verifySize(t, cores, [13 15 17]);
+end

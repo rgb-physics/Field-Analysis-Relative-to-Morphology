@@ -16,8 +16,6 @@
   "fieldanalysis.spatialCorrelation.autoCorrelation": "farmAutoCorrelation",
   "fieldanalysis.spatialCorrelation.crossCorrelation": "farmCrossCorrelation",
   "fieldanalysis.statistics.generateRadialMatrix": "farmGenerateRadialMatrix",
-  "fieldanalysis.statistics.generateStaticStructureFactor": "farmGenerateStaticStructureFactor",
-  "fieldanalysis.statistics.generateVanHove": "farmGenerateVanHove",
   "fieldanalysis.statistics.loglogBin": "farmLoglogBin",
   "fieldanalysis.statistics.pairedFieldStatistics": "farmPairedFieldStatistics",
   "fieldanalysis.statistics.radiallyAverageMatrix": "farmRadiallyAverageMatrix",

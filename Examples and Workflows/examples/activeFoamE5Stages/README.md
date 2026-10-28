@@ -105,6 +105,32 @@ is available as `c.Results.Workflow2.Filaments` and in `workflow2-output.mat`.
 If execution is stopped manually, enter `diary off` to close the progress log.
 Analysis, plotting, and general visualization interfaces remain separate work.
 
+## Frames without a measurable boundary
+
+The boundary calculation needs contact between the wall/on region and the
+outside region. If that contact is absent, distances can be infinite even
+though filament detection succeeds. An object filling the field of view is
+one possible cause; an absent wall or outside segmentation can also cause it.
+
+The staged workflow retains the filament measurements for these frames.
+`DistanceValid` and `DirectionValid` are false; sampled boundary distances,
+normals, and alignment values are `NaN`. It reports the unavailable distances
+in the processing log. It does not treat image edges as object boundaries or
+change segmentation thresholds automatically. Alignment plots therefore have
+no finite alignment values for that frame.
+
+Inspect `c.Results.GeometryInfo` for constructed boundary counts and
+`c.Results.GradientInfo.Status` for `no-finite-distance`. These diagnostics
+are included in the saved per-frame measurement file. Set `c.DistanceFillMethod='nearest'` to assign each undefined distance the
+value of its nearest finite voxel (array-coordinate Euclidean distance).
+Finite original values are retained. Assigned values can be measured and are
+flagged in `c.Results.DistanceFilled` and the filament-table column
+`BoundaryDistanceFilled`; counts are in `GradientInfo.FilledVoxelCount`.
+These values are estimates, not newly computed exact boundary distances.
+The default `'none'` keeps undefined values missing and invalidates affected
+normal directions while retaining usable measurements elsewhere. A field
+without any finite source values cannot be filled.
+
 ## Time taken by each stage
 
 The accompanying script records `c.StageTimings`, with one row for every requested

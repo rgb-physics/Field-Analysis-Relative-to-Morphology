@@ -35,6 +35,7 @@ validateattributes(options.ThrowOnFailure,{'logical'},{'scalar'});
 files = {
     'SegmentationTools','APIs/SegmentationTools/tests/testSegmentationTools.m'
     'ObjectGeometry','APIs/ObjectGeometry/tests/testObjectGeometry.m'
+    'SurfaceSkeletonWorkflow','APIs/ObjectGeometry/tests/testSurfaceSkeletonWorkflow.m'
     'FieldSampling','APIs/ObjectRelativeProfiles/tests/testFieldSampling.m'
     'VectorFieldSampling','APIs/ObjectRelativeProfiles/tests/testVectorFieldSampling.m'
     'ObjectTracking','APIs/ObjectTracking/tests/testObjectTracking.m'

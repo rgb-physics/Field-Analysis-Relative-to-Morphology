@@ -200,11 +200,22 @@ this API does not create another batching or identity framework.
 farmLoglogBin is owned by FieldAnalysis. It calculates paired
 log-domain means over occupied X bins. Its old plotting alias is archived; its repaired numerical behavior is unchanged.
 
-LiangOG, LiangADAPT, percolationAnalysis, general fitting, temporal peak
-association, and mesh workflows are outside this first pass.
-The old Fourier/plotting scripts are preserved in the sibling MeMo-Archive for provenance and future workflow review. The legacy farmGenerateVanHove and
-farmGenerateStaticStructureFactor are not repaired or recommended entry points:
-genCorrScaleMat was not found, and their estimator requires separate review.
+LiangOG, LiangADAPT, percolationAnalysis, general fitting and temporal peak
+association are outside current scope; the user chose to skip these extensions
+on October 27, 2026. Mesh/sheet work is handled separately.
+The old Fourier/plotting scripts are preserved in the sibling MeMo-Archive for
+provenance and future workflow review. By user agreement on October 27, 2026,
+farmGenerateVanHove and farmGenerateStaticStructureFactor are retired from the
+active API. Their unchanged sources are preserved in Git history and in
+MeMo-Archive/retired/2026-10-27 at their former repository-relative paths.
+
+Use farmAutoCorrelation/farmCrossCorrelation for unnormalized linear spatial
+correlation, and farmPowerSpectrum2D/farmPowerSpectrum3D for Fourier power.
+The power functions retain optional input-field Hann windowing, enabled by
+default. These supported functions do not automatically reproduce the retired
+estimators' lag-dependent scaling, correlation cropping/windowing, or final
+FFT-magnitude convention. The historical genCorrScaleMat helper is not an
+active FieldAnalysis dependency, and no integration is scheduled.
 twoFieldsCrossCorr remains a historical experiment script. Its unpadded,
 windowed FFT convention differs from the new linear correlation.
 

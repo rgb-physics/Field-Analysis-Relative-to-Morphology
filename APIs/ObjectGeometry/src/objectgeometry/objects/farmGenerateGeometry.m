@@ -22,7 +22,8 @@ if nargin < 3
 end
 options = farmOGOptions(options, struct('Identity', struct(), 'Method', '', ...
                                        'Sigma', 1, 'GradientCutoff', 0.2, 'Hessian', false, 'SheetCombination', 'intersection', ...
-                                       'SampleFraction', 0.5, 'DistanceCutoff', 2, 'LayerMean', 0, 'LayerWidth', 1));
+                                       'SampleFraction', 0.5, 'DistanceCutoff', 2, 'LayerMean', 0, 'LayerWidth', 1, ...
+                                       'PreferredAxis', 'Z', 'SurfaceMaxIterations', Inf));
 type = validatestring(type, {'skeleton', 'boundary'});
 objects = farmPrepareObjects(input, options.Identity);
 dims = numel(objects.Grid.Size);
@@ -35,7 +36,7 @@ if isempty(method)
     end
 end
 if strcmp(type, 'skeleton')
-    method = validatestring(method, {'blob', 'sheet', 'sheet-sampled'});
+    method = validatestring(method, {'blob', 'sheet', 'sheet-sampled', 'medial-surface'});
     if dims ~= 3
         error('objectgeometry:SkeletonDimensions', 'Historical skeleton methods require 3-D input.');
     end
@@ -82,14 +83,23 @@ for objectIndex = 1:numel(objects.ObjectIDs)
                     [~, output] = farmSkel3DBlobs(local, ...
                                                  options.GradientCutoff, options.Sigma, double(options.Hessian));
                 case 'sheet'
-                    [unionMask, intersectionMask] = farmSkel3Dfrom2D(local);
+                    [unionMask, intersectionMask] = farmSkel3Dfrom2D(local, options.PreferredAxis);
                     if strcmp(combination, 'union')
                         output = unionMask;
                     else
                         output = intersectionMask;
                     end
                 case 'sheet-sampled'
-                    output = farmSkel3DPop(local, options.SampleFraction, options.DistanceCutoff);
+                    output = farmSkel3DPop(local, options.SampleFraction, options.DistanceCutoff, ...
+                        [], [], options.PreferredAxis);
+                case 'medial-surface'
+                    [output, surfaceInfo] = farmMedialSurface(local, ...
+                        'Spacing', objects.Grid.Spacing, ...
+                        'MaxIterations', options.SurfaceMaxIterations);
+                    if ~surfaceInfo.Converged
+                        error('objectgeometry:SurfaceNotConverged', ...
+                            'Medial-surface extraction did not converge within SurfaceMaxIterations.');
+                    end
             end
         end
         localIndices = find(output);
@@ -132,7 +142,12 @@ end
 %
 % OPTIONS.Identity=struct(); Method='' -> skeleton:'blob', boundary:'shell';
 % skeleton methods: 'blob' (skel3DBlobs), 'sheet' (skel3Dfrom2D union/intersection),
-% 'sheet-sampled' (skel3DPop). Sigma=1, GradientCutoff=0.2, Hessian=false,
+% 'sheet-sampled' (skel3DPop), 'medial-surface' (farmMedialSurface, P-6-SI-2).
+% PreferredAxis='Z'|'X'|'Y' selects the historical sheet methods' thin axis.
+% SurfaceMaxIterations=Inf limits complete medial thinning cycles; incomplete
+% extraction raises an error here (the low-level function returns Converged).
+% Medial-surface requires isotropic Grid.Spacing; there is no auto-resampling.
+% Sigma=1, GradientCutoff=0.2, Hessian=false,
 % SheetCombination='intersection'|'union', SampleFraction=0.5, DistanceCutoff=2.
 % Boundary: LayerMean=0, LayerWidth=1, Sigma=1; uses returnSmoothBoundsBW.
 % Empty skeletons retain Status='empty' and centroid/principal-axis fallback.
@@ -143,4 +158,6 @@ end
 % RELEASE STATUS
 % -------------------------------------------------------------------------
 % Boundary and blob-skeleton operations remain supported. Sheet and
-% sheet-sampled modes are preserved but deferred pending scientific review.
+% sheet-sampled modes are preserved. New medial-surface processing has focused
+% synthetic coverage; scientific real-data validation and retirement remain
+% separate. Normals and exports are explicit downstream operations.

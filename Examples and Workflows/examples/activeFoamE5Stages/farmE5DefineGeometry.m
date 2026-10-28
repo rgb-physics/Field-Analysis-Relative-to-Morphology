@@ -16,6 +16,7 @@ function c = farmE5DefineGeometry(c)
 %   c.Results.WorkingSpacing, WorkingSize, WorkingRegions: isotropic working grid.
 %   c.Results.WorkingDistance, WorkingValid: boundary-distance calculation on that grid.
 %   c.Results.Distance, DistanceValid: physical signed distance and validity on the image grid.
+%   c.Results.GeometryInfo: constructed boundary counts and finite working-distance count.
 %
 % This is an editable E5 teaching example, not a new general package API.
 % Settings remain in c; intermediate data is stored in c.Results.
@@ -29,12 +30,19 @@ targetSize = c.Results.TargetSize;
 workingSpacing = c.BoundaryWorkingSpacing;
 workingSize = max(2, round(targetSize .* c.Spacing / workingSpacing));
 workingRegions = imresize3(regions, workingSize, c.RegionInterpolation);
-[workingDistance, ~, ~, ~, ~, workingValid] = ...
+[workingDistance, ~, ~, primaryBoundary, secondaryBoundary, workingValid] = ...
     farmDistTransFromBoundary(workingRegions == 2, workingRegions == 3, workingRegions == 1, c.BoundaryDilationRadius);
+% Proximity comparisons alone can return true when both distances are Inf.
+% A usable distance must also be finite; keep undefined distances unchanged.
+finiteWorkingDistance = isfinite(workingDistance);
+workingValid = workingValid & finiteWorkingDistance;
+geometryInfo = struct('PrimaryBoundaryVoxelCount', nnz(primaryBoundary), ...
+    'SecondaryBoundaryVoxelCount', nnz(secondaryBoundary), ...
+    'FiniteDistanceVoxelCount', nnz(finiteWorkingDistance));
 % Signed distance is negative inside and positive outside.
 % Keep the calculated zero boundary; do not move it to an alignment peak.
 distance = imresize3(workingDistance * workingSpacing, targetSize, c.DistanceInterpolation);
-distanceValid = imresize3(workingValid, targetSize, c.RegionInterpolation);
+distanceValid = imresize3(workingValid, targetSize, c.RegionInterpolation) & isfinite(distance);
 
 % Retained Results %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Keep these values available to inspect or pass to later stages.
@@ -45,4 +53,5 @@ c.Results.WorkingDistance = workingDistance;
 c.Results.WorkingValid = workingValid;
 c.Results.Distance = distance;
 c.Results.DistanceValid = distanceValid;
+c.Results.GeometryInfo = geometryInfo;
 end

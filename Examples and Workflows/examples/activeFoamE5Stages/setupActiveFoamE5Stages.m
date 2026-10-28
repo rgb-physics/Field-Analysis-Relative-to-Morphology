@@ -9,7 +9,8 @@ c = farmActiveFoamE5Config(10:60);
 if ~isfolder(c.OutputRoot)
     mkdir(c.OutputRoot);
 end
-c.RunDirectory = tempname(c.OutputRoot);
+c.RunDirectory = 'O:\Session 88\FARM Output';
+% c.RunDirectory = tempname(c.OutputRoot);
 mkdir(c.RunDirectory);
 save(fullfile(c.RunDirectory, 'configuration.mat'), 'c');
 diary(fullfile(c.RunDirectory, 'processing.log'));
@@ -107,6 +108,11 @@ allAlign = result.Filaments.Order2D;
 allRs = result.Filaments.BoundaryDistance;
 allTs = result.Filaments.Frame;
 
+% Apply filtering
+zAlignCut = .5;
+zAligns = result.Filaments.Directors(:,3);
+zLogic = abs(zAligns) < zAlignCut;
+
 % Calculate elapsed time and use one acquisition frame per time bin.
 % Retain missing frames as empty bins rather than closing gaps in time.
 frameCenters = min(allTs):max(allTs);
@@ -119,25 +125,25 @@ timeBin = discretize(allTimes, timeEdges);
 
 % Average finite alignment values within each distance/time bin.
 % Keep counts alongside the means; an empty bin has mean NaN, not zero.
-validAlignment = isfinite(allAlign) & ~isnan(distanceBin) & ~isnan(timeBin);
+validAlignment = isfinite(allAlign) & ~isnan(distanceBin) & ~isnan(timeBin) & zLogic;
 binSize = [numel(distanceCenters), numel(timeCenters)];
 alignmentCounts = accumarray([distanceBin(validAlignment), timeBin(validAlignment)], 1, binSize, @sum, 0);
 meanAlignment = accumarray([distanceBin(validAlignment), timeBin(validAlignment)], double(allAlign(validAlignment)), binSize, @mean, NaN);
 
-% Display mean alignment with distance horizontally and elapsed time vertically.
+% Display mean alignment with distance vertically and elapsed time horizontally.
 % Gray regions contain no finite alignment values. The line marks r = 0.
 alignmentFigure = figure('Name', 'Mean Order2D over distance and time');
 alignmentAxes = axes(alignmentFigure);
-alignmentImage = imagesc(alignmentAxes, distanceCenters, timeCenters, meanAlignment.');
-alignmentImage.AlphaData = isfinite(meanAlignment.');
-set(alignmentAxes, 'YDir', 'normal', 'Color', [0.85 0.85 0.85]);
-xlabel(alignmentAxes, sprintf('Signed boundary distance (%s)', result.SpacingUnit));
-ylabel(alignmentAxes, 'Elapsed time (s)');
+alignmentImage = imagesc(alignmentAxes, timeCenters/60, distanceCenters, meanAlignment);
+alignmentImage.AlphaData = isfinite(meanAlignment);
+set(alignmentAxes, 'YDir', 'normal', 'Color', [0.85 0.85 0.85],'FontSize',15);
+ylabel(alignmentAxes, sprintf('Signed boundary distance (%s)', result.SpacingUnit));
+xlabel(alignmentAxes, 'Elapsed time (min)');
 title(alignmentAxes, 'Mean Order2D by distance and time');
 alignmentColorbar = colorbar(alignmentAxes);
 alignmentColorbar.Label.String = 'Mean Order2D';
 clim(alignmentAxes, [-1 1]);
-xline(alignmentAxes, 0, 'k--');
+yline(alignmentAxes, 0, 'k--');
 
 % Display all finite distances, pooled across frames, including observations
 % without a finite alignment value. These are counts, not probability density.
@@ -148,3 +154,32 @@ xlabel(distanceAxes, sprintf('Signed boundary distance (%s)', result.SpacingUnit
 ylabel(distanceAxes, 'Filament detections');
 title(distanceAxes, 'Distribution of allRs across all processed frames');
 xline(distanceAxes, 0, 'k--');
+
+%% Get alignment maxima within a band of distances
+maxDisp = 3;
+minDisp = -15;
+cutoffLogic = distanceCenters>minDisp & distanceCenters<maxDisp;
+cutoffDists = distanceCenters(cutoffLogic);
+croppedAligns = meanAlignment((cutoffLogic),1:numel(timeCenters));
+
+[~,maxInds] = max(croppedAligns);
+
+maxDists = cutoffDists(maxInds);
+
+% Display mean alignment with distance horizontally and elapsed time vertically.
+% Gray regions contain no finite alignment values. The line marks r = 0.
+alignmentFigure = figure('Name', 'Mean Order2D over distance and time');
+alignmentAxes = axes(alignmentFigure);
+alignmentImage = imagesc(alignmentAxes, timeCenters/60,distanceCenters, meanAlignment);
+alignmentImage.AlphaData = isfinite(meanAlignment);
+set(alignmentAxes, 'YDir', 'normal', 'Color', [0.85 0.85 0.85],'FontSize',15);
+ylabel(alignmentAxes, sprintf('Signed boundary distance (%s)', result.SpacingUnit));
+xlabel(alignmentAxes, 'Elapsed time (min)');
+title(alignmentAxes, 'Mean Order2D by distance and time');
+alignmentColorbar = colorbar(alignmentAxes);
+alignmentColorbar.Label.String = 'Mean Order2D';
+clim(alignmentAxes, [-1 1]);
+yline(alignmentAxes, 0, 'k--');
+
+hold on
+scatter(timeCenters/60,maxDists)

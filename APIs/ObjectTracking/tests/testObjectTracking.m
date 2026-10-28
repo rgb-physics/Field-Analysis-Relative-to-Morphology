@@ -123,6 +123,26 @@ m = farmTrackPositions(t,struct('SearchRange',0.5,'Linker',@(data,range,memory) 
 verifyEqual(testCase,m.TrajectoryID,[4;7;9]);
 verifyError(testCase,@() farmImportLinks([3 4;1 4;2 7],map),'objecttracking:TrackpyBranch');
 end
+function testCoordinateHandoffXYAndXYZ(testCase)
+% Export preserves coordinate order and origin; imports use explicit RowID.
+coordinates = [101.25 7.5 900.75; 12.5 -40.25 30.5; .5 12 9.25];
+for dimensions = [2 3]
+    source = table(["A";"A";"A"], [8;2;8], [70;99;80], coordinates(:, 1:dimensions), ...
+        [13;17;23], 'VariableNames', {'DatasetID','Frame','ObjectID','Centroid','Volume'});
+    scale = [2 3 5]; scale = scale(1:dimensions);
+    [matrix, map] = farmExportDetections(source, struct('MassProperty', 'Volume', 'CoordinateScale', scale));
+    expected = [coordinates(:, 1:dimensions) .* scale, [13;17;23], [8;2;8]];
+    verifyEqual(testCase, matrix, expected);
+    order = 'XYZ';
+    verifyEqual(testCase, map.Properties.UserData.CoordinateOrder, order(1:dimensions));
+    membership = farmImportLinks([2 22;3 33;1 11], map);
+    verifyEqual(testCase, membership.ObjectID, source.ObjectID);
+    verifyEqual(testCase, membership.Frame, source.Frame);
+    verifyEqual(testCase, membership.DetectionID, [1;2;3]);
+    verifyEqual(testCase, membership.TrajectoryID, [11;22;33]);
+end
+end
+
 function testRenderingAndMembershipJoin(testCase)
 frames = localBranches(); r = farmTrackOverlaps(1:2,@(t) frames{t});
 objects = farmPrepareObjects(frames{2},struct('Frame',2));

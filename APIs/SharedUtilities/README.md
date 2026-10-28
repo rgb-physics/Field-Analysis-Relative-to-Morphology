@@ -60,6 +60,23 @@ The established public error identifiers and metadata envelopes are retained.
 The internal options helpers farmFAOptions, farmOGOptions and farmSUOptions
 all accept user options first and defaults second.
 
+## Laplacian-of-Gaussian filtering
+
+`farmLOG(stack, sigma)` uses `imfilter` with the historical `farmGaussD`
+kernels and symmetric endpoint padding. It uses four axis-filter passes for
+2-D images and seven for 3-D volumes, sharing intermediate smoothing and
+combining terms before the final Z smoothing. It requires Image Processing
+Toolbox. The signature and the bright-filament convention
+`response = -farmLOG(double(raw), sigma)` are unchanged.
+
+Single input returns single; integer and logical inputs are converted to
+double before filtering, matching the historical output type. Rearranging
+floating-point operations can change rounding. The sampled kernel values,
+including their small nonzero second-derivative sum, are retained. Each
+active image dimension must contain at least `ceil(3*sigma)` samples, as
+required by the previous mirrored-padding implementation. `farmMyconvn`
+and `farmGaussD` remain available unchanged.
+
 ## Repairs and intentional behavior
 
 Originals are preserved in the sibling MeMo-Archive under the original API

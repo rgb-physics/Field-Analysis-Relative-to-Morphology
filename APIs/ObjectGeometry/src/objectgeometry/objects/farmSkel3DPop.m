@@ -1,4 +1,4 @@
-function [ptCloud, orMat, andMat] = farmSkel3DPop(inputMat, andOrFrac, cutOff, orMat, andMat)
+function [ptCloud, orMat, andMat] = farmSkel3DPop(inputMat, andOrFrac, cutOff, orMat, andMat, preferredAxis)
 %FARMSKEL3DPOP Takes in a matrix, along with a cutoff value for scaling used
 %to remove skeletonization vertices too far from the center of any 
 %"structures" located in the input matrix. The input matrix is assumed to
@@ -11,21 +11,23 @@ function [ptCloud, orMat, andMat] = farmSkel3DPop(inputMat, andOrFrac, cutOff, o
 % number of indices pulled randomly from orMat, effectively populating the
 % andMat with some subset of the orMat.
 
-% Fix input variables
-if nargin == 1
-    andOrFrac = 0.5;
-    cutOff = 2;
-    [orMat, andMat] = farmSkel3Dfrom2D(inputMat);
-elseif nargin == 2
-    cutOff = 2;
-    [orMat, andMat] = farmSkel3Dfrom2D(inputMat);
-elseif nargin == 3
-    [orMat, andMat] = farmSkel3Dfrom2D(inputMat);
+% PREFERREDAXIS is optional ('Z' by default), used when masks are computed.
+% Output is a double voxel support, not an N-by-3 coordinate array.
+% Set rng before calling to reproduce historical random sampling.
+if nargin < 2 || isempty(andOrFrac), andOrFrac = 0.5; end
+if nargin < 3 || isempty(cutOff), cutOff = 2; end
+if nargin < 6, preferredAxis = 'Z'; end
+validateattributes(andOrFrac, {'numeric'}, {'real','finite','scalar','nonnegative'});
+validateattributes(cutOff, {'numeric'}, {'real','finite','scalar','nonnegative'});
+if nargin < 5 || isempty(orMat) || isempty(andMat)
+    [orMat, andMat] = farmSkel3Dfrom2D(inputMat, preferredAxis);
+elseif ~isequal(size(orMat),size(inputMat),size(andMat))
+    error('objectgeometry:MaskSize','Skeleton masks must match inputMat.');
 end
 
 % Populate matrix with random subpopulation of or matrix
 segDist = bwdist(~inputMat);
-cutoffOR = find(segDist.*orMat >= cutOff);
+cutoffOR = find(orMat & segDist >= cutOff);
 sampLen = min(numel(cutoffOR), numel(find(andMat))*andOrFrac );
 sampleCount = min(numel(cutoffOR),round(sampLen));
 subSampOR = cutoffOR(randperm(numel(cutoffOR),sampleCount));

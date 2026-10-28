@@ -51,7 +51,11 @@ so these do not validate Trackpy's linking or MATLAB/Python execution.
 8. Only after testing, retire or relocate the original Python entry point and
    its old MATLAB workflow, with provenance and compatibility notes.
 
-## Deferred explicitly
+## Outside current package scope
+
+User decision, October 27, 2026: keep basic Trackpy usage and coordinate/identity
+handoff checks. Do not implement the extensions listed below. Existing code is
+preserved; this decision does not automatically retire existing public functions.
 
 Trackpy merge/split inference; motion prediction/custom linking strategies;
 position-based trajectory analysis; head-tail tracking; gap bridging in the

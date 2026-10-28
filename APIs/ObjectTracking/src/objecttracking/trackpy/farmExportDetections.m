@@ -39,7 +39,8 @@ end
 matrix = [double(coordinates) .* double(scale(:).') double(mass) double(detections.Frame)];
 map = detections(:, {'DatasetID', 'Frame', 'ObjectID'});
 map.RowID = (1:height(map)).';
-map.Properties.UserData = struct('Options', options, 'CoordinateOrder', 'XYZ', 'ScaledCoordinates', true);
+coordinateOrder = 'XYZ';
+map.Properties.UserData = struct('Options', options, 'CoordinateOrder', coordinateOrder(1:dims), 'ScaledCoordinates', true);
 end
 
 % -------------------------------------------------------------------------

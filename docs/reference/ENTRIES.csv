@@ -40,69 +40,69 @@ Geometry,Glossary,"Geometry, supports and references",prepared/generated struct;
 Support,Glossary,"Geometry, supports and references","prepared geometry/support struct, logical mask, numeric indices/labels or cell of index groups",geometry,glossary-geometry-supports-and-references-support,Construct,264
 Reference,Glossary,"Geometry, supports and references","numeric field/vector, mask or geometry struct, according to calculation",geometry,glossary-geometry-supports-and-references-reference,,273
 Boundary,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-boundary,,278
-Isosurface,Glossary,"Geometry, supports and references",index/coordinate collection or mesh; neighborhood representation may be a mask,geometry,glossary-geometry-supports-and-references-isosurface,,285
-Distance-defined neighborhood,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-distance-defined-neighborhood,,290
-Layer,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-layer,,295
-Shell,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-shell,,300
-Skeleton,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-skeleton,,305
-Filament,Glossary,"Geometry, supports and references",mask or label matrix; prepared memberships in a struct,vectors,glossary-geometry-supports-and-references-filament,,310
-Backbone,Glossary,"Geometry, supports and references",numeric endpoint coordinates; legacy backbone struct,vectors,glossary-geometry-supports-and-references-backbone,,315
-Sheet,Glossary,"Geometry, supports and references",mask or label matrix; prepared memberships in a struct,geometry,glossary-geometry-supports-and-references-sheet,,320
-Centered surface,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-centered-surface,,325
-Point cloud,Glossary,"Geometry, supports and references",numeric coordinate matrix or voxel-index vector with grid metadata,geometry,glossary-geometry-supports-and-references-point-cloud,,330
-Rendered geometry matrix,Glossary,"Geometry, supports and references",logical mask or numeric matrix,geometry,glossary-geometry-supports-and-references-rendered-geometry-matrix,,335
-Mesh,Glossary,"Geometry, supports and references",numeric vertex/face matrices; sometimes grouped in a struct,geometry,glossary-geometry-supports-and-references-mesh,,340
-Property,Glossary,Sampling and measurements,"table variable; numeric scalar/vector, array or cell depending on property",statistics,glossary-sampling-and-measurements-property,,347
-Statistic,Glossary,Sampling and measurements,numeric scalar/vector or table variable; histogram struct for counts/edges,statistics,glossary-sampling-and-measurements-statistic,,352
-Query,Glossary,Sampling and measurements,scalar struct; struct array for multiple queries,statistics,glossary-sampling-and-measurements-query,Construct,357
-Field,Glossary,Sampling and measurements,numeric matrix or ordered component collection; optional metadata struct,statistics,glossary-sampling-and-measurements-field,Construct,364
-Scalar field,Glossary,Sampling and measurements,numeric matrix; optionally wrapped in a Data/Grid struct,statistics,glossary-sampling-and-measurements-scalar-field,Construct,371
-Vector field,Glossary,Sampling and measurements,struct of named component matrices for sampling; some outputs use a component dimension,vectors,glossary-sampling-and-measurements-vector-field,Construct,378
-Vector component,Glossary,Sampling and measurements,numeric matrix; optionally wrapped in a Data/Grid struct,vectors,glossary-sampling-and-measurements-vector-component,,383
-Selected samples,Glossary,Sampling and measurements,numeric vector,statistics,glossary-sampling-and-measurements-selected-samples,,390
-Finite samples,Glossary,Sampling and measurements,numeric vector,statistics,glossary-sampling-and-measurements-finite-samples,,395
-Diagnostic,Glossary,Sampling and measurements,numeric count or logical flag; table variables and metadata structs,statistics,glossary-sampling-and-measurements-diagnostic,,400
-Empty selection,Glossary,Sampling and measurements,empty index vector or all-false mask; flagged in sampling results,statistics,glossary-sampling-and-measurements-empty-selection,,407
-Fallback,Glossary,Sampling and measurements,struct of substitute geometry/properties; logical flags and counts record its use,statistics,glossary-sampling-and-measurements-fallback,Construct,412
-Length,Glossary,Sampling and measurements,numeric scalar per group; vector/table column across groups,vectors,glossary-sampling-and-measurements-length,,421
-Width,Glossary,Sampling and measurements,numeric scalar per group; vector/table column across groups,vectors,glossary-sampling-and-measurements-width,,426
-Principal axes,Glossary,Sampling and measurements,numeric direction matrix; eigenvalues/lengths in numeric vectors,vectors,glossary-sampling-and-measurements-principal-axes,,431
-Projected extent,Glossary,Sampling and measurements,numeric scalar per group; vector/table column across groups,vectors,glossary-sampling-and-measurements-projected-extent,,436
-Axial alignment,Glossary,Sampling and measurements,result struct containing numeric scores/angles and logical validity,vectors,glossary-sampling-and-measurements-axial-alignment,Construct,441
-Detection,Glossary,Tracking and field analysis,"table row with IDs, Frame and associated quantities",tracking,glossary-tracking-and-field-analysis-detection,,452
-Trajectory,Glossary,Tracking and field analysis,TrajectoryID column plus associated detection rows,tracking,glossary-tracking-and-field-analysis-trajectory,,457
-Lineage,Glossary,Tracking and field analysis,detection/link/event tables in a tracking struct; optional digraph,tracking,glossary-tracking-and-field-analysis-lineage,Construct,462
-Ancestry,Glossary,Tracking and field analysis,selection struct containing detection table and IDs,tracking,glossary-tracking-and-field-analysis-ancestry,Construct,471
-Descendants,Glossary,Tracking and field analysis,selection struct containing detection table and IDs,tracking,glossary-tracking-and-field-analysis-descendants,Construct,480
-Split,Glossary,Tracking and field analysis,relationships in link/event tables,tracking,glossary-tracking-and-field-analysis-split,,491
-Merge,Glossary,Tracking and field analysis,relationships in link/event tables,tracking,glossary-tracking-and-field-analysis-merge,,496
-Gap,Glossary,Tracking and field analysis,missing-frame interval; configured memory as a numeric scalar,tracking,glossary-tracking-and-field-analysis-gap,,501
-Spectrum,Glossary,Tracking and field analysis,result struct containing numeric spectra/frequency axes and metadata,spectra,glossary-tracking-and-field-analysis-spectrum,Construct,506
-Power,Glossary,Tracking and field analysis,numeric matrix or radial-statistics vectors,spectra,glossary-tracking-and-field-analysis-power,,515
-Normalization,Glossary,Tracking and field analysis,numeric factor; descriptive factors/settings in a struct,spectra,glossary-tracking-and-field-analysis-normalization,,520
-Window,Glossary,Tracking and field analysis,numeric weighting matrix; logical option selects built-in windowing,spectra,glossary-tracking-and-field-analysis-window,,529
-Correlation,Glossary,Tracking and field analysis,numeric lag matrix; returned with lag axes/metadata in a struct,spectra,glossary-tracking-and-field-analysis-correlation,Construct,534
-Conditional profile,Glossary,Tracking and field analysis,result struct containing binned-statistics table and edges,profiles,glossary-tracking-and-field-analysis-conditional-profile,Construct,543
-Bins,Glossary,Tracking and field analysis,"numeric edge/center vectors; counts in vectors, matrices or tables",profiles,glossary-tracking-and-field-analysis-bins,,552
-experiment,Glossary,Workflow 1: recognize the roles in code,scalar struct,workflows,glossary-workflow-1-recognize-the-roles-in-code-experiment,Construct instance,559
-c.ObjectProperties,Glossary,Workflow 1: recognize the roles in code,cell array of character vectors or string array,workflows,glossary-workflow-1-recognize-the-roles-in-code-c-objectproperties,,564
-c.GeometryOptions,Glossary,Workflow 1: recognize the roles in code,scalar struct with a per-geometry options struct,workflows,glossary-workflow-1-recognize-the-roles-in-code-c-geometryoptions,,569
-c.Queries,Glossary,Workflow 1: recognize the roles in code,query struct array; empty for no sampling,workflows,glossary-workflow-1-recognize-the-roles-in-code-c-queries,,574
-objects,Glossary,Workflow 1: recognize the roles in code,"scalar struct containing IDs, Components and Grid",workflows,glossary-workflow-1-recognize-the-roles-in-code-objects,Construct instance,581
-geometry,Glossary,Workflow 1: recognize the roles in code,scalar struct of named generated-geometry structs,workflows,glossary-workflow-1-recognize-the-roles-in-code-geometry,Construct instance,590
-supports,Glossary,Workflow 1: recognize the roles in code,scalar struct of named selections/geometry structs,workflows,glossary-workflow-1-recognize-the-roles-in-code-supports,Construct instance,597
-fields,Glossary,Workflow 1: recognize the roles in code,scalar struct of named matrices or Data/Grid structs,workflows,glossary-workflow-1-recognize-the-roles-in-code-fields,,604
-properties,Glossary,Workflow 1: recognize the roles in code,MATLAB table,workflows,glossary-workflow-1-recognize-the-roles-in-code-properties,,611
-diagnostics,Glossary,Workflow 1: recognize the roles in code,MATLAB table,workflows,glossary-workflow-1-recognize-the-roles-in-code-diagnostics,,616
-payload,Glossary,Workflow 1: recognize the roles in code,scalar struct,workflows,glossary-workflow-1-recognize-the-roles-in-code-payload,Construct instance,622
-manifest,Glossary,Workflow 1: recognize the roles in code,scalar struct,workflows,glossary-workflow-1-recognize-the-roles-in-code-manifest,Construct instance,631
-SelectedCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-selectedcount,,650
-FiniteCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-finitecount,,659
-NaNCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-nancount,,668
-PositiveInfCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-positiveinfcount,,675
-NegativeInfCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-negativeinfcount,,682
-SelectionEmpty,DataDictionary,Sampling diagnostics,logical scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-selectionempty,,689
-GeometryEmpty,DataDictionary,Sampling diagnostics,logical scalar per support record or result row,statistics,datadictionary-sampling-diagnostics-geometryempty,,696
-EmptyGeometryCount,DataDictionary,Sampling diagnostics,double scalar per support record or result row,statistics,datadictionary-sampling-diagnostics-emptygeometrycount,,705
-UsedFallback,DataDictionary,Sampling diagnostics,logical scalar per support record or result row,statistics,datadictionary-sampling-diagnostics-usedfallback,,712
-FallbackCount,DataDictionary,Sampling diagnostics,double scalar per support record or result row,statistics,datadictionary-sampling-diagnostics-fallbackcount,,721
+Isosurface,Glossary,"Geometry, supports and references",index/coordinate collection or mesh; neighborhood representation may be a mask,geometry,glossary-geometry-supports-and-references-isosurface,,287
+Distance-defined neighborhood,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-distance-defined-neighborhood,,292
+Layer,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-layer,,297
+Shell,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-shell,,302
+Skeleton,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-skeleton,,307
+Filament,Glossary,"Geometry, supports and references",mask or label matrix; prepared memberships in a struct,vectors,glossary-geometry-supports-and-references-filament,,314
+Backbone,Glossary,"Geometry, supports and references",numeric endpoint coordinates; legacy backbone struct,vectors,glossary-geometry-supports-and-references-backbone,,319
+Sheet,Glossary,"Geometry, supports and references",mask or label matrix; prepared memberships in a struct,geometry,glossary-geometry-supports-and-references-sheet,,324
+Centered surface,Glossary,"Geometry, supports and references",index vector or logical matrix; generated representation in a struct,geometry,glossary-geometry-supports-and-references-centered-surface,,329
+Point cloud,Glossary,"Geometry, supports and references",numeric coordinate matrix or voxel-index vector with grid metadata,geometry,glossary-geometry-supports-and-references-point-cloud,,334
+Rendered geometry matrix,Glossary,"Geometry, supports and references",logical mask or numeric matrix,geometry,glossary-geometry-supports-and-references-rendered-geometry-matrix,,339
+Mesh,Glossary,"Geometry, supports and references",numeric vertex/face matrices; sometimes grouped in a struct,geometry,glossary-geometry-supports-and-references-mesh,,344
+Property,Glossary,Sampling and measurements,"table variable; numeric scalar/vector, array or cell depending on property",statistics,glossary-sampling-and-measurements-property,,351
+Statistic,Glossary,Sampling and measurements,numeric scalar/vector or table variable; histogram struct for counts/edges,statistics,glossary-sampling-and-measurements-statistic,,356
+Query,Glossary,Sampling and measurements,scalar struct; struct array for multiple queries,statistics,glossary-sampling-and-measurements-query,Construct,361
+Field,Glossary,Sampling and measurements,numeric matrix or ordered component collection; optional metadata struct,statistics,glossary-sampling-and-measurements-field,Construct,368
+Scalar field,Glossary,Sampling and measurements,numeric matrix; optionally wrapped in a Data/Grid struct,statistics,glossary-sampling-and-measurements-scalar-field,Construct,375
+Vector field,Glossary,Sampling and measurements,struct of named component matrices for sampling; some outputs use a component dimension,vectors,glossary-sampling-and-measurements-vector-field,Construct,382
+Vector component,Glossary,Sampling and measurements,numeric matrix; optionally wrapped in a Data/Grid struct,vectors,glossary-sampling-and-measurements-vector-component,,387
+Selected samples,Glossary,Sampling and measurements,numeric vector,statistics,glossary-sampling-and-measurements-selected-samples,,394
+Finite samples,Glossary,Sampling and measurements,numeric vector,statistics,glossary-sampling-and-measurements-finite-samples,,399
+Diagnostic,Glossary,Sampling and measurements,numeric count or logical flag; table variables and metadata structs,statistics,glossary-sampling-and-measurements-diagnostic,,404
+Empty selection,Glossary,Sampling and measurements,empty index vector or all-false mask; flagged in sampling results,statistics,glossary-sampling-and-measurements-empty-selection,,411
+Fallback,Glossary,Sampling and measurements,struct of substitute geometry/properties; logical flags and counts record its use,statistics,glossary-sampling-and-measurements-fallback,Construct,416
+Length,Glossary,Sampling and measurements,numeric scalar per group; vector/table column across groups,vectors,glossary-sampling-and-measurements-length,,425
+Width,Glossary,Sampling and measurements,numeric scalar per group; vector/table column across groups,vectors,glossary-sampling-and-measurements-width,,430
+Principal axes,Glossary,Sampling and measurements,numeric direction matrix; eigenvalues/lengths in numeric vectors,vectors,glossary-sampling-and-measurements-principal-axes,,435
+Projected extent,Glossary,Sampling and measurements,numeric scalar per group; vector/table column across groups,vectors,glossary-sampling-and-measurements-projected-extent,,440
+Axial alignment,Glossary,Sampling and measurements,result struct containing numeric scores/angles and logical validity,vectors,glossary-sampling-and-measurements-axial-alignment,Construct,445
+Detection,Glossary,Tracking and field analysis,"table row with IDs, Frame and associated quantities",tracking,glossary-tracking-and-field-analysis-detection,,456
+Trajectory,Glossary,Tracking and field analysis,TrajectoryID column plus associated detection rows,tracking,glossary-tracking-and-field-analysis-trajectory,,461
+Lineage,Glossary,Tracking and field analysis,detection/link/event tables in a tracking struct; optional digraph,tracking,glossary-tracking-and-field-analysis-lineage,Construct,466
+Ancestry,Glossary,Tracking and field analysis,selection struct containing detection table and IDs,tracking,glossary-tracking-and-field-analysis-ancestry,Construct,475
+Descendants,Glossary,Tracking and field analysis,selection struct containing detection table and IDs,tracking,glossary-tracking-and-field-analysis-descendants,Construct,484
+Split,Glossary,Tracking and field analysis,relationships in link/event tables,tracking,glossary-tracking-and-field-analysis-split,,495
+Merge,Glossary,Tracking and field analysis,relationships in link/event tables,tracking,glossary-tracking-and-field-analysis-merge,,500
+Gap,Glossary,Tracking and field analysis,missing-frame interval; configured memory as a numeric scalar,tracking,glossary-tracking-and-field-analysis-gap,,505
+Spectrum,Glossary,Tracking and field analysis,result struct containing numeric spectra/frequency axes and metadata,spectra,glossary-tracking-and-field-analysis-spectrum,Construct,510
+Power,Glossary,Tracking and field analysis,numeric matrix or radial-statistics vectors,spectra,glossary-tracking-and-field-analysis-power,,519
+Normalization,Glossary,Tracking and field analysis,numeric factor; descriptive factors/settings in a struct,spectra,glossary-tracking-and-field-analysis-normalization,,524
+Window,Glossary,Tracking and field analysis,numeric weighting matrix; logical option selects built-in windowing,spectra,glossary-tracking-and-field-analysis-window,,533
+Correlation,Glossary,Tracking and field analysis,numeric lag matrix; returned with lag axes/metadata in a struct,spectra,glossary-tracking-and-field-analysis-correlation,Construct,538
+Conditional profile,Glossary,Tracking and field analysis,result struct containing binned-statistics table and edges,profiles,glossary-tracking-and-field-analysis-conditional-profile,Construct,547
+Bins,Glossary,Tracking and field analysis,"numeric edge/center vectors; counts in vectors, matrices or tables",profiles,glossary-tracking-and-field-analysis-bins,,556
+experiment,Glossary,Workflow 1: recognize the roles in code,scalar struct,workflows,glossary-workflow-1-recognize-the-roles-in-code-experiment,Construct instance,563
+c.ObjectProperties,Glossary,Workflow 1: recognize the roles in code,cell array of character vectors or string array,workflows,glossary-workflow-1-recognize-the-roles-in-code-c-objectproperties,,568
+c.GeometryOptions,Glossary,Workflow 1: recognize the roles in code,scalar struct with a per-geometry options struct,workflows,glossary-workflow-1-recognize-the-roles-in-code-c-geometryoptions,,573
+c.Queries,Glossary,Workflow 1: recognize the roles in code,query struct array; empty for no sampling,workflows,glossary-workflow-1-recognize-the-roles-in-code-c-queries,,578
+objects,Glossary,Workflow 1: recognize the roles in code,"scalar struct containing IDs, Components and Grid",workflows,glossary-workflow-1-recognize-the-roles-in-code-objects,Construct instance,585
+geometry,Glossary,Workflow 1: recognize the roles in code,scalar struct of named generated-geometry structs,workflows,glossary-workflow-1-recognize-the-roles-in-code-geometry,Construct instance,594
+supports,Glossary,Workflow 1: recognize the roles in code,scalar struct of named selections/geometry structs,workflows,glossary-workflow-1-recognize-the-roles-in-code-supports,Construct instance,601
+fields,Glossary,Workflow 1: recognize the roles in code,scalar struct of named matrices or Data/Grid structs,workflows,glossary-workflow-1-recognize-the-roles-in-code-fields,,608
+properties,Glossary,Workflow 1: recognize the roles in code,MATLAB table,workflows,glossary-workflow-1-recognize-the-roles-in-code-properties,,615
+diagnostics,Glossary,Workflow 1: recognize the roles in code,MATLAB table,workflows,glossary-workflow-1-recognize-the-roles-in-code-diagnostics,,620
+payload,Glossary,Workflow 1: recognize the roles in code,scalar struct,workflows,glossary-workflow-1-recognize-the-roles-in-code-payload,Construct instance,626
+manifest,Glossary,Workflow 1: recognize the roles in code,scalar struct,workflows,glossary-workflow-1-recognize-the-roles-in-code-manifest,Construct instance,635
+SelectedCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-selectedcount,,654
+FiniteCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-finitecount,,663
+NaNCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-nancount,,672
+PositiveInfCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-positiveinfcount,,679
+NegativeInfCount,DataDictionary,Sampling diagnostics,double scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-negativeinfcount,,686
+SelectionEmpty,DataDictionary,Sampling diagnostics,logical scalar per row; table column across rows,statistics,datadictionary-sampling-diagnostics-selectionempty,,693
+GeometryEmpty,DataDictionary,Sampling diagnostics,logical scalar per support record or result row,statistics,datadictionary-sampling-diagnostics-geometryempty,,700
+EmptyGeometryCount,DataDictionary,Sampling diagnostics,double scalar per support record or result row,statistics,datadictionary-sampling-diagnostics-emptygeometrycount,,709
+UsedFallback,DataDictionary,Sampling diagnostics,logical scalar per support record or result row,statistics,datadictionary-sampling-diagnostics-usedfallback,,716
+FallbackCount,DataDictionary,Sampling diagnostics,double scalar per support record or result row,statistics,datadictionary-sampling-diagnostics-fallbackcount,,725

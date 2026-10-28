@@ -12,11 +12,19 @@ function [gradients, distanceField, metadata, valid] = farmObjectDistanceGradien
 %                   SpacingUnit = character vector or string scalar;
 %                   DerivativeUnits = character vector or string scalar;
 %                   DistanceUnit = character vector or string scalar;
+%                   FillMethod = character vector or string scalar;
 % Outputs:
 %   gradients       XYZ gradient components on the current grid.
 %   distanceField   Requested signed/interior/exterior voxel-distance field.
 %   metadata        Distance and derivative metadata.
 %   valid           Gradient validity selection.
+% Measurement uses:
+%   Radius/radii, branch thickness and neck clearance: sample the interior
+%   distanceField at explicitly selected centers or skeleton/core locations.
+%   This gives center-point clearance to the nearest background voxel center,
+%   not an equivalent-sphere radius or a full local-thickness transform.
+%   Distances remain in voxel units. Multiply by scalar spacing only for an
+%   isotropic grid; options.Spacing does not correct anisotropic distances.
 
 if nargin < 2
     options = struct();

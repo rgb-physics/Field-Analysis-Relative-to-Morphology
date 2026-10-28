@@ -11,6 +11,7 @@ Start with a task and a guided script. You do not need to understand every API b
 | Change properties, statistics, supports or saved outputs | [Changing an analysis](CHANGING-AN-ANALYSIS.md) |
 | Look up a term or a struct's field layout | [Glossary and Data Dictionary topics](reference/README.md) |
 | Search terminology directly from MATLAB | [MATLAB glossary lookup and getters](MATLAB-GLOSSARY.md) |
+| Write or adapt readable MATLAB code | [Code conventions (review draft)](../AI%20Workflow%20Handoff/FARM-CODE-CONVENTIONS-DRAFT.md) |
 
 For a first visit, read Reading package structures, follow workflow 1, then use Changing an analysis as a reference while editing setup.
 

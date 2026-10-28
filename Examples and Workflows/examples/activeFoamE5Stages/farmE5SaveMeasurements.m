@@ -9,6 +9,7 @@ function c = farmE5SaveMeasurements(c)
 %   c.Results.Properties: completed observation table from farmE5MeasureAlignment.
 %   c.Results.SamplingDiagnostics: field-query diagnostics from farmE5SampleFields.
 %   c.Results.SegmentationInfo, GradientInfo: calculation metadata from earlier stages.
+%   c.Results.GeometryInfo: optional boundary-construction diagnostics.
 % Outputs:
 %   c   The same configuration, with these results added or updated:
 %   c.Results.SavedFrameFile: full path to the new frameNNN.mat file.
@@ -34,6 +35,9 @@ if isfile(frameFile)
 end
 result = struct('Filaments', properties, 'SamplingDiagnostics', samplingDiagnostics, ...
     'SegmentationInfo', segmentationInfo, 'GradientInfo', gradientInfo);
+if isfield(c.Results, 'GeometryInfo')
+    result.GeometryInfo = c.Results.GeometryInfo;
+end
 save(frameFile, 'result', '-v7.3');
 fprintf('Frame %g measurements saved to: %s\n', frame, frameFile);
 

@@ -95,3 +95,13 @@ options = struct('OpeningRadius', 1, 'FillMethod', 'nearest');
 `info.OpenedMasks` remains the intermediate array before overlap resolution and
 filling. No distance transform is calculated for `'none'` or `'fill'`, or when
 there are no unclassified locations.
+
+## Reuse intensity-segmentation components
+
+Set `ReturnComponents=true` in `farmSegmentIntensity` to retain its final
+connected components as `result.Components`. Pass that struct to
+`farmPrepareObjects` or `farmMeasureFilaments` to avoid detecting components
+again. Filtering preserves scan-order IDs, including after `KeepLargest`.
+`ReturnLabels=true` also reuses the computed components internally.
+This opt-in output defaults to false and uses the segmentation connectivity;
+do not reuse it if you intend a different connectivity for object detection.

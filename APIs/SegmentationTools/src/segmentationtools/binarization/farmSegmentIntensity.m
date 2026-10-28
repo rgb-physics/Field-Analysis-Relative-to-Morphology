@@ -13,8 +13,9 @@ function result = farmSegmentIntensity(intensity, options)
 %                   KeepLargest = nonnegative integer scalar or [];
 %                   Connectivity = numeric scalar or [];
 %                   ReturnLabels = logical scalar;
+%                   ReturnComponents = logical scalar;
 % Outputs:
-%   result          Foreground mask, threshold, counts and optionally connected-object labels.
+%   result          Foreground mask, threshold, counts and optionally labels/components.
 
 if nargin < 2
     options = struct();
@@ -42,6 +43,7 @@ method = validatestring(options.Method, {'fixed', 'otsu'});
 foreground = validatestring(options.Foreground, {'bright', 'dark'});
 validateattributes(options.FillHoles, {'logical'}, {'scalar'});
 validateattributes(options.ReturnLabels, {'logical'}, {'scalar'});
+validateattributes(options.ReturnComponents, {'logical'}, {'scalar'});
 validateattributes(options.MinObjectSize, {'numeric'}, ...
                    {'scalar', 'real', 'finite', 'integer', 'nonnegative'});
 if ~isempty(options.KeepLargest)
@@ -122,8 +124,18 @@ result = struct('Mask', mask, 'CandidateMask', candidate, 'Threshold', threshold
                 'IntensityRange', range, 'Method', method, 'Foreground', foreground, ...
                 'Connectivity', conn, 'VoxelCount', nnz(mask), 'ComponentCount', numel(selected), ...
                 'Options', options);
-if options.ReturnLabels
-    result.LabelVolume = labelmatrix(bwconncomp(mask, conn));
+if options.ReturnLabels || options.ReturnComponents
+    % Removing whole components cannot merge or split the retained components.
+    % Restore their original scan order after KeepLargest's size-based selection.
+    finalComponents = components;
+    finalComponents.PixelIdxList = components.PixelIdxList(sort(selected));
+    finalComponents.NumObjects = numel(selected);
+    if options.ReturnLabels
+        result.LabelVolume = labelmatrix(finalComponents);
+    end
+    if options.ReturnComponents
+        result.Components = finalComponents;
+    end
 end
 end
 
@@ -147,6 +159,10 @@ end
 %   KeepLargest     []; optionally keep this many largest components.
 %   Connectivity    []; defaults to 8 (2-D), 26 (3-D).
 %   ReturnLabels    false; optionally label individual connected objects.
+%   ReturnComponents false; retain the final bwconncomp struct as Components.
+%                   Pass it to farmPrepareObjects/farmMeasureFilaments to reuse
+%                   segmentation membership without detecting components again.
+%                   Components use the selected Connectivity and scan-order IDs.
 %
 % RESULT.Mask is the final logical morphology; CandidateMask is the strict
 % threshold result before cleanup. Threshold is in original intensity units.

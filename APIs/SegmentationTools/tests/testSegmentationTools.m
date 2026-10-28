@@ -71,6 +71,38 @@ dark = farmSegmentIntensity(uint16([100 200 300]), ...
 verifyEqual(testCase,dark.Mask,logical([1 0 0]));
 end
 
+function testReturnedComponentsKeepFilteredScanOrder(testCase)
+% Size-ranked selection must not reorder the IDs seen by object preparation.
+image = zeros(17, 19, 7);
+image(2:3, 2:3, 2:3) = 10;
+image(7:10, 7:11, 2:5) = 10;
+image(14:16, 15:18, 3:5) = 10;
+options = struct('Method', 'fixed', 'Threshold', 5, 'KeepLargest', 2, ...
+    'MinObjectSize', 2, 'ReturnLabels', true, 'ReturnComponents', true);
+r = farmSegmentIntensity(image, options);
+expected = bwconncomp(r.Mask, r.Connectivity);
+verifyEqual(testCase, r.Components, expected);
+verifyEqual(testCase, r.LabelVolume, labelmatrix(expected));
+verifyEqual(testCase, r.ComponentCount, 2);
+verifyFalse(testCase, any(r.Mask(2:3, 2:3, 2:3), 'all'));
+options.KeepLargest = 0;
+r = farmSegmentIntensity(image, options);
+verifyEqual(testCase, r.Components, bwconncomp(r.Mask, r.Connectivity));
+verifyEqual(testCase, r.ComponentCount, 0);
+verifyFalse(testCase, any(r.LabelVolume(:)));
+end
+
+function testReturnedComponentsTwoDimensionalConnectivity(testCase)
+image = zeros(9, 9); image(3, 3) = 10; image(4, 4) = 10;
+for connectivity = [4 8]
+    r = farmSegmentIntensity(image, struct('Method', 'fixed', 'Threshold', 5, ...
+        'Connectivity', connectivity, 'ReturnComponents', true));
+    verifyEqual(testCase, r.Components, bwconncomp(r.Mask, connectivity));
+end
+r = farmSegmentIntensity(image, struct('Method', 'fixed', 'Threshold', 5));
+verifyFalse(testCase, isfield(r, 'Components'));
+end
+
 function testIntensityOtsuReferenceAndConstant(testCase)
 image = [zeros(4,4) 100*ones(4,4)];
 r = farmSegmentIntensity(image);

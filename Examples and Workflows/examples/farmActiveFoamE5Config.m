@@ -113,6 +113,7 @@ c.DistanceInterpolation = 'nearest';      % Return distances to the intensity gr
 % the boundary geometry and distance field explicitly.
 c.ProfileSigma = 2; % Distance-gradient smoothing, in intensity-grid voxels.
 c.GradientDerivativeUnits = 'physical'; % Differentiate using supplied spatial spacing.
+c.DistanceFillMethod = 'none'; % 'nearest' assigns missing distances and flags them for measurement.
 
 % Field Sampling %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Request statistics at each single-voxel centroid selection. Mean and

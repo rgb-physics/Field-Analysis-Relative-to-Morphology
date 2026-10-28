@@ -280,6 +280,8 @@ The edge of a region in 2D, or its surface in 3D, separating the region from its
 
 A boundary can be used to measure distances or compare directions relative to an object's surface.
 
+For radius/radii or local thickness questions, interior distance can supply a center-point clearance radius: `farmObjectDistanceGradients(mask, struct('DistanceType','interior'))` returns distance to the nearest background voxel center. Select the measurement locations explicitly, for example manual centers or skeleton/core locations. This is not an equivalent-sphere radius or a complete local-thickness transform. Distances are in voxel units; scalar physical conversion requires isotropic spacing. The `Spacing` option does not correct anisotropic distances.
+
 Inputs: { input = object locations; type = 'boundary'; options = method settings; see farmGenerateGeometry. }
 
 **Isosurface** [index/coordinate collection or mesh; neighborhood representation may be a mask]
@@ -304,6 +306,8 @@ Inputs: { No fixed input list; this entry defines a concept or representation. S
 
 **Skeleton** [index vector or logical matrix; generated representation in a struct]
 An internal representation of a structure that reduces its thickness while describing its shape. The result depends on the selected method.
+
+Interior distances sampled at skeleton/core locations can provide local clearance radii for branch or neck measurements. See Boundary for the distance operation and interpretation. Blob cores are not guaranteed to be ordered centerlines; the location selection and radius summary are separate choices.
 
 Inputs: { input = object locations; type = 'skeleton'; options = method settings; see farmGenerateGeometry. }
 

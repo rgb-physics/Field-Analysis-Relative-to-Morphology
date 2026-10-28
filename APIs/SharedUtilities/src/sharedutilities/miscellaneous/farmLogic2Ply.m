@@ -11,18 +11,22 @@ if nargin == 2
     scaleMat = [1 1 1];
 end
 
-% Define vertices for 2D or 3D meshes
-if numel(size(logicMat)) == 2
-    [rows, cols] = ind2sub(size(logicMat), find(logicMat ~= 0));
-    vertices = [cols, rows];
-else
-    [rows, cols, depths] = ind2sub(size(logicMat), find(logicMat ~= 0));
-    vertices = [cols, rows, depths];
+% Keep historical one-based XYZ scaling (including the first voxel).
+% 2-D supports export at z=0; PLY always requires three coordinate columns.
+validateattributes(scaleMat,{'numeric'},{'real','finite','positive','vector'});
+scaleMat = double(scaleMat(:).');
+if isscalar(scaleMat), scaleMat = repmat(scaleMat,1,3); end
+if ismatrix(logicMat)
+    if numel(scaleMat)==2, scaleMat(3)=1; end
+elseif numel(scaleMat)~=3
+    error('sharedutilities:PLYScale','Use XYZ scale factors (XY also accepted for 2-D).');
 end
-faces = [];
-
-% write ply, from tubular package (Noah Mitchell)
-plywrite(saveDir, faces, vertices.*scaleMat);
+if numel(scaleMat)~=3
+    error('sharedutilities:PLYScale','Use two or three scale factors for 2-D, three for 3-D.');
+end
+vertices = farmMaskToPoints(logicMat);
+if ismatrix(logicMat), vertices(:,3)=0; end
+farmWritePointPly(saveDir,vertices.*scaleMat);
 
 end
 

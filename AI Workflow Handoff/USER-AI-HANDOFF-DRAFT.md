@@ -42,13 +42,25 @@ Resolve paths relative to the installed package root.
 | Adapt an analysis | Relevant sections of `docs/CHANGING-AN-ANALYSIS.md`; chosen setup script or stage guide |
 | Compose operations | Relevant API README and function help; implementation if needed |
 | Format the generated script | `Examples and Workflows/examples/activeFoamE5Stages/setupActiveFoamE5Stages.m` for visible stage layout; relevant stage functions for API usage |
-| Apply package writing style | Naming and Code layout and comments sections of `docs/FARM-CODE-CONVENTIONS-DRAFT.md` (review draft); explicit preferences below govern this handoff |
+| Apply package writing style | Naming and Code layout and comments sections of `AI Workflow Handoff/FARM-CODE-CONVENTIONS-DRAFT.md` (review draft, supplied beside this handoff); explicit preferences below govern this handoff |
 
 Skip unrelated APIs, historical handoffs, migration inventories, release planning,
 and test data during onboarding. Request specific missing documents or excerpts.
 
 ### Scope and choices
 
+- Translate measurement questions into underlying operations before searching.
+  Use the glossary, relevant API documentation, function help, and related terms;
+  a measurement need not have a same-named function. For example, radius/radii,
+  neck width, or branch thickness may involve interior distance sampled at
+  selected centers or skeleton/core locations. Discuss the intended geometric
+  definition rather than assuming all radius measurements are equivalent.
+- Before declaring a capability missing or proposing a replacement algorithm,
+  check related primitive operations and whether their outputs can be composed
+  with a small user calculation. Distinguish a missing operation from missing
+  selection, unit conversion, aggregation, or a convenience wrapper. This
+  documentation search is part of capability discovery; runtime checks remain
+  optional. If access is incomplete, state what you could not establish.
 - Propose a manageable first workflow using available package capabilities.
   Adapt a released example where suitable; check installed documentation for
   availability. At drafting time, released workflows are 1, 2, and Active Foam E5.
@@ -102,6 +114,11 @@ farmSetup('IncludeExamples', true);
 - Keep new helpers local when requested. Prefer explicit inputs and outputs;
   follow an existing stage's `c` / `c.Results` convention when adapting it, without
   forcing the entire workflow configuration into unrelated lower-level calls.
+- Make the script easy to extend: show which variables each operation produces
+  and where the user can insert calculations using them. Separate native FARM
+  operations from custom arithmetic, selections, and summaries with short comments.
+  Prefer a visible composition of existing functions and ordinary MATLAB code
+  over a new abstraction that hides the calculation.
 - Use one statement per line, expanded multiline `if`/`for` blocks, consistent
   indentation, spaces around assignments, and blank lines between operations.
 - Use short descriptive names and meaningful indices such as `frameInd` or
@@ -115,7 +132,8 @@ farmSetup('IncludeExamples', true);
   an obvious input section near the top of the script, immediately after the short
   purpose/how-to-run comments. Prefer placing all required user inputs there,
   including required scientific settings, before setup or processing code. Keep
-  optional analysis choices near the calls that consume them; reference the
+  optional analysis choices in a labeled block near the top or near the calls
+  that consume them; reference the
   top-level required settings at their point of use rather than duplicating them.
 - Mark unresolved values `% REQUIRED:` and illustrative values `% EXAMPLE:`.
   State units and expected formats. Do not present example thresholds as selected

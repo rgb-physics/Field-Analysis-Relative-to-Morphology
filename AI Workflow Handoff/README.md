@@ -16,6 +16,7 @@ before drafting the next part. The initial proposal is not an approved design.
 - [Workshop steps](WORKSHOP-STEPS.md): discussion order and completion criteria.
 - [Decision log](DECISIONS.md): confirmed decisions and open questions.
 - [User-to-AI handoff draft](USER-AI-HANDOFF-DRAFT.md): first draft for role-play and review.
+- [Code conventions](FARM-CODE-CONVENTIONS-DRAFT.md): package writing-style reference, retained as a review draft and supplied beside the handoff.
 
 ## Current step
 

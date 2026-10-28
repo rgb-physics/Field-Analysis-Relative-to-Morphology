@@ -60,3 +60,12 @@ Run `report = runAllTests` in your licensed MATLAB session. Use
 `runAllTests('IncludeImageStackIO', false)` when local TIFF/HDF5 fixtures are
 unavailable. The naming/layout regression suite checks path resolution,
 canonical options order, ordinary folders and synthetic HDF5 axis preservation.
+
+## Later retirements
+
+On October 27, 2026 the user retired farmGenerateVanHove and
+farmGenerateStaticStructureFactor. Their byte-identical sources are preserved in
+MeMo-Archive/retired/2026-10-27 under their former repository-relative paths.
+Their entries were removed from the active name map and marked retired in the
+local inventories/manifest. Current correlation and power APIs retain their
+own documented estimator conventions and optional input-field Hann windowing.

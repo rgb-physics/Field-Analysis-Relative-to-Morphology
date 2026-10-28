@@ -31,7 +31,7 @@ entry = farmGlossary("Detection", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L452)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L456)
 
 <a id="glossary-tracking-and-field-analysis-trajectory"></a>
 
@@ -56,7 +56,7 @@ entry = farmGlossary("Trajectory", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L457)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L461)
 
 <a id="glossary-tracking-and-field-analysis-lineage"></a>
 
@@ -92,7 +92,7 @@ entry = farmGlossary("Lineage", "Section", "Glossary");
 
 Inputs: { Detections or object frames and tracking settings; exact arguments depend on the tracking method. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L462)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L466)
 
 <a id="glossary-tracking-and-field-analysis-ancestry"></a>
 
@@ -128,7 +128,7 @@ entry = farmGlossary("Ancestry", "Section", "Glossary");
 
 Inputs: { tracking = tracking result; seed = starting selection; options.Direction = 'ancestors'; options.IncludeSeed = logical scalar (default true); options.Loader = frame loader when starting from coordinates; see farmSelectLineage. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L471)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L475)
 
 <a id="glossary-tracking-and-field-analysis-descendants"></a>
 
@@ -166,7 +166,7 @@ entry = farmGlossary("Descendants", "Section", "Glossary");
 
 Inputs: { tracking = tracking result; seed = starting selection; options.Direction = 'descendants' (must be selected explicitly); options.IncludeSeed = logical scalar (default true); options.Loader = frame loader when starting from coordinates; see farmSelectLineage. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L480)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L484)
 
 <a id="glossary-tracking-and-field-analysis-split"></a>
 
@@ -191,7 +191,7 @@ entry = farmGlossary("Split", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L491)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L495)
 
 <a id="glossary-tracking-and-field-analysis-merge"></a>
 
@@ -216,7 +216,7 @@ entry = farmGlossary("Merge", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L496)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L500)
 
 <a id="glossary-tracking-and-field-analysis-gap"></a>
 
@@ -241,7 +241,7 @@ entry = farmGlossary("Gap", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L501)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L505)
 
 ## Related topics
 

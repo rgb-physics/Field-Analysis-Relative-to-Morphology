@@ -346,6 +346,43 @@ A representation of a surface using vertices and connections between them, such 
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
+**Surface patch** [triangle subset; per-patch measurement-table row]
+A connected part of a surface separated from other patches at detected branch seams.
+
+In farmCorrectSurfaceBranches, faces connect across edges incident to exactly two triangles. An edge incident to more than two triangles is a branch seam. A patch may be curved, folded, or have several Z values at the same XY. Automatic lattice connectivity is approximate and need not match the intended physical sheet.
+
+Inputs: { inputPoints* = N-by-3 physical XYZ voxel centers; sourceMask* = binary YXZ object; options = calibration and optional Faces; see farmCorrectSurfaceBranches. }
+
+**Branch seam** [two-column original point-row indices; original point-row index vector]
+A detected junction along which more than two surface branches meet.
+
+farmCorrectSurfaceBranches identifies triangle edges with more than two incident faces. Seam edges connected through vertices form one attachment seam. Seam vertices are retained during branch cuts. Mesh artifacts can create or miss seams; detection is not proof of a physical branch.
+
+Inputs: { inputPoints* = physical XYZ points; Faces = triangle connectivity, or generated lattice faces; see farmCorrectSurfaceBranches. }
+
+**Patch extent** [numeric scalar per patch]
+The greatest shortest-path distance along a patch's triangle edges from its attachment seam to its free border.
+
+Uses the minimum path from any seam seed for each border vertex, then takes the maximum over the border. It is not height, area, or straight-line distance. Units match Spacing. Unattached patches or patches without a free border have infinite Extent and are not removable by this operation.
+
+Inputs: { surface patch* = connected triangle subset; branch seam* = seed vertices; free border* = vertices of edges incident to one triangle; see farmCorrectSurfaceBranches. }
+
+**Source-volume support** [source voxel-index selections; coverage counts and fractions]
+The portion of a segmented object represented by discrete open balls centered at selected support points.
+
+farmCorrectSurfaceBranches uses radius equal to the padded distance to the nearest background voxel center. Ball unions are intersected with sourceMask. A patch's unique support is the part that becomes uncovered if its exclusive points are removed while all other contributions remain. This measures representation redundancy, not intensity evidence or biological validity.
+
+Inputs: { inputPoints* = physical XYZ voxel centers inside sourceMask; sourceMask* = binary YXZ object; Spacing = isotropic calibration; see farmCorrectSurfaceBranches. }
+
+**Branch correction result** [scalar struct returned as info]
+Patch measurements, seam selections, original-row correspondence, and branch-cut decisions from one surface-correction call.
+
+Method='extent' filters patch extent, 'support' filters unique support fraction, and 'both' requires both. Every method enforces the total new source-loss budget and retains at least two patches per affected seam. These heuristics do not guarantee global topology or retention of the correct ribbon branches. Apply=false reports proposed cuts without changing points. Patch IDs are local to one call; preserve dataset/frame/object identity separately.
+
+Contents: { Options = scalar struct; InputKept = N-by-1 logical; OutputIndices = source voxel indices; InputFaces = M-by-3 original point-row indices; FacePatch = M-by-1 patch IDs; PointPatch = N-by-1 patch IDs or zero; SeamEdges = K-by-2 original point-row indices; SeamPointIndices = original point-row indices; Patches = measurement table; MeshPreparation = scalar struct; SourceVoxelCount = scalar; InitiallyCoveredVoxels = scalar; InitialCoverageFraction = scalar; ProposedLostVoxels = scalar; ProposedLossFraction = scalar; AppliedLostVoxels = scalar; TopologyPreserved = false; ElapsedSeconds = scalar; }
+
+Inputs: { inputPoints* = N-by-3 physical XYZ voxel centers; sourceMask* = binary YXZ object; options = scalar struct with Method='both', Spacing=[1 1 1] YXZ, Origin=[1 1 1] XYZ voxel-center position, Faces=[], MaxExtent=10, MaxUniqueSupportFraction=0.05, MaxTotalLossFraction=0.01, ProtectedPointIndices=[], Apply=true, Verbose=false; see farmCorrectSurfaceBranches. }
+
 ### Sampling and measurements
 
 **Property** [table variable; numeric scalar/vector, array or cell depending on property]
@@ -643,11 +680,12 @@ Inputs: { Output locations and combined results collected by workflow 1. }
 
 ## Data Dictionary
 
-Named fields below describe generated sampling results, not additional user inputs.
-The names are suffixes: farmQueryField writes <FieldName>_<suffix>, and farmQueryFrame uses
+Named fields below describe generated results, not additional user inputs.
+For sampling diagnostics, the names are suffixes: farmQueryField writes <FieldName>_<suffix>, and farmQueryFrame uses
 <QueryName>_<suffix>. Vector component queries use <FieldName>_<ComponentName>_<suffix>.
 Counts refer to one result row; field/query prefixes distinguish separate calculations.
 These entries document behavior, not a universal set of columns required in every table.
+Surface-branch quantities use their literal names in info or info.Patches; they are not sampling suffixes.
 
 ### Sampling diagnostics
 
@@ -730,3 +768,229 @@ Set by farmPrepareSupport and copied into farmQueryField results. With component
 Calculation detail: The number of source skeleton records for which centroid fallback was applied during support preparation.
 
 Inputs: { Calculated skeleton records and the CentroidFallback setting; see farmPrepareSupport. }
+
+### Surface branch correction
+
+**InputKept** [N-by-1 logical vector]
+Flags original point rows retained in the returned branch-corrected cloud.
+
+Produced by farmCorrectSurfaceBranches. points=inputPoints(info.InputKept,:). All entries are true in preview mode. This correspondence is local to the supplied cloud, not an object identity key.
+
+Inputs: { Original point rows and applied patch-removal decisions. }
+
+**OutputIndices** [numeric column vector]
+Linear YXZ sourceMask indices corresponding to returned branch-corrected point rows.
+
+Produced by farmCorrectSurfaceBranches, in the same row order as points. These address the supplied source grid; they are not point-row indices. Other operations may use different output grids; farmPruneSurface SAT indices can address its padded OutputGrid instead.
+
+Inputs: { Original point-to-source correspondence and InputKept. }
+
+**InputFaces** [M-by-3 numeric matrix]
+Validated and deduplicated triangle connectivity indexing original input point rows.
+
+Produced by farmCorrectSurfaceBranches. This retains the original-row indexing after correction; it is not a reindexed mesh of the returned points. FacePatch aligns with these face rows.
+
+Inputs: { Supplied Faces or generated lattice connectivity. }
+
+**FacePatch** [M-by-1 numeric vector]
+Local patch ID for each InputFaces triangle.
+
+Produced by farmCorrectSurfaceBranches after cutting face adjacency at branch seams. IDs are not persistent between calls.
+
+Inputs: { Triangle incidence across manifold edges. }
+
+**PointPatch** [N-by-1 numeric vector]
+Local patch ID for each exclusive input point row, or zero for fixed/shared/unmeshed rows.
+
+Produced by farmCorrectSurfaceBranches. A zero is a retained shared or lower-dimensional point, not a missing measurement or the first patch ID.
+
+Inputs: { Patch membership and detected seam vertices. }
+
+**SeamEdges** [K-by-2 numeric matrix]
+Branch edges indexing original input point rows.
+
+Produced by farmCorrectSurfaceBranches. Each edge has more than two incident triangles in InputFaces; empty output means no such edges were detected.
+
+Inputs: { Triangle-edge incidence counts. }
+
+**SeamPointIndices** [numeric column vector]
+Unique original input point rows incident to detected seam edges.
+
+Produced by farmCorrectSurfaceBranches and retained during branch cuts. These are point rows, not source voxel indices.
+
+Inputs: { SeamEdges endpoint rows. }
+
+**Patches** [MATLAB table]
+One row per detected surface patch containing geometry, coverage, eligibility, and decisions.
+
+Produced by farmCorrectSurfaceBranches. Columns are PatchID, InteriorPointCount, Area, Extent, AttachmentSeamCount, HasFreeBorder, Protected, CoveredVoxels, UniqueSupportVoxels, UniqueSupportFraction, Candidate, DecisionLossVoxels, WouldRemove, Removed, and Reason. Empty/curve-only input yields zero rows; no-seam surfaces can still produce retained patch rows.
+
+Inputs: { Surface-patch geometry and branch-correction settings. }
+
+**PatchID** [numeric table column]
+A positive integer identifying one patch within a single branch-correction call.
+
+Produced by farmCorrectSurfaceBranches in Patches. This is not DatasetID, Frame, ObjectID, or a cross-call identity.
+
+Inputs: { Connected face components after excluding branch-seam adjacency. }
+
+**InteriorPointCount** [numeric table column]
+Number of exclusive point rows assigned to a patch, excluding fixed/shared/seam rows.
+
+Produced by farmCorrectSurfaceBranches in Patches. Interior means exclusive patch membership here, not interior distance from the source object's boundary.
+
+Inputs: { Original point memberships and seam/shared-point selections. }
+
+**Area** [numeric table column]
+Sum of triangle areas belonging to a surface patch, in squared physical units.
+
+Produced by farmCorrectSurfaceBranches in Patches from physical XYZ coordinates. This is mesh area, not projected XY area or source voxel count.
+
+Inputs: { InputFaces, FacePatch, and physical input points. }
+
+**Extent** [numeric table column]
+Patch depth from an attachment seam to its farthest free-border vertex along triangle edges.
+
+Produced by farmCorrectSurfaceBranches in Patches. Units match Spacing. The value is infinite when there is no seam or free border, or when the queried border is unreachable. See Patch extent for the geometric definition.
+
+Inputs: { Weighted patch-edge graph, seam seeds, and free-border vertices. }
+
+**AttachmentSeamCount** [numeric table column]
+Number of connected seam groups touching a surface patch.
+
+Produced by farmCorrectSurfaceBranches in Patches. Only patches touching exactly one seam can be selected for removal.
+
+Inputs: { Seam edges connected through shared endpoints and patch vertices. }
+
+**HasFreeBorder** [logical table column]
+True if a patch contains vertices of any edge incident to exactly one triangle.
+
+Produced by farmCorrectSurfaceBranches in Patches. This is a discrete mesh-border test, not a source-image-edge test.
+
+Inputs: { Patch vertices and one-face mesh edges. }
+
+**Protected** [logical table column]
+True if any point row of a patch is listed in ProtectedPointIndices.
+
+Produced by farmCorrectSurfaceBranches in Patches. It prevents selection of the entire patch. Shared seam points are retained independently of this flag.
+
+Inputs: { ProtectedPointIndices and patch vertex membership. }
+
+**CoveredVoxels** [numeric table column]
+Number of source voxels covered by open balls centered at a patch's exclusive point rows.
+
+Produced by farmCorrectSurfaceBranches in Patches. Coverage is intersected with sourceMask. Shared seam-point balls belong to fixed coverage instead. Counts are not volumes in physical units; multiply by prod(Spacing) when physical volume is needed.
+
+Inputs: { Patch-exclusive source points, padded interior distances, and sourceMask. }
+
+**UniqueSupportVoxels** [numeric table column]
+Source voxels covered only by one patch before any proposed removals.
+
+Produced by farmCorrectSurfaceBranches in Patches. This is the initial marginal loss, not necessarily the loss when the patch is considered later in the sequential decision process.
+
+Inputs: { Initial patch-ball unions and fixed/shared-point coverage. }
+
+**UniqueSupportFraction** [numeric table column]
+UniqueSupportVoxels divided by max(1,CoveredVoxels).
+
+Produced by farmCorrectSurfaceBranches in Patches. Dimensionless; a patch with no coverage has fraction zero. Small values indicate representation redundancy, not necessarily an erroneous flap.
+
+Inputs: { Initial unique and patch-covered source voxel counts. }
+
+**Candidate** [logical table column]
+Initial eligibility after attachment, free-border, protection, and selected-method threshold tests.
+
+Produced by farmCorrectSurfaceBranches in Patches. A candidate can still be retained to preserve two seam branches or satisfy the sequential support/total-loss limits. This flag is not a removal decision.
+
+Inputs: { Initial patch measurements, Method, MaxExtent, and MaxUniqueSupportFraction. }
+
+**DecisionLossVoxels** [numeric table column]
+Marginal source-coverage loss recomputed when a candidate reaches the sequential support test.
+
+Produced by farmCorrectSurfaceBranches in Patches. NaN means that stage was not evaluated, for example because the patch was ineligible or the two-branch guard retained it. A finite value can describe a rejected proposal; it does not imply removal.
+
+Inputs: { Coverage remaining after earlier proposed removals. }
+
+**WouldRemove** [logical table column]
+True if the patch passes the complete sequential selection procedure.
+
+Produced by farmCorrectSurfaceBranches in Patches. Available in preview and apply modes. Depends on ranking and earlier proposals as well as the initial thresholds.
+
+Inputs: { Candidate ranking, seam guard, and sequential support/loss checks. }
+
+**Removed** [logical table column]
+True if a selected patch's exclusive point rows are actually removed.
+
+Produced by farmCorrectSurfaceBranches in Patches. Equals WouldRemove when Apply=true; all false when Apply=false. Original seam/shared/unmeshed point rows remain retained.
+
+Inputs: { WouldRemove and Apply. }
+
+**Reason** [string table column]
+The branch-selection decision or retention reason for each patch.
+
+Produced by farmCorrectSurfaceBranches in Patches. Values currently include not eligible, protected, multiple attachment seams, no attachment seam, retain two seam branches, support became unique after earlier removal, total source loss limit, and selected. selected describes a proposal even in preview mode; consult Removed for application.
+
+Inputs: { Branch eligibility and sequential decision checks. }
+
+**MeshPreparation** [scalar struct]
+Diagnostics describing automatic surface-complex preparation or supplied connectivity.
+
+Produced by farmCorrectSurfaceBranches. InputTetrahedronCount and CollapsedTetrahedronCount describe lattice tetrahedra; both are zero for supplied Faces. Automatic preparation also returns LowerDimensionalPointCount, the number of original point rows with no remaining incident triangle. Collapse preserves homotopy of the lattice complex, not a global branch-cut topology guarantee.
+
+Inputs: { Original voxel support and automatic/supplied face selection. }
+
+**SourceVoxelCount** [numeric scalar]
+Number of true voxels in the source object used for branch correction.
+
+Produced by farmCorrectSurfaceBranches. This is the denominator of the total new loss budget; it is not the number of input cloud points.
+
+Inputs: { sourceMask. }
+
+**InitiallyCoveredVoxels** [numeric scalar]
+Source voxels covered by the union of all original support-point balls.
+
+Produced by farmCorrectSurfaceBranches before any proposed cuts. Original supports need not reconstruct the entire source object.
+
+Inputs: { Fixed-point and all patch-exclusive ball unions intersected with sourceMask. }
+
+**InitialCoverageFraction** [numeric scalar]
+InitiallyCoveredVoxels divided by max(1,SourceVoxelCount).
+
+Produced by farmCorrectSurfaceBranches. Reports existing representation coverage separately from new loss caused by proposed cuts. Zero new loss does not imply complete source reconstruction.
+
+Inputs: { Initial covered-source and total-source voxel counts. }
+
+**ProposedLostVoxels** [numeric scalar]
+Additional source voxels uncovered after all accepted sequential cut proposals.
+
+Produced by farmCorrectSurfaceBranches in preview and apply modes. Excludes source voxels already uncovered by the original point cloud.
+
+Inputs: { Initial coverage and sequential accepted proposals. }
+
+**ProposedLossFraction** [numeric scalar]
+ProposedLostVoxels divided by max(1,SourceVoxelCount).
+
+Produced by farmCorrectSurfaceBranches. This fraction is bounded by MaxTotalLossFraction for every method, including extent-only selection.
+
+Inputs: { Proposed new coverage loss and total-source voxel count. }
+
+**AppliedLostVoxels** [numeric scalar]
+New source-coverage loss attributable to cuts actually applied to the returned cloud.
+
+Produced by farmCorrectSurfaceBranches. Equals ProposedLostVoxels when Apply=true; zero in preview mode.
+
+Inputs: { ProposedLostVoxels and Apply. }
+
+**TopologyPreserved** [logical scalar]
+A branch-result flag recording whether topology preservation is guaranteed by the operation.
+
+farmCorrectSurfaceBranches always returns false. This indicates no guarantee, not an observed topology change. Retaining two branches per seam and retaining seam points do not establish global topology preservation.
+
+Inputs: { The documented guarantees of the branch-correction algorithm. }
+
+**ElapsedSeconds** [numeric scalar]
+Wall-clock duration of the branch-correction call, in seconds.
+
+Produced by farmCorrectSurfaceBranches. Includes mesh preparation, patch extent, source coverage and decision calculations; excludes caller plotting and file loading. It is not a peak-memory measurement or a repeat-run benchmark statistic.
+
+Inputs: { tic/toc around the branch-correction calculation. }

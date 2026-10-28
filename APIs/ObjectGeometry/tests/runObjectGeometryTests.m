@@ -18,6 +18,8 @@ logPath = fullfile(tempdir,'ObjectGeometryTestDiagnostics.log');
 diary(logPath); cleanup = onCleanup(@() diary('off'));
 suite = matlab.unittest.TestSuite.fromFile(fullfile(folder,'testObjectGeometry.m'));
 suite = [suite,matlab.unittest.TestSuite.fromFile(fullfile(folder,'testSurfaceSkeletonWorkflow.m'))];
+suite = [suite, matlab.unittest.TestSuite.fromFile(fullfile(folder, 'testSurfacePruning.m'))];
+suite = [suite, matlab.unittest.TestSuite.fromFile(fullfile(folder, 'testSurfaceBranchCorrection.m'))];
 runner = matlab.unittest.TestRunner.withTextOutput('OutputDetail',matlab.unittest.Verbosity.Detailed);
 results = runner.run(suite);
 fprintf('\nObjectGeometry: %d passed, %d failed, %d incomplete.\n', ...

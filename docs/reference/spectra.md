@@ -42,7 +42,7 @@ entry = farmGlossary("Spectrum", "Section", "Glossary");
 
 Inputs: { Sampled field and spectrum settings, including spatial calibration; see farmPowerSpectrum2D or farmPowerSpectrum3D. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L510)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L547)
 
 <a id="glossary-tracking-and-field-analysis-power"></a>
 
@@ -67,7 +67,7 @@ entry = farmGlossary("Power", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L519)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L556)
 
 <a id="glossary-tracking-and-field-analysis-normalization"></a>
 
@@ -103,7 +103,7 @@ entry = farmGlossary("Normalization", "Section", "Glossary");
 
 Inputs: { Values to rescale and settings for the selected normalization method. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L524)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L561)
 
 <a id="glossary-tracking-and-field-analysis-window"></a>
 
@@ -128,7 +128,7 @@ entry = farmGlossary("Window", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L533)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L570)
 
 <a id="glossary-tracking-and-field-analysis-correlation"></a>
 
@@ -164,7 +164,7 @@ entry = farmGlossary("Correlation", "Section", "Glossary");
 
 Inputs: { Fields to compare and correlation settings; exact arguments depend on the selected correlation function. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L538)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L575)
 
 ## Related topics
 

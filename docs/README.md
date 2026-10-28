@@ -2,6 +2,13 @@
 
 Start with a task and a guided script. You do not need to understand every API before loading your first dataset.
 
+For experimental wrinkled-sheet flap correction, see the
+[branch-cut guide](../APIs/ObjectGeometry/SURFACE-BRANCH-CORRECTION.md) and its
+[editable frame-35 script](../Examples%20and%20Workflows/analyzeSheetFrame35.m).
+Patch/seam concepts and returned quantities are included in the shared glossary
+and generated geometry reference. These heuristics are not validated released
+workflows or a global topology-preservation method.
+
 ## Choose a starting point
 
 | You want to… | Open |

@@ -7,15 +7,21 @@
 | Entry | Classification | Topic |
 | --- | --- | --- |
 | [Ancestry](tracking.md#glossary-tracking-and-field-analysis-ancestry) | Glossary | Tracking and ancestry |
+| [AppliedLostVoxels](geometry.md#datadictionary-surface-branch-correction-appliedlostvoxels) | DataDictionary | Geometry and sampling supports |
+| [Area](geometry.md#datadictionary-surface-branch-correction-area) | DataDictionary | Geometry and sampling supports |
 | [Array](containers.md#glossary-containers-and-structure-roles-array) | Glossary | Containers and constructs |
+| [AttachmentSeamCount](geometry.md#datadictionary-surface-branch-correction-attachmentseamcount) | DataDictionary | Geometry and sampling supports |
 | [Axes](datasets.md#glossary-dataset-organization-axes) | Glossary | Datasets, grids and units |
 | [Axial alignment](vectors.md#glossary-sampling-and-measurements-axial-alignment) | Glossary | Vectors, filaments and alignment |
 | [Backbone](vectors.md#glossary-geometry-supports-and-references-backbone) | Glossary | Vectors, filaments and alignment |
 | [Bins](profiles.md#glossary-tracking-and-field-analysis-bins) | Glossary | Profiles and bins |
 | [Boundary](geometry.md#glossary-geometry-supports-and-references-boundary) | Glossary | Geometry and sampling supports |
+| [Branch correction result](geometry.md#glossary-geometry-supports-and-references-branch-correction-result) | Glossary | Geometry and sampling supports |
+| [Branch seam](geometry.md#glossary-geometry-supports-and-references-branch-seam) | Glossary | Geometry and sampling supports |
 | [c.GeometryOptions](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-c-geometryoptions) | Glossary | Workflow results and access |
 | [c.ObjectProperties](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-c-objectproperties) | Glossary | Workflow results and access |
 | [c.Queries](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-c-queries) | Glossary | Workflow results and access |
+| [Candidate](geometry.md#datadictionary-surface-branch-correction-candidate) | DataDictionary | Geometry and sampling supports |
 | [Cell array](containers.md#glossary-containers-and-structure-roles-cell-array) | Glossary | Containers and constructs |
 | [Centered surface](geometry.md#glossary-geometry-supports-and-references-centered-surface) | Glossary | Geometry and sampling supports |
 | [Channel](datasets.md#glossary-dataset-organization-channel) | Glossary | Datasets, grids and units |
@@ -25,18 +31,23 @@
 | [Coordinate order](datasets.md#glossary-dataset-organization-coordinate-order) | Glossary | Datasets, grids and units |
 | [Coordinates](geometry.md#glossary-geometry-supports-and-references-coordinates) | Glossary | Geometry and sampling supports |
 | [Correlation](spectra.md#glossary-tracking-and-field-analysis-correlation) | Glossary | Spectra and correlations |
+| [CoveredVoxels](geometry.md#datadictionary-surface-branch-correction-coveredvoxels) | DataDictionary | Geometry and sampling supports |
 | [Data](containers.md#glossary-containers-and-structure-roles-data) | Glossary | Containers and constructs |
 | [Data source](datasets.md#glossary-dataset-organization-data-source) | Glossary | Datasets, grids and units |
 | [Dataset](datasets.md#glossary-dataset-organization-dataset) | Glossary | Datasets, grids and units |
+| [DecisionLossVoxels](geometry.md#datadictionary-surface-branch-correction-decisionlossvoxels) | DataDictionary | Geometry and sampling supports |
 | [Descendants](tracking.md#glossary-tracking-and-field-analysis-descendants) | Glossary | Tracking and ancestry |
 | [Detection](tracking.md#glossary-tracking-and-field-analysis-detection) | Glossary | Tracking and ancestry |
 | [Diagnostic](statistics.md#glossary-sampling-and-measurements-diagnostic) | Glossary | Scalar sampling and diagnostics |
 | [diagnostics](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-diagnostics) | Glossary | Workflow results and access |
 | [Distance-defined neighborhood](geometry.md#glossary-geometry-supports-and-references-distance-defined-neighborhood) | Glossary | Geometry and sampling supports |
+| [ElapsedSeconds](geometry.md#datadictionary-surface-branch-correction-elapsedseconds) | DataDictionary | Geometry and sampling supports |
 | [Empty selection](statistics.md#glossary-sampling-and-measurements-empty-selection) | Glossary | Scalar sampling and diagnostics |
 | [EmptyGeometryCount](statistics.md#datadictionary-sampling-diagnostics-emptygeometrycount) | DataDictionary | Scalar sampling and diagnostics |
 | [Experiment](datasets.md#glossary-dataset-organization-experiment) | Glossary | Datasets, grids and units |
 | [experiment](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-experiment) | Glossary | Workflow results and access |
+| [Extent](geometry.md#datadictionary-surface-branch-correction-extent) | DataDictionary | Geometry and sampling supports |
+| [FacePatch](geometry.md#datadictionary-surface-branch-correction-facepatch) | DataDictionary | Geometry and sampling supports |
 | [Fallback](statistics.md#glossary-sampling-and-measurements-fallback) | Glossary | Scalar sampling and diagnostics |
 | [FallbackCount](statistics.md#datadictionary-sampling-diagnostics-fallbackcount) | DataDictionary | Scalar sampling and diagnostics |
 | [Field](statistics.md#glossary-sampling-and-measurements-field) | Glossary | Scalar sampling and diagnostics |
@@ -51,9 +62,15 @@
 | [geometry](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-geometry) | Glossary | Workflow results and access |
 | [GeometryEmpty](statistics.md#datadictionary-sampling-diagnostics-geometryempty) | DataDictionary | Scalar sampling and diagnostics |
 | [Grid](datasets.md#glossary-dataset-organization-grid) | Glossary | Datasets, grids and units |
+| [HasFreeBorder](geometry.md#datadictionary-surface-branch-correction-hasfreeborder) | DataDictionary | Geometry and sampling supports |
 | [ID group](segmentation.md#glossary-segmentation-and-identity-id-group) | Glossary | Segmentation and object identity |
 | [Indices](geometry.md#glossary-geometry-supports-and-references-indices) | Glossary | Geometry and sampling supports |
+| [InitialCoverageFraction](geometry.md#datadictionary-surface-branch-correction-initialcoveragefraction) | DataDictionary | Geometry and sampling supports |
+| [InitiallyCoveredVoxels](geometry.md#datadictionary-surface-branch-correction-initiallycoveredvoxels) | DataDictionary | Geometry and sampling supports |
+| [InputFaces](geometry.md#datadictionary-surface-branch-correction-inputfaces) | DataDictionary | Geometry and sampling supports |
+| [InputKept](geometry.md#datadictionary-surface-branch-correction-inputkept) | DataDictionary | Geometry and sampling supports |
 | [Intensity field](segmentation.md#glossary-segmentation-and-identity-intensity-field) | Glossary | Segmentation and object identity |
+| [InteriorPointCount](geometry.md#datadictionary-surface-branch-correction-interiorpointcount) | DataDictionary | Geometry and sampling supports |
 | [Isosurface](geometry.md#glossary-geometry-supports-and-references-isosurface) | Glossary | Geometry and sampling supports |
 | [Label matrix](segmentation.md#glossary-segmentation-and-identity-label-matrix) | Glossary | Segmentation and object identity |
 | [Layer](geometry.md#glossary-geometry-supports-and-references-layer) | Glossary | Geometry and sampling supports |
@@ -65,15 +82,21 @@
 | [Matrix](containers.md#glossary-containers-and-structure-roles-matrix) | Glossary | Containers and constructs |
 | [Merge](tracking.md#glossary-tracking-and-field-analysis-merge) | Glossary | Tracking and ancestry |
 | [Mesh](geometry.md#glossary-geometry-supports-and-references-mesh) | Glossary | Geometry and sampling supports |
+| [MeshPreparation](geometry.md#datadictionary-surface-branch-correction-meshpreparation) | DataDictionary | Geometry and sampling supports |
 | [Metadata](containers.md#glossary-containers-and-structure-roles-metadata) | Glossary | Containers and constructs |
 | [NaNCount](statistics.md#datadictionary-sampling-diagnostics-nancount) | DataDictionary | Scalar sampling and diagnostics |
 | [NegativeInfCount](statistics.md#datadictionary-sampling-diagnostics-negativeinfcount) | DataDictionary | Scalar sampling and diagnostics |
 | [Normalization](spectra.md#glossary-tracking-and-field-analysis-normalization) | Glossary | Spectra and correlations |
 | [objects](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-objects) | Glossary | Workflow results and access |
 | [Options](containers.md#glossary-containers-and-structure-roles-options) | Glossary | Containers and constructs |
+| [OutputIndices](geometry.md#datadictionary-surface-branch-correction-outputindices) | DataDictionary | Geometry and sampling supports |
+| [Patch extent](geometry.md#glossary-geometry-supports-and-references-patch-extent) | Glossary | Geometry and sampling supports |
+| [Patches](geometry.md#datadictionary-surface-branch-correction-patches) | DataDictionary | Geometry and sampling supports |
+| [PatchID](geometry.md#datadictionary-surface-branch-correction-patchid) | DataDictionary | Geometry and sampling supports |
 | [Payload](containers.md#glossary-containers-and-structure-roles-payload) | Glossary | Containers and constructs |
 | [payload](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-payload) | Glossary | Workflow results and access |
 | [Point cloud](geometry.md#glossary-geometry-supports-and-references-point-cloud) | Glossary | Geometry and sampling supports |
+| [PointPatch](geometry.md#datadictionary-surface-branch-correction-pointpatch) | DataDictionary | Geometry and sampling supports |
 | [PositiveInfCount](statistics.md#datadictionary-sampling-diagnostics-positiveinfcount) | DataDictionary | Scalar sampling and diagnostics |
 | [Power](spectra.md#glossary-tracking-and-field-analysis-power) | Glossary | Spectra and correlations |
 | [Prepared geometry collection](segmentation.md#glossary-segmentation-and-identity-prepared-geometry-collection) | Glossary | Segmentation and object identity |
@@ -82,12 +105,19 @@
 | [Projected extent](vectors.md#glossary-sampling-and-measurements-projected-extent) | Glossary | Vectors, filaments and alignment |
 | [properties](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-properties) | Glossary | Workflow results and access |
 | [Property](statistics.md#glossary-sampling-and-measurements-property) | Glossary | Scalar sampling and diagnostics |
+| [ProposedLossFraction](geometry.md#datadictionary-surface-branch-correction-proposedlossfraction) | DataDictionary | Geometry and sampling supports |
+| [ProposedLostVoxels](geometry.md#datadictionary-surface-branch-correction-proposedlostvoxels) | DataDictionary | Geometry and sampling supports |
+| [Protected](geometry.md#datadictionary-surface-branch-correction-protected) | DataDictionary | Geometry and sampling supports |
 | [Query](statistics.md#glossary-sampling-and-measurements-query) | Glossary | Scalar sampling and diagnostics |
+| [Reason](geometry.md#datadictionary-surface-branch-correction-reason) | DataDictionary | Geometry and sampling supports |
 | [Reference](geometry.md#glossary-geometry-supports-and-references-reference) | Glossary | Geometry and sampling supports |
+| [Removed](geometry.md#datadictionary-surface-branch-correction-removed) | DataDictionary | Geometry and sampling supports |
 | [Rendered geometry matrix](geometry.md#glossary-geometry-supports-and-references-rendered-geometry-matrix) | Glossary | Geometry and sampling supports |
 | [Request / specification](containers.md#glossary-containers-and-structure-roles-request-specification) | Glossary | Containers and constructs |
 | [Result](containers.md#glossary-containers-and-structure-roles-result) | Glossary | Containers and constructs |
 | [Scalar field](statistics.md#glossary-sampling-and-measurements-scalar-field) | Glossary | Scalar sampling and diagnostics |
+| [SeamEdges](geometry.md#datadictionary-surface-branch-correction-seamedges) | DataDictionary | Geometry and sampling supports |
+| [SeamPointIndices](geometry.md#datadictionary-surface-branch-correction-seampointindices) | DataDictionary | Geometry and sampling supports |
 | [Segmented category](segmentation.md#glossary-segmentation-and-identity-segmented-category) | Glossary | Segmentation and object identity |
 | [Selected samples](statistics.md#glossary-sampling-and-measurements-selected-samples) | Glossary | Scalar sampling and diagnostics |
 | [SelectedCount](statistics.md#datadictionary-sampling-diagnostics-selectedcount) | DataDictionary | Scalar sampling and diagnostics |
@@ -95,17 +125,23 @@
 | [Sheet](geometry.md#glossary-geometry-supports-and-references-sheet) | Glossary | Geometry and sampling supports |
 | [Shell](geometry.md#glossary-geometry-supports-and-references-shell) | Glossary | Geometry and sampling supports |
 | [Skeleton](geometry.md#glossary-geometry-supports-and-references-skeleton) | Glossary | Geometry and sampling supports |
+| [Source-volume support](geometry.md#glossary-geometry-supports-and-references-source-volume-support) | Glossary | Geometry and sampling supports |
+| [SourceVoxelCount](geometry.md#datadictionary-surface-branch-correction-sourcevoxelcount) | DataDictionary | Geometry and sampling supports |
 | [Spectrum](spectra.md#glossary-tracking-and-field-analysis-spectrum) | Glossary | Spectra and correlations |
 | [Split](tracking.md#glossary-tracking-and-field-analysis-split) | Glossary | Tracking and ancestry |
 | [Statistic](statistics.md#glossary-sampling-and-measurements-statistic) | Glossary | Scalar sampling and diagnostics |
 | [Struct](containers.md#glossary-containers-and-structure-roles-struct) | Glossary | Containers and constructs |
 | [Support](geometry.md#glossary-geometry-supports-and-references-support) | Glossary | Geometry and sampling supports |
 | [supports](workflows.md#glossary-workflow-1-recognize-the-roles-in-code-supports) | Glossary | Workflow results and access |
+| [Surface patch](geometry.md#glossary-geometry-supports-and-references-surface-patch) | Glossary | Geometry and sampling supports |
 | [Table](containers.md#glossary-containers-and-structure-roles-table) | Glossary | Containers and constructs |
 | [Time index](datasets.md#glossary-dataset-organization-time-index) | Glossary | Datasets, grids and units |
 | [Time step](datasets.md#glossary-dataset-organization-time-step) | Glossary | Datasets, grids and units |
 | [Time unit](datasets.md#glossary-dataset-organization-time-unit) | Glossary | Datasets, grids and units |
+| [TopologyPreserved](geometry.md#datadictionary-surface-branch-correction-topologypreserved) | DataDictionary | Geometry and sampling supports |
 | [Trajectory](tracking.md#glossary-tracking-and-field-analysis-trajectory) | Glossary | Tracking and ancestry |
+| [UniqueSupportFraction](geometry.md#datadictionary-surface-branch-correction-uniquesupportfraction) | DataDictionary | Geometry and sampling supports |
+| [UniqueSupportVoxels](geometry.md#datadictionary-surface-branch-correction-uniquesupportvoxels) | DataDictionary | Geometry and sampling supports |
 | [Units](datasets.md#glossary-dataset-organization-units) | Glossary | Datasets, grids and units |
 | [UsedFallback](statistics.md#datadictionary-sampling-diagnostics-usedfallback) | DataDictionary | Scalar sampling and diagnostics |
 | [Vector component](vectors.md#glossary-sampling-and-measurements-vector-component) | Glossary | Vectors, filaments and alignment |
@@ -113,3 +149,4 @@
 | [Voxel spacing](datasets.md#glossary-dataset-organization-voxel-spacing) | Glossary | Datasets, grids and units |
 | [Width](vectors.md#glossary-sampling-and-measurements-width) | Glossary | Vectors, filaments and alignment |
 | [Window](spectra.md#glossary-tracking-and-field-analysis-window) | Glossary | Spectra and correlations |
+| [WouldRemove](geometry.md#datadictionary-surface-branch-correction-wouldremove) | DataDictionary | Geometry and sampling supports |

@@ -2,6 +2,14 @@
 
 Start with the [editable examples and setup guide](examples/README.md).
 
+Experimental sheet analysis is available separately in
+[analyzeSheetFrame35.m](analyzeSheetFrame35.m). Its independent branch-cut
+sections query patch extent and source-volume support and display candidate
+seams, proposed cuts, and corrected point clouds. See the
+[branch-correction guide](../APIs/ObjectGeometry/SURFACE-BRANCH-CORRECTION.md)
+for settings, return fields, calibration, and validation limits. This dataset-
+specific script is not one of the released workflows listed below.
+
 The release includes:
 
 - Workflow 1: object segmentation, geometry and field measurements.

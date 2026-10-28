@@ -13,7 +13,7 @@ Definitions have one editable source: the [shared glossary](../../GLOSSARY-CAPAB
 | [Containers and constructs](containers.md) | 13 | Representations, settings, requests and returned results. |
 | [Datasets, grids and units](datasets.md) | 13 | Sources, frame identity, spatial axes and calibration. |
 | [Segmentation and object identity](segmentation.md) | 8 | Category selection and object membership. |
-| [Geometry and sampling supports](geometry.md) | 17 | Boundaries, skeletons, indices and geometric references. |
+| [Geometry and sampling supports](geometry.md) | 54 | Boundaries, skeletons, indices and geometric references. |
 | [Scalar sampling and diagnostics](statistics.md) | 20 | Selected values, validity counts and empty selections. |
 | [Vectors, filaments and alignment](vectors.md) | 9 | Components, filament measurements and axial comparisons. |
 | [Profiles and bins](profiles.md) | 2 | Conditional measurements and numerical intervals. |
@@ -25,7 +25,7 @@ Definitions have one editable source: the [shared glossary](../../GLOSSARY-CAPAB
 
 Use the [alphabetical index](terms.md), browser Find on a topic page, or `farmGlossary("search", "distance")` in MATLAB. [MATLAB lookup and getters](../MATLAB-GLOSSARY.md) explain section filters and exact spelling.
 
-The current source contains **107 entries**, including **10 Data Dictionary quantities**. The dictionary currently covers sampling diagnostics; it is not a complete list of requestable statistics.
+The current source contains **144 entries**, including **42 Data Dictionary quantities**. The dictionary covers sampling diagnostics and experimental surface-branch results; it is not a complete list of requestable statistics or public-function outputs.
 
 ## Reading the labels
 
@@ -33,4 +33,4 @@ The current source contains **107 entries**, including **10 Data Dictionary quan
 
 **Inputs** describes what is supplied to create, calculate, or select an item. **Contents** describes stored or returned fields. Concepts without a fixed input list say so explicitly; their named-option table is empty.
 
-Mesh and sheet entries remain available to interpret historical material. Those operations are deferred, as are ND2 and the two historical estimators. A definition does not establish release support.
+Mesh and sheet entries also describe experimental geometry operations; consult their API guides for validation and release status. Historical mesh/sheet release work, ND2, and the two historical estimators remain deferred. A definition does not establish release support.

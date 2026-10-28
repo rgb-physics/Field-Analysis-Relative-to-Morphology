@@ -6,7 +6,7 @@ Boundaries, skeletons, indices and geometric references.
 
 [All topics](README.md) · [Alphabetical index](terms.md) · [MATLAB lookup](../MATLAB-GLOSSARY.md)
 
-[Linear voxel indices](#glossary-geometry-supports-and-references-linear-voxel-indices) · [Indices](#glossary-geometry-supports-and-references-indices) · [Coordinates](#glossary-geometry-supports-and-references-coordinates) · [Geometry](#glossary-geometry-supports-and-references-geometry) · [Support](#glossary-geometry-supports-and-references-support) · [Reference](#glossary-geometry-supports-and-references-reference) · [Boundary](#glossary-geometry-supports-and-references-boundary) · [Isosurface](#glossary-geometry-supports-and-references-isosurface) · [Distance-defined neighborhood](#glossary-geometry-supports-and-references-distance-defined-neighborhood) · [Layer](#glossary-geometry-supports-and-references-layer) · [Shell](#glossary-geometry-supports-and-references-shell) · [Skeleton](#glossary-geometry-supports-and-references-skeleton) · [Sheet](#glossary-geometry-supports-and-references-sheet) · [Centered surface](#glossary-geometry-supports-and-references-centered-surface) · [Point cloud](#glossary-geometry-supports-and-references-point-cloud) · [Rendered geometry matrix](#glossary-geometry-supports-and-references-rendered-geometry-matrix) · [Mesh](#glossary-geometry-supports-and-references-mesh)
+[Linear voxel indices](#glossary-geometry-supports-and-references-linear-voxel-indices) · [Indices](#glossary-geometry-supports-and-references-indices) · [Coordinates](#glossary-geometry-supports-and-references-coordinates) · [Geometry](#glossary-geometry-supports-and-references-geometry) · [Support](#glossary-geometry-supports-and-references-support) · [Reference](#glossary-geometry-supports-and-references-reference) · [Boundary](#glossary-geometry-supports-and-references-boundary) · [Isosurface](#glossary-geometry-supports-and-references-isosurface) · [Distance-defined neighborhood](#glossary-geometry-supports-and-references-distance-defined-neighborhood) · [Layer](#glossary-geometry-supports-and-references-layer) · [Shell](#glossary-geometry-supports-and-references-shell) · [Skeleton](#glossary-geometry-supports-and-references-skeleton) · [Sheet](#glossary-geometry-supports-and-references-sheet) · [Centered surface](#glossary-geometry-supports-and-references-centered-surface) · [Point cloud](#glossary-geometry-supports-and-references-point-cloud) · [Rendered geometry matrix](#glossary-geometry-supports-and-references-rendered-geometry-matrix) · [Mesh](#glossary-geometry-supports-and-references-mesh) · [Surface patch](#glossary-geometry-supports-and-references-surface-patch) · [Branch seam](#glossary-geometry-supports-and-references-branch-seam) · [Patch extent](#glossary-geometry-supports-and-references-patch-extent) · [Source-volume support](#glossary-geometry-supports-and-references-source-volume-support) · [Branch correction result](#glossary-geometry-supports-and-references-branch-correction-result) · [InputKept](#datadictionary-surface-branch-correction-inputkept) · [OutputIndices](#datadictionary-surface-branch-correction-outputindices) · [InputFaces](#datadictionary-surface-branch-correction-inputfaces) · [FacePatch](#datadictionary-surface-branch-correction-facepatch) · [PointPatch](#datadictionary-surface-branch-correction-pointpatch) · [SeamEdges](#datadictionary-surface-branch-correction-seamedges) · [SeamPointIndices](#datadictionary-surface-branch-correction-seampointindices) · [Patches](#datadictionary-surface-branch-correction-patches) · [PatchID](#datadictionary-surface-branch-correction-patchid) · [InteriorPointCount](#datadictionary-surface-branch-correction-interiorpointcount) · [Area](#datadictionary-surface-branch-correction-area) · [Extent](#datadictionary-surface-branch-correction-extent) · [AttachmentSeamCount](#datadictionary-surface-branch-correction-attachmentseamcount) · [HasFreeBorder](#datadictionary-surface-branch-correction-hasfreeborder) · [Protected](#datadictionary-surface-branch-correction-protected) · [CoveredVoxels](#datadictionary-surface-branch-correction-coveredvoxels) · [UniqueSupportVoxels](#datadictionary-surface-branch-correction-uniquesupportvoxels) · [UniqueSupportFraction](#datadictionary-surface-branch-correction-uniquesupportfraction) · [Candidate](#datadictionary-surface-branch-correction-candidate) · [DecisionLossVoxels](#datadictionary-surface-branch-correction-decisionlossvoxels) · [WouldRemove](#datadictionary-surface-branch-correction-wouldremove) · [Removed](#datadictionary-surface-branch-correction-removed) · [Reason](#datadictionary-surface-branch-correction-reason) · [MeshPreparation](#datadictionary-surface-branch-correction-meshpreparation) · [SourceVoxelCount](#datadictionary-surface-branch-correction-sourcevoxelcount) · [InitiallyCoveredVoxels](#datadictionary-surface-branch-correction-initiallycoveredvoxels) · [InitialCoverageFraction](#datadictionary-surface-branch-correction-initialcoveragefraction) · [ProposedLostVoxels](#datadictionary-surface-branch-correction-proposedlostvoxels) · [ProposedLossFraction](#datadictionary-surface-branch-correction-proposedlossfraction) · [AppliedLostVoxels](#datadictionary-surface-branch-correction-appliedlostvoxels) · [TopologyPreserved](#datadictionary-surface-branch-correction-topologypreserved) · [ElapsedSeconds](#datadictionary-surface-branch-correction-elapsedseconds)
 
 <a id="glossary-geometry-supports-and-references-linear-voxel-indices"></a>
 
@@ -480,6 +480,1746 @@ entry = farmGlossary("Mesh", "Section", "Glossary");
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
 [Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L344)
+
+<a id="glossary-geometry-supports-and-references-surface-patch"></a>
+
+## Surface patch
+
+**Glossary / Geometry, supports and references**
+
+[triangle subset; per-patch measurement-table row]
+
+A connected part of a surface separated from other patches at detected branch seams.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+In farmCorrectSurfaceBranches, faces connect across edges incident to exactly two triangles. An edge incident to more than two triangles is a branch seam. A patch may be curved, folded, or have several Z values at the same XY. Automatic lattice connectivity is approximate and need not match the intended physical sheet.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Surface patch", "Section", "Glossary");
+```
+
+
+</details>
+
+Inputs: { inputPoints* = N-by-3 physical XYZ voxel centers; sourceMask* = binary YXZ object; options = calibration and optional Faces; see farmCorrectSurfaceBranches. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L349)
+
+<a id="glossary-geometry-supports-and-references-branch-seam"></a>
+
+## Branch seam
+
+**Glossary / Geometry, supports and references**
+
+[two-column original point-row indices; original point-row index vector]
+
+A detected junction along which more than two surface branches meet.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+farmCorrectSurfaceBranches identifies triangle edges with more than two incident faces. Seam edges connected through vertices form one attachment seam. Seam vertices are retained during branch cuts. Mesh artifacts can create or miss seams; detection is not proof of a physical branch.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Branch seam", "Section", "Glossary");
+```
+
+
+</details>
+
+Inputs: { inputPoints* = physical XYZ points; Faces = triangle connectivity, or generated lattice faces; see farmCorrectSurfaceBranches. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L356)
+
+<a id="glossary-geometry-supports-and-references-patch-extent"></a>
+
+## Patch extent
+
+**Glossary / Geometry, supports and references**
+
+[numeric scalar per patch]
+
+The greatest shortest-path distance along a patch's triangle edges from its attachment seam to its free border.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Uses the minimum path from any seam seed for each border vertex, then takes the maximum over the border. It is not height, area, or straight-line distance. Units match Spacing. Unattached patches or patches without a free border have infinite Extent and are not removable by this operation.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Patch extent", "Section", "Glossary");
+```
+
+
+</details>
+
+Inputs: { surface patch* = connected triangle subset; branch seam* = seed vertices; free border* = vertices of edges incident to one triangle; see farmCorrectSurfaceBranches. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L363)
+
+<a id="glossary-geometry-supports-and-references-source-volume-support"></a>
+
+## Source-volume support
+
+**Glossary / Geometry, supports and references**
+
+[source voxel-index selections; coverage counts and fractions]
+
+The portion of a segmented object represented by discrete open balls centered at selected support points.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+farmCorrectSurfaceBranches uses radius equal to the padded distance to the nearest background voxel center. Ball unions are intersected with sourceMask. A patch's unique support is the part that becomes uncovered if its exclusive points are removed while all other contributions remain. This measures representation redundancy, not intensity evidence or biological validity.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Source-volume support", "Section", "Glossary");
+```
+
+
+</details>
+
+Inputs: { inputPoints* = physical XYZ voxel centers inside sourceMask; sourceMask* = binary YXZ object; Spacing = isotropic calibration; see farmCorrectSurfaceBranches. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L370)
+
+<a id="glossary-geometry-supports-and-references-branch-correction-result"></a>
+
+## Branch correction result
+
+**Glossary / Geometry, supports and references**
+
+[scalar struct returned as info]
+
+Patch measurements, seam selections, original-row correspondence, and branch-cut decisions from one surface-correction call.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Method='extent' filters patch extent, 'support' filters unique support fraction, and 'both' requires both. Every method enforces the total new source-loss budget and retains at least two patches per affected seam. These heuristics do not guarantee global topology or retention of the correct ribbon branches. Apply=false reports proposed cuts without changing points. Patch IDs are local to one call; preserve dataset/frame/object identity separately.
+
+Contents: { Options = scalar struct; InputKept = N-by-1 logical; OutputIndices = source voxel indices; InputFaces = M-by-3 original point-row indices; FacePatch = M-by-1 patch IDs; PointPatch = N-by-1 patch IDs or zero; SeamEdges = K-by-2 original point-row indices; SeamPointIndices = original point-row indices; Patches = measurement table; MeshPreparation = scalar struct; SourceVoxelCount = scalar; InitiallyCoveredVoxels = scalar; InitialCoverageFraction = scalar; ProposedLostVoxels = scalar; ProposedLossFraction = scalar; AppliedLostVoxels = scalar; TopologyPreserved = false; ElapsedSeconds = scalar; }
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Branch correction result", "Section", "Glossary");
+```
+
+
+</details>
+
+Inputs: { inputPoints* = N-by-3 physical XYZ voxel centers; sourceMask* = binary YXZ object; options = scalar struct with Method='both', Spacing=[1 1 1] YXZ, Origin=[1 1 1] XYZ voxel-center position, Faces=[], MaxExtent=10, MaxUniqueSupportFraction=0.05, MaxTotalLossFraction=0.01, ProtectedPointIndices=[], Apply=true, Verbose=false; see farmCorrectSurfaceBranches. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L377)
+
+<a id="datadictionary-surface-branch-correction-inputkept"></a>
+
+## InputKept
+
+**DataDictionary / Surface branch correction**
+
+[N-by-1 logical vector]
+
+Flags original point rows retained in the returned branch-corrected cloud.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. points=inputPoints(info.InputKept,:). All entries are true in preview mode. This correspondence is local to the supplied cloud, not an object identity key.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_InputKept;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("InputKept", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Original point rows and applied patch-removal decisions. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L774)
+
+<a id="datadictionary-surface-branch-correction-outputindices"></a>
+
+## OutputIndices
+
+**DataDictionary / Surface branch correction**
+
+[numeric column vector]
+
+Linear YXZ sourceMask indices corresponding to returned branch-corrected point rows.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches, in the same row order as points. These address the supplied source grid; they are not point-row indices. Other operations may use different output grids; farmPruneSurface SAT indices can address its padded OutputGrid instead.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_OutputIndices;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("OutputIndices", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Original point-to-source correspondence and InputKept. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L781)
+
+<a id="datadictionary-surface-branch-correction-inputfaces"></a>
+
+## InputFaces
+
+**DataDictionary / Surface branch correction**
+
+[M-by-3 numeric matrix]
+
+Validated and deduplicated triangle connectivity indexing original input point rows.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. This retains the original-row indexing after correction; it is not a reindexed mesh of the returned points. FacePatch aligns with these face rows.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_InputFaces;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("InputFaces", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Supplied Faces or generated lattice connectivity. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L788)
+
+<a id="datadictionary-surface-branch-correction-facepatch"></a>
+
+## FacePatch
+
+**DataDictionary / Surface branch correction**
+
+[M-by-1 numeric vector]
+
+Local patch ID for each InputFaces triangle.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches after cutting face adjacency at branch seams. IDs are not persistent between calls.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_FacePatch;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("FacePatch", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Triangle incidence across manifold edges. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L795)
+
+<a id="datadictionary-surface-branch-correction-pointpatch"></a>
+
+## PointPatch
+
+**DataDictionary / Surface branch correction**
+
+[N-by-1 numeric vector]
+
+Local patch ID for each exclusive input point row, or zero for fixed/shared/unmeshed rows.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. A zero is a retained shared or lower-dimensional point, not a missing measurement or the first patch ID.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_PointPatch;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("PointPatch", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Patch membership and detected seam vertices. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L802)
+
+<a id="datadictionary-surface-branch-correction-seamedges"></a>
+
+## SeamEdges
+
+**DataDictionary / Surface branch correction**
+
+[K-by-2 numeric matrix]
+
+Branch edges indexing original input point rows.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. Each edge has more than two incident triangles in InputFaces; empty output means no such edges were detected.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_SeamEdges;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("SeamEdges", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Triangle-edge incidence counts. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L809)
+
+<a id="datadictionary-surface-branch-correction-seampointindices"></a>
+
+## SeamPointIndices
+
+**DataDictionary / Surface branch correction**
+
+[numeric column vector]
+
+Unique original input point rows incident to detected seam edges.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches and retained during branch cuts. These are point rows, not source voxel indices.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_SeamPointIndices;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("SeamPointIndices", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { SeamEdges endpoint rows. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L816)
+
+<a id="datadictionary-surface-branch-correction-patches"></a>
+
+## Patches
+
+**DataDictionary / Surface branch correction**
+
+[MATLAB table]
+
+One row per detected surface patch containing geometry, coverage, eligibility, and decisions.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. Columns are PatchID, InteriorPointCount, Area, Extent, AttachmentSeamCount, HasFreeBorder, Protected, CoveredVoxels, UniqueSupportVoxels, UniqueSupportFraction, Candidate, DecisionLossVoxels, WouldRemove, Removed, and Reason. Empty/curve-only input yields zero rows; no-seam surfaces can still produce retained patch rows.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_Patches;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Patches", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Surface-patch geometry and branch-correction settings. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L823)
+
+<a id="datadictionary-surface-branch-correction-patchid"></a>
+
+## PatchID
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+A positive integer identifying one patch within a single branch-correction call.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. This is not DatasetID, Frame, ObjectID, or a cross-call identity.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_PatchID;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("PatchID", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Connected face components after excluding branch-seam adjacency. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L830)
+
+<a id="datadictionary-surface-branch-correction-interiorpointcount"></a>
+
+## InteriorPointCount
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+Number of exclusive point rows assigned to a patch, excluding fixed/shared/seam rows.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. Interior means exclusive patch membership here, not interior distance from the source object's boundary.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_InteriorPointCount;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("InteriorPointCount", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Original point memberships and seam/shared-point selections. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L837)
+
+<a id="datadictionary-surface-branch-correction-area"></a>
+
+## Area
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+Sum of triangle areas belonging to a surface patch, in squared physical units.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches from physical XYZ coordinates. This is mesh area, not projected XY area or source voxel count.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_Area;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Area", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { InputFaces, FacePatch, and physical input points. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L844)
+
+<a id="datadictionary-surface-branch-correction-extent"></a>
+
+## Extent
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+Patch depth from an attachment seam to its farthest free-border vertex along triangle edges.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. Units match Spacing. The value is infinite when there is no seam or free border, or when the queried border is unreachable. See Patch extent for the geometric definition.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_Extent;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Extent", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Weighted patch-edge graph, seam seeds, and free-border vertices. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L851)
+
+<a id="datadictionary-surface-branch-correction-attachmentseamcount"></a>
+
+## AttachmentSeamCount
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+Number of connected seam groups touching a surface patch.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. Only patches touching exactly one seam can be selected for removal.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_AttachmentSeamCount;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("AttachmentSeamCount", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Seam edges connected through shared endpoints and patch vertices. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L858)
+
+<a id="datadictionary-surface-branch-correction-hasfreeborder"></a>
+
+## HasFreeBorder
+
+**DataDictionary / Surface branch correction**
+
+[logical table column]
+
+True if a patch contains vertices of any edge incident to exactly one triangle.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. This is a discrete mesh-border test, not a source-image-edge test.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_HasFreeBorder;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("HasFreeBorder", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Patch vertices and one-face mesh edges. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L865)
+
+<a id="datadictionary-surface-branch-correction-protected"></a>
+
+## Protected
+
+**DataDictionary / Surface branch correction**
+
+[logical table column]
+
+True if any point row of a patch is listed in ProtectedPointIndices.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. It prevents selection of the entire patch. Shared seam points are retained independently of this flag.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_Protected;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Protected", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { ProtectedPointIndices and patch vertex membership. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L872)
+
+<a id="datadictionary-surface-branch-correction-coveredvoxels"></a>
+
+## CoveredVoxels
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+Number of source voxels covered by open balls centered at a patch's exclusive point rows.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. Coverage is intersected with sourceMask. Shared seam-point balls belong to fixed coverage instead. Counts are not volumes in physical units; multiply by prod(Spacing) when physical volume is needed.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_CoveredVoxels;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("CoveredVoxels", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Patch-exclusive source points, padded interior distances, and sourceMask. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L879)
+
+<a id="datadictionary-surface-branch-correction-uniquesupportvoxels"></a>
+
+## UniqueSupportVoxels
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+Source voxels covered only by one patch before any proposed removals.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. This is the initial marginal loss, not necessarily the loss when the patch is considered later in the sequential decision process.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_UniqueSupportVoxels;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("UniqueSupportVoxels", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Initial patch-ball unions and fixed/shared-point coverage. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L886)
+
+<a id="datadictionary-surface-branch-correction-uniquesupportfraction"></a>
+
+## UniqueSupportFraction
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+UniqueSupportVoxels divided by max(1,CoveredVoxels).
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. Dimensionless; a patch with no coverage has fraction zero. Small values indicate representation redundancy, not necessarily an erroneous flap.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_UniqueSupportFraction;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("UniqueSupportFraction", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Initial unique and patch-covered source voxel counts. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L893)
+
+<a id="datadictionary-surface-branch-correction-candidate"></a>
+
+## Candidate
+
+**DataDictionary / Surface branch correction**
+
+[logical table column]
+
+Initial eligibility after attachment, free-border, protection, and selected-method threshold tests.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. A candidate can still be retained to preserve two seam branches or satisfy the sequential support/total-loss limits. This flag is not a removal decision.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_Candidate;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Candidate", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Initial patch measurements, Method, MaxExtent, and MaxUniqueSupportFraction. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L900)
+
+<a id="datadictionary-surface-branch-correction-decisionlossvoxels"></a>
+
+## DecisionLossVoxels
+
+**DataDictionary / Surface branch correction**
+
+[numeric table column]
+
+Marginal source-coverage loss recomputed when a candidate reaches the sequential support test.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. NaN means that stage was not evaluated, for example because the patch was ineligible or the two-branch guard retained it. A finite value can describe a rejected proposal; it does not imply removal.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_DecisionLossVoxels;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("DecisionLossVoxels", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Coverage remaining after earlier proposed removals. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L907)
+
+<a id="datadictionary-surface-branch-correction-wouldremove"></a>
+
+## WouldRemove
+
+**DataDictionary / Surface branch correction**
+
+[logical table column]
+
+True if the patch passes the complete sequential selection procedure.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. Available in preview and apply modes. Depends on ranking and earlier proposals as well as the initial thresholds.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_WouldRemove;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("WouldRemove", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Candidate ranking, seam guard, and sequential support/loss checks. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L914)
+
+<a id="datadictionary-surface-branch-correction-removed"></a>
+
+## Removed
+
+**DataDictionary / Surface branch correction**
+
+[logical table column]
+
+True if a selected patch's exclusive point rows are actually removed.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. Equals WouldRemove when Apply=true; all false when Apply=false. Original seam/shared/unmeshed point rows remain retained.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_Removed;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Removed", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { WouldRemove and Apply. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L921)
+
+<a id="datadictionary-surface-branch-correction-reason"></a>
+
+## Reason
+
+**DataDictionary / Surface branch correction**
+
+[string table column]
+
+The branch-selection decision or retention reason for each patch.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in Patches. Values currently include not eligible, protected, multiple attachment seams, no attachment seam, retain two seam branches, support became unique after earlier removal, total source loss limit, and selected. selected describes a proposal even in preview mode; consult Removed for application.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_Reason;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("Reason", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Branch eligibility and sequential decision checks. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L928)
+
+<a id="datadictionary-surface-branch-correction-meshpreparation"></a>
+
+## MeshPreparation
+
+**DataDictionary / Surface branch correction**
+
+[scalar struct]
+
+Diagnostics describing automatic surface-complex preparation or supplied connectivity.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. InputTetrahedronCount and CollapsedTetrahedronCount describe lattice tetrahedra; both are zero for supplied Faces. Automatic preparation also returns LowerDimensionalPointCount, the number of original point rows with no remaining incident triangle. Collapse preserves homotopy of the lattice complex, not a global branch-cut topology guarantee.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_MeshPreparation;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("MeshPreparation", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Original voxel support and automatic/supplied face selection. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L935)
+
+<a id="datadictionary-surface-branch-correction-sourcevoxelcount"></a>
+
+## SourceVoxelCount
+
+**DataDictionary / Surface branch correction**
+
+[numeric scalar]
+
+Number of true voxels in the source object used for branch correction.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. This is the denominator of the total new loss budget; it is not the number of input cloud points.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_SourceVoxelCount;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("SourceVoxelCount", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { sourceMask. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L942)
+
+<a id="datadictionary-surface-branch-correction-initiallycoveredvoxels"></a>
+
+## InitiallyCoveredVoxels
+
+**DataDictionary / Surface branch correction**
+
+[numeric scalar]
+
+Source voxels covered by the union of all original support-point balls.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches before any proposed cuts. Original supports need not reconstruct the entire source object.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_InitiallyCoveredVoxels;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("InitiallyCoveredVoxels", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Fixed-point and all patch-exclusive ball unions intersected with sourceMask. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L949)
+
+<a id="datadictionary-surface-branch-correction-initialcoveragefraction"></a>
+
+## InitialCoverageFraction
+
+**DataDictionary / Surface branch correction**
+
+[numeric scalar]
+
+InitiallyCoveredVoxels divided by max(1,SourceVoxelCount).
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. Reports existing representation coverage separately from new loss caused by proposed cuts. Zero new loss does not imply complete source reconstruction.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_InitialCoverageFraction;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("InitialCoverageFraction", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Initial covered-source and total-source voxel counts. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L956)
+
+<a id="datadictionary-surface-branch-correction-proposedlostvoxels"></a>
+
+## ProposedLostVoxels
+
+**DataDictionary / Surface branch correction**
+
+[numeric scalar]
+
+Additional source voxels uncovered after all accepted sequential cut proposals.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches in preview and apply modes. Excludes source voxels already uncovered by the original point cloud.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_ProposedLostVoxels;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("ProposedLostVoxels", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Initial coverage and sequential accepted proposals. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L963)
+
+<a id="datadictionary-surface-branch-correction-proposedlossfraction"></a>
+
+## ProposedLossFraction
+
+**DataDictionary / Surface branch correction**
+
+[numeric scalar]
+
+ProposedLostVoxels divided by max(1,SourceVoxelCount).
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. This fraction is bounded by MaxTotalLossFraction for every method, including extent-only selection.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_ProposedLossFraction;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("ProposedLossFraction", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { Proposed new coverage loss and total-source voxel count. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L970)
+
+<a id="datadictionary-surface-branch-correction-appliedlostvoxels"></a>
+
+## AppliedLostVoxels
+
+**DataDictionary / Surface branch correction**
+
+[numeric scalar]
+
+New source-coverage loss attributable to cuts actually applied to the returned cloud.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. Equals ProposedLostVoxels when Apply=true; zero in preview mode.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_AppliedLostVoxels;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("AppliedLostVoxels", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { ProposedLostVoxels and Apply. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L977)
+
+<a id="datadictionary-surface-branch-correction-topologypreserved"></a>
+
+## TopologyPreserved
+
+**DataDictionary / Surface branch correction**
+
+[logical scalar]
+
+A branch-result flag recording whether topology preservation is guaranteed by the operation.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+farmCorrectSurfaceBranches always returns false. This indicates no guarantee, not an observed topology change. Retaining two branches per seam and retaining seam points do not establish global topology preservation.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_TopologyPreserved;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("TopologyPreserved", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { The documented guarantees of the branch-correction algorithm. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L984)
+
+<a id="datadictionary-surface-branch-correction-elapsedseconds"></a>
+
+## ElapsedSeconds
+
+**DataDictionary / Surface branch correction**
+
+[numeric scalar]
+
+Wall-clock duration of the branch-correction call, in seconds.
+
+<details>
+<summary>Interpretation and scope</summary>
+
+
+Produced by farmCorrectSurfaceBranches. Includes mesh preparation, patch extent, source coverage and decision calculations; excludes caller plotting and file loading. It is not a peak-memory measurement or a repeat-run benchmark statistic.
+
+
+</details>
+
+<details>
+<summary>Access in returned data</summary>
+
+
+After a scalar query with `FieldName = 'Signal'`:
+
+```matlab
+value = results.Signal_ElapsedSeconds;
+```
+
+For query/component prefixes, see the example at the top of this page. These are generated values, not additional inputs.
+
+
+</details>
+
+<details>
+<summary>MATLAB lookup</summary>
+
+
+```matlab
+entry = farmGlossary("ElapsedSeconds", "Section", "DataDictionary");
+```
+
+
+</details>
+
+Inputs: { tic/toc around the branch-correction calculation. }
+
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L991)
 
 ## Related topics
 

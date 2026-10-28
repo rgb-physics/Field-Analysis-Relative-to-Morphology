@@ -81,7 +81,7 @@ entry = farmGlossary("Vector field", "Section", "Glossary");
 
 Inputs: { <component name>\* = numeric matrix or Data/Grid struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L382)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L419)
 
 <a id="glossary-sampling-and-measurements-vector-component"></a>
 
@@ -115,7 +115,7 @@ entry = farmGlossary("Vector component", "Section", "Glossary");
 
 Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L387)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L424)
 
 <a id="glossary-sampling-and-measurements-length"></a>
 
@@ -140,7 +140,7 @@ entry = farmGlossary("Length", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L425)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L462)
 
 <a id="glossary-sampling-and-measurements-width"></a>
 
@@ -165,7 +165,7 @@ entry = farmGlossary("Width", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L430)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L467)
 
 <a id="glossary-sampling-and-measurements-principal-axes"></a>
 
@@ -190,7 +190,7 @@ entry = farmGlossary("Principal axes", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L435)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L472)
 
 <a id="glossary-sampling-and-measurements-projected-extent"></a>
 
@@ -215,7 +215,7 @@ entry = farmGlossary("Projected extent", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L440)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L477)
 
 <a id="glossary-sampling-and-measurements-axial-alignment"></a>
 
@@ -251,7 +251,7 @@ entry = farmGlossary("Axial alignment", "Section", "Glossary");
 
 Inputs: { Directions to compare and alignment settings; exact arguments depend on the selected alignment function. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L445)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L482)
 
 ## Related topics
 

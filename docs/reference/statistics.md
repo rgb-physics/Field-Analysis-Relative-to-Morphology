@@ -47,7 +47,7 @@ entry = farmGlossary("Property", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L351)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L388)
 
 <a id="glossary-sampling-and-measurements-statistic"></a>
 
@@ -72,7 +72,7 @@ entry = farmGlossary("Statistic", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L356)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L393)
 
 <a id="glossary-sampling-and-measurements-query"></a>
 
@@ -106,7 +106,7 @@ entry = farmGlossary("Query", "Section", "Glossary");
 
 Inputs: { `Name`\* = text; `Support`\* = text; `Field` = text (required for a scalar query without Operation); `Operation` = function handle (alternative to Field); `Kind` = text; `Fields` = text list (required for vector queries); `Statistics` = text list; `Mode` = text; `Options` = scalar struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L361)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L398)
 
 <a id="glossary-sampling-and-measurements-field"></a>
 
@@ -140,7 +140,7 @@ entry = farmGlossary("Field", "Section", "Glossary");
 
 Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L368)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L405)
 
 <a id="glossary-sampling-and-measurements-scalar-field"></a>
 
@@ -174,7 +174,7 @@ entry = farmGlossary("Scalar field", "Section", "Glossary");
 
 Inputs: { `Data`\* = numeric or logical matrix; `Grid` = scalar struct; }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L375)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L412)
 
 <a id="glossary-sampling-and-measurements-selected-samples"></a>
 
@@ -199,7 +199,7 @@ entry = farmGlossary("Selected samples", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L394)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L431)
 
 <a id="glossary-sampling-and-measurements-finite-samples"></a>
 
@@ -224,7 +224,7 @@ entry = farmGlossary("Finite samples", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L399)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L436)
 
 <a id="glossary-sampling-and-measurements-diagnostic"></a>
 
@@ -258,7 +258,7 @@ entry = farmGlossary("Diagnostic", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L404)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L441)
 
 <a id="glossary-sampling-and-measurements-empty-selection"></a>
 
@@ -283,7 +283,7 @@ entry = farmGlossary("Empty selection", "Section", "Glossary");
 
 Inputs: { No fixed input list; this entry defines a concept or representation. See the function using it for accepted values. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L411)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L448)
 
 <a id="glossary-sampling-and-measurements-fallback"></a>
 
@@ -319,7 +319,7 @@ entry = farmGlossary("Fallback", "Section", "Glossary");
 
 Inputs: { Unavailable geometry or result, available substitute information, and settings enabling substitution for the selected method. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L416)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L453)
 
 <a id="datadictionary-sampling-diagnostics-selectedcount"></a>
 
@@ -370,7 +370,7 @@ entry = farmGlossary("SelectedCount", "Section", "DataDictionary");
 
 Inputs: { Sampled field values at the selected locations, after any requested sample operation. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L654)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L692)
 
 <a id="datadictionary-sampling-diagnostics-finitecount"></a>
 
@@ -421,7 +421,7 @@ entry = farmGlossary("FiniteCount", "Section", "DataDictionary");
 
 Inputs: { Sampled field values at the selected locations, after any requested sample operation. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L663)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L701)
 
 <a id="datadictionary-sampling-diagnostics-nancount"></a>
 
@@ -470,7 +470,7 @@ entry = farmGlossary("NaNCount", "Section", "DataDictionary");
 
 Inputs: { Sampled field values at the selected locations, after any requested sample operation. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L672)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L710)
 
 <a id="datadictionary-sampling-diagnostics-positiveinfcount"></a>
 
@@ -519,7 +519,7 @@ entry = farmGlossary("PositiveInfCount", "Section", "DataDictionary");
 
 Inputs: { Sampled field values at the selected locations, after any requested sample operation. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L679)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L717)
 
 <a id="datadictionary-sampling-diagnostics-negativeinfcount"></a>
 
@@ -568,7 +568,7 @@ entry = farmGlossary("NegativeInfCount", "Section", "DataDictionary");
 
 Inputs: { Sampled field values at the selected locations, after any requested sample operation. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L686)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L724)
 
 <a id="datadictionary-sampling-diagnostics-selectionempty"></a>
 
@@ -617,7 +617,7 @@ entry = farmGlossary("SelectionEmpty", "Section", "DataDictionary");
 
 Inputs: { Selected locations after preparation and any enabled centroid substitution. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L693)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L731)
 
 <a id="datadictionary-sampling-diagnostics-geometryempty"></a>
 
@@ -668,7 +668,7 @@ entry = farmGlossary("GeometryEmpty", "Section", "DataDictionary");
 
 Inputs: { Calculated geometry records before centroid substitution; see farmPrepareSupport. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L700)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L738)
 
 <a id="datadictionary-sampling-diagnostics-emptygeometrycount"></a>
 
@@ -717,7 +717,7 @@ entry = farmGlossary("EmptyGeometryCount", "Section", "DataDictionary");
 
 Inputs: { Calculated geometry records before centroid substitution; see farmPrepareSupport. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L709)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L747)
 
 <a id="datadictionary-sampling-diagnostics-usedfallback"></a>
 
@@ -768,7 +768,7 @@ entry = farmGlossary("UsedFallback", "Section", "DataDictionary");
 
 Inputs: { Calculated skeleton records and the CentroidFallback setting; see farmPrepareSupport. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L716)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L754)
 
 <a id="datadictionary-sampling-diagnostics-fallbackcount"></a>
 
@@ -819,7 +819,7 @@ entry = farmGlossary("FallbackCount", "Section", "DataDictionary");
 
 Inputs: { Calculated skeleton records and the CentroidFallback setting; see farmPrepareSupport. }
 
-[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L725)
+[Source entry](../../GLOSSARY-CAPABILITIES.md?plain=1#L763)
 
 ## Related topics
 

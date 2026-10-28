@@ -250,3 +250,13 @@ calibrated point preparation, optional sampled normals, separate spatial and
 temporal orientation, and vertex-only PLY export for MeshLab. Focused synthetic
 checks and a runnable example are included. Scientific real-data validation and
 retirement of historical two-sheet helpers remain separate.
+
+Experimental ET filtering and rasterized SAT are available through
+`farmPruneSurface`. See [surface pruning](SURFACE-PRUNING.md) for required
+surface connectivity, calibration, approximation limits, and returned point
+correspondence. Neither option promises topology preservation.
+
+`farmCorrectSurfaceBranches` provides branch-cut heuristics based on seam-to-
+border patch extent and marginal source-volume coverage. See
+[branch correction](SURFACE-BRANCH-CORRECTION.md) for preview controls,
+protected rows, loss limits, and the assumptions of automatic patch detection.

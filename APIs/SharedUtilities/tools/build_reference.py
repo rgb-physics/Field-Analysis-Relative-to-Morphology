@@ -35,6 +35,7 @@ GROUP_TOPICS = {
     'Geometry, supports and references': 'geometry',
     'Sampling and measurements': 'statistics',
     'Sampling diagnostics': 'statistics',
+    'Surface branch correction': 'geometry',
     'Workflow 1: recognize the roles in code': 'workflows',
 }
 VECTOR_TERMS = {'Filament', 'Backbone', 'Principal axes', 'Length', 'Width',
@@ -142,7 +143,8 @@ def build():
              '[MATLAB lookup and getters](../MATLAB-GLOSSARY.md) explain section filters and exact spelling.',
              f'The current source contains **{len(entries)} entries**, including '
              f'**{sum(e["Section"]=="DataDictionary" for e in entries)} Data Dictionary quantities**. '
-             'The dictionary currently covers sampling diagnostics; it is not a complete list of requestable statistics.',
+             'The dictionary covers sampling diagnostics and experimental surface-branch results; '
+             'it is not a complete list of requestable statistics or public-function outputs.',
              '## Reading the labels',
              '**Construct** identifies an item with a defined FARM role and documented representation. '
              'A **construct instance** is a workflow variable holding one of those items. '
@@ -151,8 +153,9 @@ def build():
              '**Inputs** describes what is supplied to create, calculate, or select an item. '
              '**Contents** describes stored or returned fields. Concepts without a fixed input '
              'list say so explicitly; their named-option table is empty.',
-             'Mesh and sheet entries remain available to interpret historical material. Those operations '
-             'are deferred, as are ND2 and the two historical estimators. A definition does not establish release support.']
+             'Mesh and sheet entries also describe experimental geometry operations; consult their API '
+             'guides for validation and release status. Historical mesh/sheet release work, ND2, and '
+             'the two historical estimators remain deferred. A definition does not establish release support.']
     outputs[OUTPUT+'README.md'] = '\n\n'.join(index)+'\n'
     alphabetical = [NOTICE, '# Alphabetical entry index', '[Scientific topics](README.md)',
                     '| Entry | Classification | Topic |\n| --- | --- | --- |\n'+'\n'.join(

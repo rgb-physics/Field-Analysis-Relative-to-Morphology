@@ -29,6 +29,13 @@ function [gradients, distanceField, metadata, valid] = farmObjectDistanceGradien
 if nargin < 2
     options = struct();
 end
+if isfield(options, 'Spacing') && numel(options.Spacing) == 3 && ndims(mask) <= 3
+    spacing = options.Spacing(1:ndims(mask));
+    if all(isfinite(spacing)) && all(spacing > 0) && max(spacing) / min(spacing) > 1 + 1e-6
+        warning('objectgeometry:AnisotropicDistance', ...
+            'Native distance uses equal voxel steps; Spacing does not correct anisotropic distances.');
+    end
+end
 type = 'signed';
 if isfield(options, 'DistanceType')
     type = options.DistanceType;

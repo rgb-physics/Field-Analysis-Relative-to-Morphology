@@ -106,6 +106,12 @@ Preserve documented operation-specific conventions and make adaptations explicit
 
 ## Validation and errors
 
+- User requirement (2026-10-30): operations based on morphology or voxel-distance
+  transforms must warn when supplied anisotropic spacing if their algorithm assumes
+  isotropic voxels. Metadata-free arrays cannot reveal physical spacing; callers
+  must check known spacing before invoking those operations. A spacing argument
+  must not silently imply anisotropic correction where none is implemented.
+
 - Public entry points must check essential structure and values, including when
   users supply editable structs directly rather than using builders.
 - Builders validate settings without loading data. Operations validate relevant

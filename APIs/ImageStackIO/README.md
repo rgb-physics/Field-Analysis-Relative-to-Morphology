@@ -2,6 +2,17 @@
 
 ImageStackIO owns image-file loading and saving, stack inspection, axis normalization, and retained stack-transform helpers. The internal axis convention is `[Y X Z C T]`.
 
+`farmWriteImageJAxesTiff` is a separate, explicit-axis ImageJ writer. Supply
+`SourceAxes='YXC'` (or `[1 2 4]` with Y/X/Z/C/T mapped to 1/2/3/4/5),
+`Spacing` in YXZ order, `SpacingUnit`, and optionally `Overwrite=true`.
+It reuses native axis normalization and writes contiguous, uncompressed pixels
+with TIFF directories after the pixels, so ImageJ headers and TIFF directories
+describe the same stack. Arbitrary permutations/subsets of YXZCT including Y/X
+are supported, as are XZ/YZ planes with the missing spatial axis singleton;
+arbitrary new axis types are not. Classic TIFF files must remain
+below 4 GB. Existing writers are unchanged. The dedicated regression file is
+`tests/testFarmWriteImageJAxesTiff.m`; viewer verification is still required.
+
 Grayscale multipage TIFFs without recognized axis metadata default to
 `SourceAxes='YXZ'`, treating pages as Z slices. Explicit SourceAxes and
 recognized TIFF/ImageJ axis metadata take precedence. Set SourceAxes='YXT'

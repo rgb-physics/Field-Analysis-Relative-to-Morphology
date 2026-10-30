@@ -6,6 +6,7 @@ function farmWriteTiff(imageInput, filePath, options)
 %   options         Optional scalar struct with the fields:
 %                   Overwrite = logical scalar;
 %                   Compression = character vector or string scalar;
+%                   ImageJMetadata = logical scalar (default true);
 %                   Spacing = positive numeric three-element vector;
 %                   SpacingUnit = character vector or string scalar;
 % Outputs:
@@ -39,6 +40,16 @@ description = sprintf([ ...
                        'spacing=%.17g\n' ...
                        'MATLAB_AXIS_ORDER=YXZ'], ...
                       numZ, numZ, spacingUnit, spacing(3));
+% Ordinary multipage TIFF readers follow each directory rather than assuming
+% contiguous ImageJ stack pixels. The page writer interleaves directories.
+imageJMetadata = true;
+if isfield(options, 'ImageJMetadata')
+    imageJMetadata = options.ImageJMetadata;
+end
+validateattributes(imageJMetadata, {'logical'}, {'scalar'});
+if ~imageJMetadata
+    description = 'MATLAB_AXIS_ORDER=YXZ';
+end
 calibration = struct( ...
                      'XResolution', 1 / spacing(2), ...
                      'YResolution', 1 / spacing(1));
